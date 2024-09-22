@@ -1,20 +1,3 @@
----
-name: Issue Template
-about: Describe this issue template's purpose here.
-title: ''
-labels: ''
-assignees: 2kmkmkm, goodoong
-
----
-
----
-name: Issue Template
-about: 간단한 이슈 템플릿
-title: "[이슈 타입] 제목 작성"
-labels: ''
-assignees: ''
----
-
 ## 📝 이슈 타입
 - [ ] 버그 (Bug)
 - [ ] 기능 요청 (Feature)
@@ -32,4 +15,4 @@ assignees: ''
 - 브라우저:
 
 ## 📄 추가 정보
-추가적으로 필요한 내용이나 참고할 사항이 있다면 적어주세요
+추가적으로 필요한 내용이나 참고할 사항이 있다면 적어주세요.
