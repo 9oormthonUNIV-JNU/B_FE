@@ -24,20 +24,34 @@ const TagContainer = styled.div`
   gap: 10px;
 `;
 
+type MemberProps = {
+  name: string;
+  generation: number;
+  part: "PM" | "PD" | "FE" | "BE";
+  image: string;
+};
+
+const Member: React.FC<MemberProps> = ({ image, name, generation, part }) => {
+  return (
+    <>
+      <MemberImage src={image} />
+      <MemberContents>
+        <CustomText weight={500} size={28}>
+          {name}
+        </CustomText>
+        <TagContainer>
+          <CustomTag>{generation}기</CustomTag>
+          <CustomTag>{part}</CustomTag>
+        </TagContainer>
+      </MemberContents>
+    </>
+  );
+};
+
 const MemberBox = () => {
   return (
     <CustomBox width={320} height={470}>
-      <MemberImage src={img_flower} />
-      <MemberContents>
-        <CustomText weight={500} size={28}>
-          최지원
-        </CustomText>
-        <TagContainer>
-          <CustomTag>2기</CustomTag>
-          <CustomTag>3기</CustomTag>
-          <CustomTag>PD</CustomTag>
-        </TagContainer>
-      </MemberContents>
+      <Member image={img_flower} name="최지원" generation={2} part="PD" />
     </CustomBox>
   );
 };
