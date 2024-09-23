@@ -3,6 +3,8 @@ import CustomText from "./CustomText";
 import { useState } from "react";
 
 const LabelButtonContainer = styled.button<{ isActive: boolean }>`
+  cursor: pointer;
+  display: flex;
   padding: 12px 20px;
   justify-content: center;
   align-items: center;

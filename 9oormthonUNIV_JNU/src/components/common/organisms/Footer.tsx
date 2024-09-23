@@ -4,11 +4,7 @@ import icon_github from "../../../assets/images/icon_github.svg";
 import icon_instagram from "../../../assets/images/icon_instagram.svg";
 
 const FooterContainer = styled.div`
-  position: fixed;
-  display: flex;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  position: relative;
   display: flex;
   width: 100%;
   height: 336px;
