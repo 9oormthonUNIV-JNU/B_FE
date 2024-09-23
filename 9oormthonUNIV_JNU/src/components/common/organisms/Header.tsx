@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import logo_horizontal from "../../../assets/images/logo_horizontal.svg";
-import CustomText from "./CustomText";
+import CustomText from "../atoms/CustomText";
 
 const HeaderContainer = styled.div`
   position: fixed;
@@ -15,6 +15,7 @@ const HeaderContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   box-sizing: border-box;
+  z-index: 1000;
   background-color: #97bffc;
 `;
 

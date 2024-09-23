@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import CustomText from "./CustomText";
+import CustomText from "../atoms/CustomText";
 import icon_github from "../../../assets/images/icon_github.svg";
 import icon_instagram from "../../../assets/images/icon_instagram.svg";
 
