@@ -2,7 +2,6 @@ import styled from "styled-components";
 import CustomBox from "../atoms/CustomBox";
 import CustomTag from "../atoms/CustomTag";
 import CustomText from "../atoms/CustomText";
-import img_flower from "../../../assets/images/img_flower.svg";
 
 const ActivityContainer = styled.div`
   display: flex;
@@ -31,36 +30,26 @@ const TagContainer = styled.div`
   gap: 10px;
 `;
 
-type ActivityProps = {
+type ActivityBoxProps = {
   image: string;
   subject: string;
   tag: string;
 };
 
-const Activity: React.FC<ActivityProps> = ({ image, subject, tag }) => {
-  return (
-    <ActivityContainer>
-      <ActivityImage src={image} />
-      <ActivityContents>
-        <CustomText weight={500} size={28}>
-          {subject}
-        </CustomText>
-        <TagContainer>
-          <CustomTag>{tag}</CustomTag>
-        </TagContainer>
-      </ActivityContents>
-    </ActivityContainer>
-  );
-};
-
-const ActivityBox = () => {
+const ActivityBox: React.FC<ActivityBoxProps> = ({ image, subject, tag }) => {
   return (
     <CustomBox width={480} height={376}>
-      <Activity
-        image={img_flower}
-        subject="대학생을 위한 밤샘서비스 '자니'"
-        tag="해커톤"
-      />
+      <ActivityContainer>
+        <ActivityImage src={image} />
+        <ActivityContents>
+          <CustomText weight={500} size={28}>
+            {subject}
+          </CustomText>
+          <TagContainer>
+            <CustomTag>{tag}</CustomTag>
+          </TagContainer>
+        </ActivityContents>
+      </ActivityContainer>
     </CustomBox>
   );
 };

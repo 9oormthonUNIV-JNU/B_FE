@@ -1,15 +1,7 @@
 import styled from "styled-components";
 import CustomBox from "../atoms/CustomBox";
 import CustomText from "../atoms/CustomText";
-import img_flower from "../../../assets/images/img_flower.svg";
 import CustomTag from "../atoms/CustomTag";
-
-const MemberContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
-`;
 
 const MemberImage = styled.img`
   width: 100%;
@@ -31,17 +23,22 @@ const TagContainer = styled.div`
   gap: 10px;
 `;
 
-type MemberProps = {
+type MemberBoxProps = {
+  image: string;
   name: string;
   generation: number;
   part: "PM" | "PD" | "FE" | "BE";
-  image: string;
 };
 
-const Member: React.FC<MemberProps> = ({ image, name, generation, part }) => {
+const MemberBox: React.FC<MemberBoxProps> = ({
+  image,
+  name,
+  generation,
+  part,
+}) => {
   return (
-    <MemberContainer>
-      <MemberImage src={image} />
+    <CustomBox width={320} height={470}>
+      <MemberImage src={image} alt={name} />
       <MemberContents>
         <CustomText weight={500} size={28}>
           {name}
@@ -51,14 +48,6 @@ const Member: React.FC<MemberProps> = ({ image, name, generation, part }) => {
           <CustomTag>{part}</CustomTag>
         </TagContainer>
       </MemberContents>
-    </MemberContainer>
-  );
-};
-
-const MemberBox = () => {
-  return (
-    <CustomBox width={320} height={470}>
-      <Member image={img_flower} name="최지원" generation={2} part="PD" />
     </CustomBox>
   );
 };

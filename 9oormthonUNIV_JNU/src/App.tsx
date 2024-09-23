@@ -1,8 +1,9 @@
-import ActivityBox from "./components/common/molecules/ActivityBox";
+import LabelButton from "./components/common/atoms/LabelButton";
+
 const App = () => {
   return (
     <>
-      <ActivityBox />
+      <LabelButton label="교내 리크루팅" />
     </>
   );
 };
