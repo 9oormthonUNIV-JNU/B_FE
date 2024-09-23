@@ -1,10 +1,12 @@
-import CustomText from "./components/common/atoms/CustomText";
+import Footer from "./components/common/atoms/Footer";
+import Header from "./components/common/atoms/Header";
 
 const App = () => {
   return (
-    <CustomText size={32} weight={600}>
-      App
-    </CustomText>
+    <>
+      <Header />
+      <Footer />
+    </>
   );
 };
 
