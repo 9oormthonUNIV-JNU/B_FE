@@ -21,7 +21,7 @@ const ActivityContents = styled.div`
 
 const ActivityImage = styled.img`
   width: 100%;
-  height: auto;
+  height: 225px;
   object-fit: cover;
 `;
 

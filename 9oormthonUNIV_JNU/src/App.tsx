@@ -1,8 +1,9 @@
-import IntroductionBox from "./components/common/molecules/IntroductionBox";
+import MemberBox from "./components/common/molecules/MemberBox";
+
 const App = () => {
   return (
     <>
-      <IntroductionBox />
+      <MemberBox />
     </>
   );
 };
