@@ -1,5 +1,10 @@
+import IntroductionBox from "./components/common/molecules/IntroductionBox";
 const App = () => {
-  return <></>;
+  return (
+    <>
+      <IntroductionBox />
+    </>
+  );
 };
 
 export default App;

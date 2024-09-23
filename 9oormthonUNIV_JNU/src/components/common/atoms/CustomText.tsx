@@ -8,6 +8,7 @@ type CustomTextProps = {
   weight?: FontWeight;
   size?: number;
   color?: string;
+  line?: number;
 };
 
 const getFontFamily = (weight: FontWeight): string => {
@@ -29,11 +30,16 @@ const getFontSize = (size?: number): string => {
   return size ? `${size}px` : "16px";
 };
 
+const getLine = (line?: number): string => {
+  return line ? `${line}px` : "normal";
+};
+
 const StyledText = styled.span<CustomTextProps>`
   font-family: ${({ weight }) => getFontFamily(weight || 400)}, sans-serif;
   font-size: ${({ size }) => getFontSize(size)};
   color: ${({ color }) => color || "black"};
   font-weight: ${({ weight }) => weight || 400};
+  line-height: ${({ line }) => getLine(line)};
 `;
 
 const CustomText: React.FC<CustomTextProps> = ({
@@ -41,9 +47,10 @@ const CustomText: React.FC<CustomTextProps> = ({
   weight = 400,
   size = 16,
   color = "black",
+  line,
 }) => {
   return (
-    <StyledText weight={weight} size={size} color={color}>
+    <StyledText weight={weight} size={size} color={color} line={line}>
       {children}
     </StyledText>
   );
