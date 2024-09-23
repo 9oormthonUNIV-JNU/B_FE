@@ -4,6 +4,13 @@ import CustomText from "../atoms/CustomText";
 import img_flower from "../../../assets/images/img_flower.svg";
 import CustomTag from "../atoms/CustomTag";
 
+const MemberContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+`;
+
 const MemberImage = styled.img`
   width: 100%;
   height: 320px;
@@ -33,7 +40,7 @@ type MemberProps = {
 
 const Member: React.FC<MemberProps> = ({ image, name, generation, part }) => {
   return (
-    <>
+    <MemberContainer>
       <MemberImage src={image} />
       <MemberContents>
         <CustomText weight={500} size={28}>
@@ -44,7 +51,7 @@ const Member: React.FC<MemberProps> = ({ image, name, generation, part }) => {
           <CustomTag>{part}</CustomTag>
         </TagContainer>
       </MemberContents>
-    </>
+    </MemberContainer>
   );
 };
 

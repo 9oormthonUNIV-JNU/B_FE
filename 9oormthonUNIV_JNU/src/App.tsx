@@ -1,9 +1,8 @@
-import MemberBox from "./components/common/molecules/MemberBox";
-
+import ActivityBox from "./components/common/molecules/ActivityBox";
 const App = () => {
   return (
     <>
-      <MemberBox />
+      <ActivityBox />
     </>
   );
 };
