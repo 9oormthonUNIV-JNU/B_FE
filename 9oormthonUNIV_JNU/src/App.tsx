@@ -3,6 +3,7 @@ import Footer from "./components/common/organisms/Footer";
 import styled from "styled-components";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
+import Contacts from "./components/common/molecules/Contacts";
 
 const MainContainer = styled.div`
   flex-direction: column;
@@ -20,6 +21,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<HomePage />} />
         </Routes>
+        <Contacts />
       </MainContainer>
       <Footer />
     </Router>
