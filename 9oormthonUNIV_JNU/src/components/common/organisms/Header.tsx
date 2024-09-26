@@ -58,10 +58,10 @@ const Header = () => {
   return (
     <HeaderContainer>
       <div>
-        <CustomText weight={700} size={24} color="white">
-          CNU :&nbsp;
-        </CustomText>
         <img src={logo_horizontal} />
+        <CustomText weight={700} size={24} color="white">
+          &nbsp;: CNU
+        </CustomText>
       </div>
       <OptionContainer>
         {["Member", "Activities", "Recruit", "Login"].map((option) => (

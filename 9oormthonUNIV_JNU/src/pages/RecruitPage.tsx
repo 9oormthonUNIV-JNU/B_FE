@@ -1,1 +1,5 @@
-//리크루트 페이지 입니다.
+const RecruitPage = () => {
+  return <div>RecruitPage</div>;
+};
+
+export default RecruitPage;
