@@ -1,1 +1,5 @@
-//일정관리 페이지 입니다.
+const ScheduleManagePage = () => {
+  return <div>ScheduleManagePage</div>;
+};
+
+export default ScheduleManagePage;

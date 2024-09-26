@@ -1,1 +1,5 @@
-//홈페이지 입니다.
+const HomePage = () => {
+  return <div>HomePage</div>;
+};
+
+export default HomePage;

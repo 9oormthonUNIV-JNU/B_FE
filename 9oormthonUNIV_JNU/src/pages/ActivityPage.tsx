@@ -1,1 +1,5 @@
-//액티비티 페이지 입니다.
+const ActivityPage = () => {
+  return <div>ActivityPage</div>;
+};
+
+export default ActivityPage;

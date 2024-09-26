@@ -1,1 +1,5 @@
-//마이페이지 입니다.
+const MyPage = () => {
+  return <div>MyPage</div>;
+};
+
+export default MyPage;

@@ -1,1 +1,5 @@
-//회원 승인 페이지 입니다.
+const MemberApprovalPage = () => {
+  return <div>MemberApprovalPage</div>;
+};
+
+export default MemberApprovalPage;
