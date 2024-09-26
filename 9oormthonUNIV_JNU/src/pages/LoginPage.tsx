@@ -1,1 +1,5 @@
-//로그인 페이지 입니다.
+const LoginPage = () => {
+  return <div>LoginPage</div>;
+};
+
+export default LoginPage;
