@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import styled from "styled-components";
 import CustomText from "./CustomText";
+import icon_down from "../../../assets/images/icon_down.svg";
 
 const AccordionContainer = styled.div`
   width: 50%;
@@ -18,8 +19,10 @@ const AccordionHeader = styled.button<{ isOpen: boolean }>`
   border: none;
   cursor: pointer;
   text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   transition: background-color 0.3s;
-  padding: 20px;
 
   &:hover {
     background-color: ${(props) => (props.isOpen ? "#E1EBFD" : "#e2e6ea")};
@@ -57,6 +60,7 @@ const Accordion: React.FC<AccordionProps> = ({ title, children }) => {
         <CustomText weight={600} size={20}>
           {title}
         </CustomText>
+        <img style={{ paddingRight: "20px" }} src={icon_down} />
       </AccordionHeader>
       <AccordionContent
         isOpen={isOpen}
