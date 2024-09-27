@@ -24,6 +24,10 @@ const FooterContainer = styled.div`
     gap: 50px;
     align-self: flex-start;
   }
+
+  .footer_button {
+    cursor: pointer;
+  }
 `;
 
 const Footer = () => {
@@ -42,8 +46,23 @@ const Footer = () => {
         </CustomText>
       </div>
       <div className="footer_icon">
-        <img src={icon_github} width={48} />
-        <img src={icon_instagram} width={48} />
+        <img
+          className="footer_button"
+          src={icon_github}
+          width={48}
+          onClick={() =>
+            (window.location.href = "https://github.com/9oormthonUNIV-JNU")
+          }
+        />
+        <img
+          className="footer_button"
+          src={icon_instagram}
+          width={48}
+          onClick={() =>
+            (window.location.href =
+              "https://www.instagram.com/9oormthon_univ_jnu/")
+          }
+        />
       </div>
     </FooterContainer>
   );

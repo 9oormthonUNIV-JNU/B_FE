@@ -2,11 +2,11 @@ import icon_pencil from "../assets/images/icon_pencil.svg";
 import icon_book from "../assets/images/icon_book.svg";
 import icon_networking from "../assets/images/icon_networking.svg";
 import icon_notebook from "../assets/images/icon_notebook.svg";
-import img_flower from "../assets/images/img_flower.svg";
 import icon_pin from "../assets/images/icon_pin.svg";
 import icon_lightning from "../assets/images/icon_lightning.svg";
 import icon_glitter from "../assets/images/icon_glitter.svg";
 import icon_party from "../assets/images/icon_party.svg";
+import img_flower from "../assets/images/img_flower.svg";
 
 export const CampusIntroductionData = [
     {
