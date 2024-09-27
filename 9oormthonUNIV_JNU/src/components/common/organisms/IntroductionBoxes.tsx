@@ -6,15 +6,21 @@ const IntroductionBoxesContainer = styled.div`
   width: 100%;
   justify-content: space-between;
   align-items: center;
-  gap: 53px;
-  padding: 80px;
-  padding-bottom: 112px;
+  gap: 40px;
+  box-sizing: border-box;
+  padding: 80px 0px;
 `;
 
-// IntroductionBoxes 컴포넌트
-const IntroductionBoxes: React.FC<{ introductionData?: Array<{ icon: string; subject: string; contents: string; image: string }> }> = ({ introductionData }) => {
+const IntroductionBoxes: React.FC<{
+  introductionData?: Array<{
+    icon: string;
+    subject: string;
+    contents: string;
+    image: string;
+  }>;
+}> = ({ introductionData }) => {
   if (!introductionData || introductionData.length === 0) {
-    return null; // 데이터가 없을 경우 아무것도 렌더링하지 않음
+    return null;
   }
 
   return (

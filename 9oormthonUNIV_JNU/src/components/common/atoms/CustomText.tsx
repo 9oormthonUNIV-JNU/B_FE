@@ -6,7 +6,7 @@ type TextStyle = "h1" | "h2" | "h3" | "b1" | "b2" | "b3" | "nav";
 
 type CustomTextProps = {
   children: React.ReactNode;
-  textStyle?: TextStyle; // `style`을 `textStyle`로 변경
+  textStyle?: TextStyle;
   color?: string;
   line?: number;
 };
@@ -41,9 +41,10 @@ const getLineHeight = (line?: number): string => {
 const StyledText = styled.span<CustomTextProps>`
   font-family: "Pretendard";
   font-weight: ${({ textStyle }) => getFontStyles(textStyle).weight};
-  font-size: ${({ textStyle }) => getFontStyles(textStyle).size};
+  font-size: ${({ textStyle }) => getFontStyles(textStyle).size} !important;
   color: ${({ color }) => color || "black"};
   line-height: ${({ line }) => getLineHeight(line)};
+  white-space: pre-line;
 `;
 
 const CustomText: React.FC<CustomTextProps> = ({

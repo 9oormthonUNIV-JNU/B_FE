@@ -7,7 +7,7 @@ import CustomText from "../atoms/CustomText";
 const LogoBackground = styled.div`
   background-color: #9fbef7;
   width: 100%;
-  height: 450px;
+  height: auto;
   padding: 80px 150px 0px;
   box-sizing: border-box;
   align-items: center;
