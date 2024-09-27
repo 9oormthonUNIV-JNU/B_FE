@@ -11,6 +11,7 @@ import MemberPage from "./pages/MemberPage";
 import RecruitPage from "./pages/RecruitPage";
 import ScheduleManagePage from "./pages/ScheduleManagePage";
 import SignupPage from "./pages/SignupPage";
+import MyPage from "./pages/MyPage";
 
 const MainContainer = styled.div`
   flex-direction: column;
@@ -35,6 +36,7 @@ const App = () => {
           <Route path="/recruit" element={<RecruitPage />} />
           <Route path="/schedule-manage" element={<ScheduleManagePage />} />
           <Route path="/sign" element={<SignupPage />} />
+          <Route path="/mypage" element={<MyPage />} />
         </Routes>
       </MainContainer>
       <Footer />
