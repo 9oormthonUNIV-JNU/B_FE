@@ -13,24 +13,24 @@ type CustomTextProps = {
 
 const getFontStyles = (
   textStyle?: TextStyle
-): { size: number; weight: number } => {
+): { size: string; weight: number } => {
   switch (textStyle) {
     case "h1":
-      return { size: 48, weight: 600 };
+      return { size: "clamp(32px, 4vw, 48px)", weight: 600 };
     case "h2":
-      return { size: 40, weight: 600 };
+      return { size: "clamp(28px, 3.5vw, 40px)", weight: 600 };
     case "h3":
-      return { size: 32, weight: 600 };
+      return { size: "clamp(24px, 3vw, 32px)", weight: 600 };
     case "b1":
-      return { size: 32, weight: 500 };
+      return { size: "clamp(24px, 3vw, 32px)", weight: 500 };
     case "b2":
-      return { size: 24, weight: 500 };
+      return { size: "clamp(18px, 2.5vw, 24px)", weight: 500 };
     case "b3":
-      return { size: 20, weight: 500 };
+      return { size: "clamp(16px, 2vw, 20px)", weight: 500 };
     case "nav":
-      return { size: 16, weight: 600 };
+      return { size: "clamp(14px, 1.5vw, 16px)", weight: 600 };
     default:
-      return { size: 24, weight: 700 };
+      return { size: "clamp(18px, 2vw, 24px)", weight: 700 };
   }
 };
 
@@ -41,7 +41,7 @@ const getLineHeight = (line?: number): string => {
 const StyledText = styled.span<CustomTextProps>`
   font-family: "Pretendard";
   font-weight: ${({ textStyle }) => getFontStyles(textStyle).weight};
-  font-size: ${({ textStyle }) => `${getFontStyles(textStyle).size}px`};
+  font-size: ${({ textStyle }) => getFontStyles(textStyle).size};
   color: ${({ color }) => color || "black"};
   line-height: ${({ line }) => getLineHeight(line)};
 `;

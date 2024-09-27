@@ -14,7 +14,7 @@ const HeaderContainer = styled.div`
   align-items: center;
   box-sizing: border-box;
   z-index: 1000;
-  background-color: #97bffc;
+  background-color: #9fbef7;
 `;
 
 const HeaderButtonContainer = styled.button`

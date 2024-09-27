@@ -6,6 +6,8 @@ import {
   CampusIntroductionData,
   ExtracurricularIntroductionData,
 } from "../constants/List";
+import IntroductionLogo from "../components/common/templates/IntroductionLogo";
+import Introduction from "../components/common/templates/Introduction";
 
 const MainContainer = styled.div`
   display: flex;
@@ -42,13 +44,8 @@ const Spacer = styled.div`
 const HomePage = () => {
   return (
     <MainContainer>
-      <FirstContainer>
-        <CustomText textStyle="h1">구름톤 유니브 전남대</CustomText>
-        <CustomText textStyle="b1">
-          구름톤 유니브는 goorm과 kakao에서 후원하는 전국 IT연합 동아리로,
-          전남대학교는 구름톤 유니브에 2기부터 함께하게 되었습니다.
-        </CustomText>
-      </FirstContainer>
+      <IntroductionLogo />
+      <Introduction />
       <SecondContainer>
         <CustomText textStyle="h1">구름톤 유니브 전남대만의 활동</CustomText>
         <Spacer />

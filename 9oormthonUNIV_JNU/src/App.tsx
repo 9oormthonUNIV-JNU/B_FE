@@ -14,8 +14,7 @@ import SignupPage from "./pages/SignupPage";
 import MyPage from "./pages/MyPage";
 
 const MainContainer = styled.div`
-  flex-direction: column;
-  padding: 50px 100px;
+  display: flex;
   flex-direction: column;
   gap: 40px;
   margin-bottom: 336px;
