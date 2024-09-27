@@ -9,6 +9,7 @@ type CustomTextProps = {
   textStyle?: TextStyle;
   color?: string;
   line?: number;
+  onClick?: () => void;
 };
 
 const getFontStyles = (
@@ -52,9 +53,15 @@ const CustomText: React.FC<CustomTextProps> = ({
   textStyle,
   color = "black",
   line,
+  onClick,
 }) => {
   return (
-    <StyledText textStyle={textStyle} color={color} line={line}>
+    <StyledText
+      textStyle={textStyle}
+      color={color}
+      line={line}
+      onClick={onClick}
+    >
       {children}
     </StyledText>
   );

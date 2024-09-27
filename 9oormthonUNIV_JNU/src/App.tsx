@@ -1,3 +1,4 @@
+// App.js
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./components/common/organisms/Header";
 import Footer from "./components/common/organisms/Footer";
@@ -13,32 +14,40 @@ import ScheduleManagePage from "./pages/ScheduleManagePage";
 import SignupPage from "./pages/SignupPage";
 import MyPage from "./pages/MyPage";
 
+const AppContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+`;
+
 const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 40px;
-  margin-bottom: 336px;
+  flex-grow: 1;
+  overflow: auto;
 `;
 
 const App = () => {
   return (
     <Router>
-      <Header />
-      <MainContainer>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/activity-manage" element={<ActivityManagePage />} />
-          <Route path="/activity" element={<ActivityPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/member-approval" element={<MemberApprovalPage />} />
-          <Route path="/member" element={<MemberPage />} />
-          <Route path="/recruit" element={<RecruitPage />} />
-          <Route path="/schedule-manage" element={<ScheduleManagePage />} />
-          <Route path="/sign" element={<SignupPage />} />
-          <Route path="/mypage" element={<MyPage />} />
-        </Routes>
-      </MainContainer>
-      <Footer />
+      <AppContainer>
+        <Header />
+        <MainContainer>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/activity-manage" element={<ActivityManagePage />} />
+            <Route path="/activity" element={<ActivityPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/member-approval" element={<MemberApprovalPage />} />
+            <Route path="/member" element={<MemberPage />} />
+            <Route path="/recruit" element={<RecruitPage />} />
+            <Route path="/schedule-manage" element={<ScheduleManagePage />} />
+            <Route path="/sign" element={<SignupPage />} />
+            <Route path="/mypage" element={<MyPage />} />
+          </Routes>
+        </MainContainer>
+        <Footer />
+      </AppContainer>
     </Router>
   );
 };
