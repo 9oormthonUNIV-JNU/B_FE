@@ -1,5 +1,7 @@
+import LoginLogo from "../components/common/templates/LoginLogo";
+
 const LoginPage = () => {
-  return <div>LoginPage</div>;
+  return <LoginLogo></LoginLogo>;
 };
 
 export default LoginPage;

@@ -64,7 +64,6 @@ const Header = () => {
   const handleButtonClick = (option: string) => {
     setActiveOption(option);
 
-    // 각 옵션에 따라 경로 설정
     switch (option) {
       case "Member":
         navigate("/member");
@@ -85,7 +84,7 @@ const Header = () => {
 
   return (
     <HeaderContainer>
-      <div>
+      <div style={{ cursor: "pointer" }} onClick={() => navigate("/")}>
         <img src={logo_horizontal} />
         <CustomText color="white">&nbsp;: CNU</CustomText>
       </div>
