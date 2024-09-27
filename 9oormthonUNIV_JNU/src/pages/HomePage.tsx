@@ -94,8 +94,8 @@ const ExtracurricularIntroductionData = [
     },
     {
       icon: icon_party,
-      subject: "",
-      contents: "",
+      subject: "애프터파티 9UAP",
+      contents: "9UAP은 ‘9oormthonUNIV After Party’의 약자로, 해커톤 대상 및 최우수 수상자들 그리고 현직 전문가들의 세미나와 마무리 회고를 진행하는 행사입니다.",
       image: img_flower,
     },
   ];

@@ -3,7 +3,7 @@ import CustomText from "../atoms/CustomText";
 
 const BarContainer = styled.div`
   display: flex;
-  margin: 80px;
+  width: 100%;
   height: 65px;
   padding: 14px 27px;
   align-items: center;
