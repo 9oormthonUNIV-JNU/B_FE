@@ -42,9 +42,7 @@ const ActivityBox: React.FC<ActivityBoxProps> = ({ image, subject, tag }) => {
       <ActivityContainer>
         <ActivityImage src={image} />
         <ActivityContents>
-          <CustomText weight={500} size={28}>
-            {subject}
-          </CustomText>
+          <CustomText textStyle="b2">{subject}</CustomText>
           <TagContainer>
             <CustomTag>{tag}</CustomTag>
           </TagContainer>

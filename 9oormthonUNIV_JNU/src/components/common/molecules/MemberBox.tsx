@@ -40,9 +40,7 @@ const MemberBox: React.FC<MemberBoxProps> = ({
     <CustomBox width={320} height={470}>
       <MemberImage src={image} alt={name} />
       <MemberContents>
-        <CustomText weight={500} size={28}>
-          {name}
-        </CustomText>
+        <CustomText textStyle="b2">{name}</CustomText>
         <TagContainer>
           <CustomTag>{generation}기</CustomTag>
           <CustomTag>{part}</CustomTag>

@@ -43,6 +43,8 @@ const FilterButton = () => {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [dropdownWidth, setDropdownWidth] = useState("200px");
 
+  const options = ["PM", "PD", "FE", "BE"];
+
   const toggleDropdown = () => {
     setIsOpen((prev) => !prev);
   };
@@ -62,28 +64,19 @@ const FilterButton = () => {
   return (
     <div style={{ position: "relative" }}>
       <FilterButtonContainer ref={buttonRef} onClick={toggleDropdown}>
-        <CustomText weight={500} size={20}>
-          {selectedOption}
-        </CustomText>
+        <CustomText textStyle="b3">{selectedOption}</CustomText>
         <img src={icon_down} alt="down arrow" />
       </FilterButtonContainer>
       {isOpen && (
         <DropdownMenu width={dropdownWidth}>
-          <DropdownItem onClick={() => handleOptionClick("옵션 1")}>
-            <CustomText weight={500} size={20}>
-              옵션 1
-            </CustomText>
-          </DropdownItem>
-          <DropdownItem onClick={() => handleOptionClick("옵션 2")}>
-            <CustomText weight={500} size={20}>
-              옵션 2
-            </CustomText>
-          </DropdownItem>
-          <DropdownItem onClick={() => handleOptionClick("옵션 3")}>
-            <CustomText weight={500} size={20}>
-              옵션 3
-            </CustomText>
-          </DropdownItem>
+          {options.map((option) => (
+            <DropdownItem
+              key={option}
+              onClick={() => handleOptionClick(option)}
+            >
+              <CustomText textStyle="b3">{option}</CustomText>
+            </DropdownItem>
+          ))}
         </DropdownMenu>
       )}
     </div>

@@ -42,13 +42,9 @@ const IntroductionBox: React.FC<IntroductionBoxProps> = ({
         <IntroductionContents>
           <div style={{ display: "flex", gap: "10px" }}>
             <img src={icon} />
-            <CustomText size={32} weight={600}>
-              {subject}
-            </CustomText>
+            <CustomText textStyle="h3">{subject}</CustomText>
           </div>
-          <CustomText size={20} weight={500} line={30}>
-            {contents}
-          </CustomText>
+          <CustomText textStyle="b3">{contents}</CustomText>
         </IntroductionContents>
         <IntroductionImage src={image} />
       </IntroductionContainer>

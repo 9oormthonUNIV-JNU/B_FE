@@ -30,12 +30,8 @@ const Contact: React.FC<ContactProps> = ({ logo, platform, id }) => {
     <ContactContainer>
       <ContactIcon src={logo} />
       <ContactContent>
-        <CustomText weight={600} size={32}>
-          {platform}
-        </CustomText>
-        <CustomText weight={500} size={28}>
-          {id}
-        </CustomText>
+        <CustomText textStyle="h3">{platform}</CustomText>
+        <CustomText textStyle="b2">{id}</CustomText>
       </ContactContent>
     </ContactContainer>
   );

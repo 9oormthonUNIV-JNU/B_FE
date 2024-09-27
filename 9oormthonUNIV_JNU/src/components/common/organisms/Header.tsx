@@ -35,7 +35,7 @@ const HeaderButton: React.FC<HeaderButtonProps> = ({
 }) => {
   return (
     <HeaderButtonContainer onClick={onClick} style={{ cursor: "pointer" }}>
-      <CustomText size={16} weight={600} color={isActive ? "#FF6D57" : "white"}>
+      <CustomText textStyle="nav" color={isActive ? "#FF6D57" : "white"}>
         {option}
       </CustomText>
     </HeaderButtonContainer>
@@ -59,9 +59,7 @@ const Header = () => {
     <HeaderContainer>
       <div>
         <img src={logo_horizontal} />
-        <CustomText weight={700} size={24} color="white">
-          &nbsp;: CNU
-        </CustomText>
+        <CustomText color="white">&nbsp;: CNU</CustomText>
       </div>
       <OptionContainer>
         {["Member", "Activities", "Recruit", "Login"].map((option) => (

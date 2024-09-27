@@ -41,31 +41,23 @@ const Spacer = styled.div`
 
 const HomePage = () => {
   return (
-    <>
-      <MainContainer>
-        <FirstContainer>
-          <CustomText weight={600} size={64}>
-            구름톤 유니브 전남대
-          </CustomText>
-          <CustomText weight={500} size={36}>
-            구름톤 유니브는 goorm과 kakao에서 후원하는 전국 IT연합 동아리로,
-            전남대학교는 구름톤 유니브에 2기부터 함께하게 되었습니다.
-          </CustomText>
-        </FirstContainer>
-        <SecondContainer>
-          <CustomText weight={600} size={64}>
-            구름톤 유니브 전남대만의 활동
-          </CustomText>
-          <Spacer />
-          <HomeBar>교내활동</HomeBar>
-          <IntroductionBoxes introductionData={CampusIntroductionData} />
-          <HomeBar>교외활동</HomeBar>
-          <IntroductionBoxes
-            introductionData={ExtracurricularIntroductionData}
-          />
-        </SecondContainer>
-      </MainContainer>
-    </>
+    <MainContainer>
+      <FirstContainer>
+        <CustomText textStyle="h1">구름톤 유니브 전남대</CustomText>
+        <CustomText textStyle="b1">
+          구름톤 유니브는 goorm과 kakao에서 후원하는 전국 IT연합 동아리로,
+          전남대학교는 구름톤 유니브에 2기부터 함께하게 되었습니다.
+        </CustomText>
+      </FirstContainer>
+      <SecondContainer>
+        <CustomText textStyle="h1">구름톤 유니브 전남대만의 활동</CustomText>
+        <Spacer />
+        <HomeBar>교내활동</HomeBar>
+        <IntroductionBoxes introductionData={CampusIntroductionData} />
+        <HomeBar>교외활동</HomeBar>
+        <IntroductionBoxes introductionData={ExtracurricularIntroductionData} />
+      </SecondContainer>
+    </MainContainer>
   );
 };
 
