@@ -2,10 +2,10 @@ import styled from "styled-components";
 import logo_horizontal from "../../../assets/images/logo_horizontal.svg";
 import CustomText from "../atoms/CustomText";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const HeaderContainer = styled.div`
   display: flex;
-  margin: 0;
   flex-direction: row;
   width: 100%;
   padding: 25px 100px;
@@ -13,13 +13,13 @@ const HeaderContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   box-sizing: border-box;
-  z-index: 1000;
   background-color: #9fbef7;
 `;
 
 const HeaderButtonContainer = styled.button`
   border: none;
   background: none;
+  cursor: pointer;
 `;
 
 type HeaderButtonProps = {
@@ -33,9 +33,18 @@ const HeaderButton: React.FC<HeaderButtonProps> = ({
   isActive,
   onClick,
 }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
-    <HeaderButtonContainer onClick={onClick} style={{ cursor: "pointer" }}>
-      <CustomText textStyle="nav" color={isActive ? "#FF6D57" : "white"}>
+    <HeaderButtonContainer
+      onClick={onClick}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <CustomText
+        textStyle="nav"
+        color={isHovered ? "#FFA6A6" : isActive ? "#FF6D57" : "white"}
+      >
         {option}
       </CustomText>
     </HeaderButtonContainer>
@@ -50,9 +59,28 @@ const OptionContainer = styled.div`
 
 const Header = () => {
   const [activeOption, setActiveOption] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const handleButtonClick = (option: string) => {
     setActiveOption(option);
+
+    // 각 옵션에 따라 경로 설정
+    switch (option) {
+      case "Member":
+        navigate("/member");
+        break;
+      case "Activities":
+        navigate("/activity");
+        break;
+      case "Recruit":
+        navigate("/recruit");
+        break;
+      case "Login":
+        navigate("/login");
+        break;
+      default:
+        break;
+    }
   };
 
   return (
