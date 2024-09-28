@@ -5,10 +5,10 @@ const BarContainer = styled.div`
   display: flex;
   width: 100%;
   height: 65px;
-  padding: 14px 27px;
+  padding: 15px 30px;
   align-items: center;
   background-color: #97bffc;
-
+  box-sizing: border-box;
 `;
 
 interface HomeBarProps {
@@ -18,7 +18,7 @@ interface HomeBarProps {
 const HomeBar: React.FC<HomeBarProps> = ({ children }) => {
   return (
     <BarContainer>
-      <CustomText weight={600} size={32} color="#FFF">
+      <CustomText textStyle="h3" color="#FFF">
         {children}
       </CustomText>
     </BarContainer>

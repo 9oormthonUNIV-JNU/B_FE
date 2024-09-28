@@ -18,9 +18,7 @@ type CustomTagProps = {
 const CustomTag: React.FC<CustomTagProps> = ({ children, backgroundColor }) => {
   return (
     <StyledTag backgroundColor={backgroundColor}>
-      <CustomText color="black" weight={500} size={20}>
-        {children}
-      </CustomText>
+      <CustomText textStyle="b3">{children}</CustomText>
     </StyledTag>
   );
 };

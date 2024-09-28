@@ -2,6 +2,7 @@ import styled from "styled-components";
 import CustomText from "../atoms/CustomText";
 import icon_github from "../../../assets/images/icon_github.svg";
 import icon_instagram from "../../../assets/images/icon_instagram.svg";
+import logo_horizontal from "../../../assets/images/logo_horizontal.svg";
 
 const FooterContainer = styled.div`
   position: relative;
@@ -24,26 +25,46 @@ const FooterContainer = styled.div`
     gap: 50px;
     align-self: flex-start;
   }
+
+  .footer_button {
+    cursor: pointer;
+  }
 `;
 
 const Footer = () => {
   return (
     <FooterContainer>
       <div className="footer_logo">
-        <CustomText size={36} weight={700} color="white">
-          9oormthon UNIV: CNU
-        </CustomText>
-        <CustomText size={20} weight={500} color="white">
+        <div>
+          <img src={logo_horizontal} />
+          <CustomText color="white">&nbsp;: CNU</CustomText>
+        </div>
+        <CustomText textStyle="b3" color="white">
           "사계절 구름과 함께"
         </CustomText>
         <div style={{ height: "120px" }} />
-        <CustomText size={14} weight={500} color="white">
+        <CustomText textStyle="nav" color="white">
           ⓒ goorm Inc. All rights Reserved.
         </CustomText>
       </div>
       <div className="footer_icon">
-        <img src={icon_github} width={48} />
-        <img src={icon_instagram} width={48} />
+        <img
+          className="footer_button"
+          src={icon_github}
+          width={48}
+          onClick={() =>
+            (window.location.href = "https://github.com/9oormthonUNIV-JNU")
+          }
+        />
+        <img
+          className="footer_button"
+          src={icon_instagram}
+          width={48}
+          onClick={() =>
+            (window.location.href =
+              "https://www.instagram.com/9oormthon_univ_jnu/")
+          }
+        />
       </div>
     </FooterContainer>
   );

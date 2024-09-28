@@ -57,9 +57,7 @@ const Accordion: React.FC<AccordionProps> = ({ title, children }) => {
   return (
     <AccordionContainer>
       <AccordionHeader onClick={toggleAccordion} isOpen={isOpen}>
-        <CustomText weight={600} size={20}>
-          {title}
-        </CustomText>
+        <CustomText textStyle="h3">{title}</CustomText>{" "}
         <img style={{ paddingRight: "20px" }} src={icon_down} />
       </AccordionHeader>
       <AccordionContent
@@ -67,9 +65,7 @@ const Accordion: React.FC<AccordionProps> = ({ title, children }) => {
         contentHeight={contentHeight}
         ref={contentRef}
       >
-        <CustomText weight={500} size={16} color="#5E5E5E">
-          {children}
-        </CustomText>
+        <CustomText textStyle="b2">{children}</CustomText>
       </AccordionContent>
     </AccordionContainer>
   );

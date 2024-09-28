@@ -26,7 +26,7 @@ const LabelButton: React.FC<LabelButtonProps> = ({ label }) => {
   };
   return (
     <LabelButtonContainer isActive={isActive} onClick={handleClick}>
-      <CustomText weight={500} size={20} color={isActive ? "white" : "black"}>
+      <CustomText textStyle="b3" color={isActive ? "white" : "black"}>
         {label}
       </CustomText>
     </LabelButtonContainer>
