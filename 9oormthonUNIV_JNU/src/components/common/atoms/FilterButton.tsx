@@ -49,7 +49,7 @@ const FilterButton: React.FC<FilterButtonProps> = ({ filterType }) => {
 
   // Options based on the filter type
   const options =
-    filterType === "파트별" ? ["PM", "PD", "FE", "BE"] : ["2기", "3기"];
+    filterType === "파트별" ? ["전체","PM", "PD", "FE", "BE"] : ["전체","2기", "3기"];
 
   const toggleDropdown = () => {
     setIsOpen((prev) => !prev);
