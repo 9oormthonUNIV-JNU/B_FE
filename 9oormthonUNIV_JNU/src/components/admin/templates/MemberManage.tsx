@@ -1,5 +1,11 @@
+import ApprovedMember from "../atoms/ApprovedMember";
+
 const MemeberManage = () => {
-  return <div>MemeberManage</div>;
+  return (
+    <div>
+      <ApprovedMember />
+    </div>
+  );
 };
 
 export default MemeberManage;
