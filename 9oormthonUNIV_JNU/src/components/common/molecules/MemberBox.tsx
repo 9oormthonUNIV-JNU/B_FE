@@ -26,14 +26,14 @@ const TagContainer = styled.div`
 type MemberBoxProps = {
   image: string;
   name: string;
-  generation: number;
+  generations: number[];
   part: "PM" | "PD" | "FE" | "BE";
 };
 
 const MemberBox: React.FC<MemberBoxProps> = ({
   image,
   name,
-  generation,
+  generations,
   part,
 }) => {
   return (
@@ -42,7 +42,9 @@ const MemberBox: React.FC<MemberBoxProps> = ({
       <MemberContents>
         <CustomText textStyle="b2">{name}</CustomText>
         <TagContainer>
-          <CustomTag>{generation}기</CustomTag>
+        {generations.map((gen, index) => (
+            <CustomTag key={index}>{gen}기</CustomTag>
+          ))}
           <CustomTag>{part}</CustomTag>
         </TagContainer>
       </MemberContents>

@@ -1,5 +1,7 @@
+import MemberTemplate from "../components/common/templates/MemberTemplate";
+
 const MemberPage = () => {
-  return <div>MemberPage</div>;
+  return <MemberTemplate/>;
 };
 
 export default MemberPage;
