@@ -20,7 +20,7 @@ const AdminPageConatiner = styled.div`
 `;
 
 const AdminPage = () => {
-  const [selectedMenu, setSelectedMenu] = useState("회원 관리");
+  const [selectedMenu, setSelectedMenu] = useState("일정 관리");
 
   const renderContent = () => {
     switch (selectedMenu) {

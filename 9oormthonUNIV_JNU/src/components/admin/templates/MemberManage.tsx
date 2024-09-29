@@ -2,7 +2,7 @@ import PendingMemberList from "../organisms/PendingMemberList";
 import ApprovedMemberList from "../organisms/ApprovedMemberList";
 import styled from "styled-components";
 
-const MemberManage = styled.div`
+const MemberManageContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 80px;
@@ -12,10 +12,10 @@ const MemberManage = styled.div`
 const MemeberManage = () => {
   return (
     <div>
-      <MemberManage>
+      <MemberManageContainer>
         <PendingMemberList />
         <ApprovedMemberList />
-      </MemberManage>
+      </MemberManageContainer>
     </div>
   );
 };
