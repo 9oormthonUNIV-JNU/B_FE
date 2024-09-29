@@ -3,20 +3,22 @@ import CustomText from "./CustomText";
 
 type ButtonProps = {
   borderColor?: string;
+  width?: number;
+  height?: number;
   bgColor?: string;
-  radius?: string;
+  radius?: number;
   textColor?: string;
   textStyle?: "h1" | "h2" | "h3" | "b1" | "b2" | "b3" | "nav";
   onClick?: () => void;
 };
 
 const StyledButton = styled.button<ButtonProps>`
-  border: ${(props) => `1px solid ${props.borderColor || "#8FABDE"}`};
+  border: 1px solid ${(props) => props.borderColor || "#8FABDE"};
   background-color: ${(props) => props.bgColor || "#9fbef7"};
-  border-radius: ${(props) => (props.radius ? `${props.radius}px` : `20px`)};
-  color: ${(props) => props.textColor || "#5e5e5e"};
-  height: 70px;
-  width: 100%;
+  border-radius: ${(props) => `${props.radius || 20}px`};
+  color: ${(props) => props.textColor || "#2B2D36"};
+  height: ${(props) => `${props.height || 64}px`};
+  width: ${(props) => (props.width ? `${props.width}px` : "100%")};
   cursor: pointer;
 `;
 
@@ -26,8 +28,10 @@ const CustomButton: React.FC<ButtonProps & { children: React.ReactNode }> = ({
   bgColor,
   radius,
   textColor,
-  textStyle,
+  textStyle = "b3",
   onClick,
+  width,
+  height,
 }) => {
   return (
     <StyledButton
@@ -35,6 +39,8 @@ const CustomButton: React.FC<ButtonProps & { children: React.ReactNode }> = ({
       bgColor={bgColor}
       radius={radius}
       textColor={textColor}
+      width={width}
+      height={height}
       onClick={onClick}
     >
       <CustomText textStyle={textStyle} color={textColor}>

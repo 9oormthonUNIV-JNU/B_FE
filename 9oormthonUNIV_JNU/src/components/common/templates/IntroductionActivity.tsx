@@ -5,7 +5,7 @@ import IntroductionBoxes from "../organisms/IntroductionBoxes";
 import {
   CampusIntroductionData,
   ExtracurricularIntroductionData,
-} from "../../../constants/List";
+} from "../../../constants/IntrouctionList";
 
 const IntroductionContainer = styled.div`
   display: flex;
