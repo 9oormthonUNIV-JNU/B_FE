@@ -38,18 +38,15 @@ const DropdownItem = styled.div`
 `;
 
 type FilterButtonProps = {
-  filterType: "파트별" | "기수별";
+  filterType: string;
+  options: string[];
 };
 
-const FilterButton: React.FC<FilterButtonProps> = ({ filterType }) => {
+const FilterButton: React.FC<FilterButtonProps> = ({ filterType, options }) => {
   const [selectedOption, setSelectedOption] = useState<string>(filterType);
   const [isOpen, setIsOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [dropdownWidth, setDropdownWidth] = useState("200px");
-
-  // Options based on the filter type
-  const options =
-    filterType === "파트별" ? ["전체","PM", "PD", "FE", "BE"] : ["전체","2기", "3기"];
 
   const toggleDropdown = () => {
     setIsOpen((prev) => !prev);

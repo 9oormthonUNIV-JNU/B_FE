@@ -17,25 +17,25 @@ const MemberBoxes: React.FC<{
         name: string;
         generations: number[];
         part: "PM" | "PD" | "FE" | "BE";
-  }>;
+    }>;
 }> = ({ MemberData }) => {
-  if (!MemberData || MemberData.length === 0) {
-    return null;
-  }
+    if (!MemberData || MemberData.length === 0) {
+        return null;
+    }
 
-  return (
-    <MemberBoxesContainer>
-      {MemberData.map((data, index) => (
-        <MemberBox
-          key={index}
-          image={data.image}
-          name={data.name}
-          generations={data.generations}
-          part={data.part}
-        />
-      ))}
-    </MemberBoxesContainer>
-  );
+    return (
+        <MemberBoxesContainer>
+            {MemberData.map((data, index) => (
+                <MemberBox
+                    key={index}
+                    image={data.image}
+                    name={data.name}
+                    generations={data.generations}
+                    part={data.part}
+                />
+            ))}
+        </MemberBoxesContainer>
+    );
 };
 
 export default MemberBoxes;

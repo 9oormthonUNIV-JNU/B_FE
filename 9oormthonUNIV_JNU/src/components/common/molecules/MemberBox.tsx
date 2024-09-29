@@ -42,7 +42,7 @@ const MemberBox: React.FC<MemberBoxProps> = ({
       <MemberContents>
         <CustomText textStyle="b2">{name}</CustomText>
         <TagContainer>
-        {generations.map((gen, index) => (
+          {generations.map((gen, index) => (
             <CustomTag key={index}>{gen}기</CustomTag>
           ))}
           <CustomTag>{part}</CustomTag>

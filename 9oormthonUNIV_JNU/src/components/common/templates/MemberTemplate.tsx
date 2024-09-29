@@ -26,19 +26,20 @@ const MemberTemplateContainer = styled.div`
 `;
 
 const MemberTemplate = () => {
-return (
-    <MemberTemplateContainer>
-      <div className="member_content">
-      <CustomText textStyle="h1">Member</CustomText>
-      </div>
-      <div className="filter_button">
-      <FilterButton filterType="파트별"/>
-      <FilterButton filterType="기수별"/>
-      </div>
-      
-    <MemberBoxes MemberData={MemberData}/>
-    </MemberTemplateContainer>
-);
+    return (
+        <MemberTemplateContainer>
+            <div className="member_content">
+                <CustomText textStyle="h1">Member</CustomText>
+            </div>
+            <div className="filter_button">
+                <FilterButton filterType="파트별" options={["전체", "PM", "PD", "FE", "BE"]} />
+                <FilterButton filterType="기수별" options={["전체", "2기", "3기"]} />
+
+            </div>
+
+            <MemberBoxes MemberData={MemberData} />
+        </MemberTemplateContainer>
+    );
 
 };
 
