@@ -1,18 +1,15 @@
-// App.js
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./components/common/organisms/Header";
 import Footer from "./components/common/organisms/Footer";
 import styled from "styled-components";
 import HomePage from "./pages/HomePage";
-import ActivityManagePage from "./pages/ActivityManagePage";
 import ActivityPage from "./pages/ActivityPage";
 import LoginPage from "./pages/LoginPage";
-import MemberApprovalPage from "./pages/MemberApprovalPage";
 import MemberPage from "./pages/MemberPage";
 import RecruitPage from "./pages/RecruitPage";
-import ScheduleManagePage from "./pages/ScheduleManagePage";
 import SignupPage from "./pages/SignupPage";
 import MyPage from "./pages/MyPage";
+import AdminPage from "./pages/AdminPage";
 
 const AppContainer = styled.div`
   display: flex;
@@ -35,15 +32,13 @@ const App = () => {
         <MainContainer>
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/activity-manage" element={<ActivityManagePage />} />
             <Route path="/activity" element={<ActivityPage />} />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/member-approval" element={<MemberApprovalPage />} />
             <Route path="/member" element={<MemberPage />} />
             <Route path="/recruit" element={<RecruitPage />} />
-            <Route path="/schedule-manage" element={<ScheduleManagePage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/mypage" element={<MyPage />} />
+            <Route path="/adminpage" element={<AdminPage />} />
           </Routes>
         </MainContainer>
         <Footer />
