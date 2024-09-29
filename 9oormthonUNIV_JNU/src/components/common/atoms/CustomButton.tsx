@@ -14,9 +14,10 @@ type ButtonProps = {
 };
 
 const StyledButton = styled.button<ButtonProps>`
- border-style: solid;
+  border-style: solid;
   border-color: ${(props) => props.borderColor || "#FFF"};
-  border-width: ${(props) => (props.borderWidth ? `${props.borderWidth}px` : `0px`)};
+  border-width: ${(props) =>
+    props.borderWidth ? `${props.borderWidth}px` : `0px`};
   background-color: ${(props) => props.bgColor || "#9fbef7"};
   border-radius: ${(props) => (props.radius ? `${props.radius}px` : `20px`)};
   color: ${(props) => props.textColor || "#5e5e5e"};
@@ -43,8 +44,8 @@ const CustomButton: React.FC<ButtonProps & { children: React.ReactNode }> = ({
 }) => {
   return (
     <StyledButton
-    borderColor={borderColor}
-    borderWidth={borderWidth}
+      borderColor={borderColor}
+      borderWidth={borderWidth}
       bgColor={bgColor}
       radius={radius}
       textColor={textColor}
