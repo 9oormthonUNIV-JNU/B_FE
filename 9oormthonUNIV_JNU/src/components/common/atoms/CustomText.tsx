@@ -46,6 +46,7 @@ const StyledText = styled.span<CustomTextProps>`
   color: ${({ color }) => color || "black"};
   line-height: ${({ line }) => getLineHeight(line)};
   white-space: pre-line;
+  cursor: ${({ onClick }) => (onClick ? "pointer" : "default")};
 `;
 
 const CustomText: React.FC<CustomTextProps> = ({
