@@ -2,7 +2,7 @@ import CustomText from "../../common/atoms/CustomText";
 import CustomTag from "../../common/atoms/CustomTag";
 import styled from "styled-components";
 
-const PendingMemberContainer = styled.div`
+const PendingMemberItemContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 512px;
@@ -25,17 +25,31 @@ const PendingMemberContainer = styled.div`
   }
 `;
 
-const PendingMember = () => {
+type PendingMemberItemProps = {
+  name: string;
+  email: string;
+  applicationDate: string;
+};
+
+const PendingMemberItem: React.FC<PendingMemberItemProps> = ({
+  name,
+  email,
+  applicationDate,
+}) => {
   return (
-    <PendingMemberContainer>
+    <PendingMemberItemContainer>
       <div>
-        <CustomText textStyle="b2">최지원 {""}</CustomText>
+        <CustomText textStyle="b2">
+          {name} {""}
+        </CustomText>
         <CustomText textStyle="b2" color="#ABABAB">
-          (email@email.com)
+          {"("}
+          {email}
+          {")"}
         </CustomText>
       </div>
       <div className="pending_bottom">
-        <CustomText textStyle="b3">신청일 : 2024. 09. 29</CustomText>
+        <CustomText textStyle="b3">신청일 : {applicationDate}</CustomText>
         <div className="pending_button_container">
           <CustomTag backgroundColor="#E1EBFD" onClick={() => {}}>
             승인
@@ -45,8 +59,8 @@ const PendingMember = () => {
           </CustomTag>
         </div>
       </div>
-    </PendingMemberContainer>
+    </PendingMemberItemContainer>
   );
 };
 
-export default PendingMember;
+export default PendingMemberItem;

@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import CustomText from "../../common/atoms/CustomText";
 import CustomTag from "../../common/atoms/CustomTag";
 import icon_kebab from "../../../assets/images/icon_kebab.svg";
 
-const ApprovedMemberContainer = styled.div`
+const ApprovedMemberItemContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 512px;
@@ -38,7 +38,19 @@ const ApprovedMemberContainer = styled.div`
   }
 `;
 
-const ApprovedMember = () => {
+type ApprovedMemberItemProps = {
+  name: string;
+  email: string;
+  generation: number;
+  part: "PM" | "PD" | "FE" | "BE";
+};
+
+const ApprovedMemberItem: React.FC<ApprovedMemberItemProps> = ({
+  name,
+  email,
+  generation,
+  part,
+}) => {
   const [isKebabOpen, setIsKebabOpen] = useState(false);
 
   const toggleKebab = () => {
@@ -55,12 +67,16 @@ const ApprovedMember = () => {
   };
 
   return (
-    <ApprovedMemberContainer>
+    <ApprovedMemberItemContainer>
       <div className="approved_name">
         <div>
-          <CustomText textStyle="b2">최지원 {""}</CustomText>
+          <CustomText textStyle="b2">
+            {name} {""}
+          </CustomText>
           <CustomText textStyle="b2" color="#ABABAB">
-            (email@email.com)
+            {"("}
+            {email}
+            {")"}
           </CustomText>
         </div>
         <div className="approved_kebab" onClick={toggleKebab}>
@@ -69,8 +85,8 @@ const ApprovedMember = () => {
       </div>
       <div className="tag_and_delete_container">
         <div className="approved_tag_container">
-          <CustomTag backgroundColor="#E1EBFD">3기</CustomTag>
-          <CustomTag backgroundColor="#F7F7F7">PM</CustomTag>
+          <CustomTag backgroundColor="#E1EBFD">{generation}기</CustomTag>
+          <CustomTag backgroundColor="#F7F7F7">{part}</CustomTag>
         </div>
         {isKebabOpen && (
           <CustomTag
@@ -82,8 +98,8 @@ const ApprovedMember = () => {
           </CustomTag>
         )}
       </div>
-    </ApprovedMemberContainer>
+    </ApprovedMemberItemContainer>
   );
 };
 
-export default ApprovedMember;
+export default ApprovedMemberItem;

@@ -40,13 +40,16 @@ const AdminPage = () => {
       <div className="admin">
         <CustomText textStyle="h1">Admin Page</CustomText>
       </div>
-      {/*<MenuBar
-        options={["회원 관리", "일정 관리", "게시글 관리"]}
-        onOptionClick={setSelectedMenu}
-      />*/}
       <div>{renderContent()}</div>
     </AdminPageConatiner>
   );
 };
 
 export default AdminPage;
+
+{
+  /* <MenuBar
+        options={["회원 관리", "일정 관리", "게시글 관리"]}
+        onOptionClick={setSelectedMenu}
+      /> */
+}
