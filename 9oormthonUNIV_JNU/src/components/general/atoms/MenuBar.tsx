@@ -3,8 +3,8 @@ import styled from "styled-components";
 import CustomText from "../../common/atoms/CustomText";
 
 type MenuBarProps = {
-  options: string[]; // 메뉴 항목 배열을 props로 받음
-  onOptionClick?: (option: string) => void; // 선택된 옵션을 처리하는 콜백
+  options: string[];
+  onOptionClick?: (option: string) => void;
 };
 
 const MenuBarContainer = styled.div`
