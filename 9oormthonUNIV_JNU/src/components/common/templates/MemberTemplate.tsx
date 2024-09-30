@@ -14,7 +14,7 @@ const MemberTemplateContainer = styled.div`
 
   .member_content {
     padding: 80px;
-    marginbotton:71px;
+    margin-bottom: 20px;
   }
 
   .filter_button {

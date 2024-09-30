@@ -5,6 +5,7 @@ import CustomText from "../atoms/CustomText";
 import { RecruitData, EventData } from "../../../constants/ScheduleList";
 import LabelButton from "../atoms/LabelButton";
 import backgroundschedule from "../../../assets/images/background_schedule.svg";
+
 const ScheduleContainer = styled.div`
   background-image: url(${backgroundschedule});
   display: flex;

@@ -33,7 +33,7 @@ const TagContainer = styled.div`
 type ActivityBoxProps = {
   image: string;
   subject: string;
-  tag: string;
+  tag: string[];
 };
 
 const ActivityBox: React.FC<ActivityBoxProps> = ({ image, subject, tag }) => {
@@ -44,7 +44,15 @@ const ActivityBox: React.FC<ActivityBoxProps> = ({ image, subject, tag }) => {
         <ActivityContents>
           <CustomText textStyle="b2">{subject}</CustomText>
           <TagContainer>
-            <CustomTag>{tag}</CustomTag>
+            {tag.map((tagItem, index) => (
+              <CustomTag
+                key={index}
+                backgroundColor={index === 0 ? "#E1EBFD" : "#F7F7F7"}
+                color="#000" 
+              >
+                {tagItem}
+              </CustomTag>
+            ))}
           </TagContainer>
         </ActivityContents>
       </ActivityContainer>
