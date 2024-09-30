@@ -11,18 +11,18 @@ const MemberTemplateContainer = styled.div`
   align-items: center;
   width: 100%;
   box-sizing: border-box;
-  max-width: 1200px; /* 추가 */
-  margin: 0 auto; /* 추가 */
+  max-width: 1200px;
+  margin: 0 auto;
 
   .member_content {
-    padding: 80px;
-    margin-bottom: 71px;
+    margin: 60px 0px;
   }
 
   .filter_button {
     display: flex;
     flex-direction: row;
-    gap: 21px;
+    gap: 20px;
+    justify-content: center;
   }
 `;
 
