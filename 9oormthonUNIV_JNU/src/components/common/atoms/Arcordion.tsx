@@ -4,7 +4,7 @@ import CustomText from "./CustomText";
 import icon_down from "../../../assets/images/icon_down.svg";
 
 const AccordionContainer = styled.div`
-  width: 50%;
+  width: 100%;
   border: none;
   background: #f7f7f7;
   border-radius: 24px;

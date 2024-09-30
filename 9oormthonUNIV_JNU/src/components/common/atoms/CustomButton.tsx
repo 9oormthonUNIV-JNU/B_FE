@@ -3,55 +3,47 @@ import CustomText from "./CustomText";
 
 type ButtonProps = {
   borderColor?: string;
-  borderWidth?: string;
+  width?: number;
+  height?: number;
   bgColor?: string;
-  radius?: string;
+  radius?: number;
   textColor?: string;
-  hoverColor?: string;
   textStyle?: "h1" | "h2" | "h3" | "b1" | "b2" | "b3" | "nav";
-  line?: number;
   onClick?: () => void;
 };
 
 const StyledButton = styled.button<ButtonProps>`
- border-style: solid;
-  border-color: ${(props) => props.borderColor || "#FFF"};
-  border-width: ${(props) => (props.borderWidth ? `${props.borderWidth}px` : `0px`)};
+  border: 1px solid ${(props) => props.borderColor || "#8FABDE"};
   background-color: ${(props) => props.bgColor || "#9fbef7"};
-  border-radius: ${(props) => (props.radius ? `${props.radius}px` : `20px`)};
-  color: ${(props) => props.textColor || "#5e5e5e"};
-  height: 70px;
-  width: 100%;
+  border-radius: ${(props) => `${props.radius || 20}px`};
+  color: ${(props) => props.textColor || "#2B2D36"};
+  height: ${(props) => `${props.height || 64}px`};
+  width: ${(props) => (props.width ? `${props.width}px` : "100%")};
   cursor: pointer;
-
-  &:hover {
-    background-color: ${(props) => props.hoverColor || "#8FABDE"};
-  }
 `;
 
 const CustomButton: React.FC<ButtonProps & { children: React.ReactNode }> = ({
   children,
   borderColor,
-  borderWidth,
   bgColor,
   radius,
   textColor,
-  hoverColor,
-  textStyle,
-  line,
+  textStyle = "b3",
   onClick,
+  width,
+  height,
 }) => {
   return (
     <StyledButton
-    borderColor={borderColor}
-    borderWidth={borderWidth}
+      borderColor={borderColor}
       bgColor={bgColor}
       radius={radius}
       textColor={textColor}
-      hoverColor={hoverColor}
+      width={width}
+      height={height}
       onClick={onClick}
     >
-      <CustomText textStyle={textStyle} color={textColor} line={line}>
+      <CustomText textStyle={textStyle} color={textColor}>
         {children}
       </CustomText>
     </StyledButton>

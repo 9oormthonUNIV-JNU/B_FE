@@ -1,4 +1,4 @@
-import CustomInput from "../atoms/CusotmInput";
+import CustomInput from "../atoms/CustomInput";
 import styled from "styled-components";
 import CustomText from "../atoms/CustomText";
 import CustomButton from "../atoms/CustomButton";

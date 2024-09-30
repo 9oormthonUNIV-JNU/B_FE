@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import CustomText from "./CustomText";
-import { useState } from "react";
 
 const LabelButtonContainer = styled.button<{ isActive: boolean }>`
   cursor: pointer;
@@ -16,16 +15,17 @@ const LabelButtonContainer = styled.button<{ isActive: boolean }>`
 
 type LabelButtonProps = {
   label: string;
+  isActive: boolean;
+  onClick: () => void;
 };
 
-const LabelButton: React.FC<LabelButtonProps> = ({ label }) => {
-  const [isActive, setIsActive] = useState(false);
-
-  const handleClick = () => {
-    setIsActive((prev) => !prev);
-  };
+const LabelButton: React.FC<LabelButtonProps> = ({
+  label,
+  isActive,
+  onClick,
+}) => {
   return (
-    <LabelButtonContainer isActive={isActive} onClick={handleClick}>
+    <LabelButtonContainer isActive={isActive} onClick={onClick}>
       <CustomText textStyle="b3" color={isActive ? "white" : "black"}>
         {label}
       </CustomText>
