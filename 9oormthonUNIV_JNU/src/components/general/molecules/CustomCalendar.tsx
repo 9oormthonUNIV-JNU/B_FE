@@ -32,7 +32,8 @@ const StyledCalendar = styled(Calendar)`
 
   .react-calendar__tile {
     position: relative;
-    height: 100px;
+    height: 145px;
+    width: 145px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
