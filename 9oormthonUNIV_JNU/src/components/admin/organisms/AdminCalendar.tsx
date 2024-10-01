@@ -1,6 +1,6 @@
 import { useState } from "react";
 import CustomCalendar from "../../general/molecules/CustomCalendar";
-import CustomModal from "../atoms/CustomModal";
+import CustomModal from "../molecules/CustomModal";
 import styled from "styled-components";
 import LabelButton from "../../common/atoms/LabelButton";
 
@@ -16,7 +16,7 @@ const MonthNavigation = styled.div`
 `;
 
 type Schedule = {
-  date: Date;
+  date: string;
   name: string;
   member: string;
   description: string;
@@ -25,9 +25,10 @@ type Schedule = {
 const AdminCalendar = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [schedules, setSchedules] = useState<Schedule[]>([]);
+  const [isButtonActive, setIsButtonActive] = useState(false); // isActive 상태 추가
 
-  const [form, setForm] = useState<Schedule>({
-    date: new Date(),
+  const [modalForm, setModalForm] = useState<Schedule>({
+    date: "",
     name: "",
     member: "",
     description: "",
@@ -35,27 +36,28 @@ const AdminCalendar = () => {
 
   const handleOpenModal = () => {
     setModalIsOpen(true);
+    setIsButtonActive(true); // 버튼 클릭 시 isActive 상태를 true로 설정
   };
 
   const handleCloseModal = () => {
     setModalIsOpen(false);
-    setForm({ date: new Date(), name: "", member: "", description: "" });
+    setModalForm({ date: "", name: "", member: "", description: "" });
+    setIsButtonActive(false); // 모달 닫을 때 isActive 상태를 false로 설정
   };
 
-  // 이벤트 핸들러에서 정확한 타입을 명시
-  const handleChange = (
+  const handleModalChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
   ) => {
-    setForm({
-      ...form,
+    setModalForm({
+      ...modalForm,
       [e.target.name]: e.target.value,
     });
   };
 
   const handleSave = () => {
-    setSchedules([...schedules, form]);
+    setSchedules([...schedules, modalForm]);
     handleCloseModal();
   };
 
@@ -63,8 +65,8 @@ const AdminCalendar = () => {
     <AdminCalendarWrapper>
       <MonthNavigation>
         <LabelButton
-          isActive={true}
           label="+ 일정 추가"
+          isActive={isButtonActive} // isActive 상태 전달
           onClick={handleOpenModal}
         />
       </MonthNavigation>
@@ -77,8 +79,8 @@ const AdminCalendar = () => {
         isOpen={modalIsOpen}
         onRequestClose={handleCloseModal}
         onSave={handleSave}
-        form={form}
-        handleChange={handleChange}
+        modalForm={modalForm} // 'modalForm' 전달
+        handleModalChange={handleModalChange} // 'handleModalChange' 전달
       />
     </AdminCalendarWrapper>
   );

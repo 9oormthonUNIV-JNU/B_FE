@@ -15,13 +15,13 @@ const LabelButtonContainer = styled.button<{ isActive: boolean }>`
 
 type LabelButtonProps = {
   label: string;
-  isActive: boolean;
+  isActive?: boolean;
   onClick: () => void;
 };
 
 const LabelButton: React.FC<LabelButtonProps> = ({
   label,
-  isActive,
+  isActive = false,
   onClick,
 }) => {
   return (

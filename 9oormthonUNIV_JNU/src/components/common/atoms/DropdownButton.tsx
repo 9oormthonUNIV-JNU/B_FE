@@ -1,13 +1,15 @@
 import styled from "styled-components";
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import CustomText from "./CustomText";
 import icon_down from "../../../assets/images/icon_down.svg";
 
 type DropdownButtonProps = {
-  label: string;
+  label?: string;
   options: string[];
   value?: string;
   onChange?: (selected: string) => void;
+  style?: React.CSSProperties;
+  form?: boolean;
 };
 
 const DropdownContainer = styled.div`
@@ -22,12 +24,13 @@ const DropdownContainer = styled.div`
   }
 `;
 
-const StyledDropdownButton = styled.button`
-  border-radius: 20px;
-  border: 1px solid #e5e5e5;
+// form 속성에 따라 스타일을 다르게 적용
+const StyledDropdownButton = styled.button<{ form?: boolean }>`
+  border-radius: ${({ form }) => (form ? "10px" : "20px")};
+  border: ${({ form }) => (form ? "none" : "1px solid #e5e5e5")};
   background-color: #f7f7f7;
-  height: 64px;
-  padding: 20px 30px;
+  height: ${({ form }) => (form ? "30px" : "64px")};
+  padding: ${({ form }) => (form ? "4px 8px" : "20px 30px")};
   box-sizing: border-box;
   width: 100%;
   display: flex;
@@ -48,7 +51,8 @@ const StyledDropdownButton = styled.button`
 
   &:focus {
     outline: none;
-    box-shadow: 0 0 0 1px rgba(159, 190, 247, 0.5);
+    box-shadow: ${({ form }) =>
+      form ? "none" : " 0 0 0 1px rgba(159, 190, 247, 0.5);"};
   }
 `;
 
@@ -65,8 +69,9 @@ const DropdownMenu = styled.div<{ width: string }>`
   z-index: 1;
 `;
 
-const DropdownItem = styled.div`
-  padding: 10px 15px;
+const DropdownItem = styled.div<{ form: boolean }>`
+  height: ${({ form }) => (form ? "30px" : "64px")};
+  padding: ${({ form }) => (form ? "4px 8px" : "20px 30px")};
   cursor: pointer;
   border-radius: 10px;
 
@@ -80,6 +85,8 @@ const DropdownButton: React.FC<DropdownButtonProps> = ({
   options,
   value,
   onChange,
+  style,
+  form = false,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(value || label);
@@ -132,7 +139,12 @@ const DropdownButton: React.FC<DropdownButtonProps> = ({
       <div className="dropdown_label">
         {label && <CustomText textStyle="b3">{label}</CustomText>}
       </div>
-      <StyledDropdownButton ref={buttonRef} onClick={toggleDropdown}>
+      <StyledDropdownButton
+        style={style}
+        ref={buttonRef}
+        onClick={toggleDropdown}
+        form={form}
+      >
         <CustomText textStyle="b3" color="#797979">
           {selectedOption}
         </CustomText>
@@ -142,6 +154,7 @@ const DropdownButton: React.FC<DropdownButtonProps> = ({
         <DropdownMenu ref={dropdownRef} width={dropdownWidth}>
           {options.map((option) => (
             <DropdownItem
+              form={form}
               key={option}
               onClick={() => handleOptionClick(option)}
             >
