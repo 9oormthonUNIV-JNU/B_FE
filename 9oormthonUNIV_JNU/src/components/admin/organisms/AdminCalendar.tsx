@@ -6,13 +6,20 @@ import LabelButton from "../../common/atoms/LabelButton";
 
 const AdminCalendarWrapper = styled.div`
   padding: 20px;
+  position: relative;
 `;
 
-const MonthNavigation = styled.div`
+const AddSchedule = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1000;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   margin-bottom: 20px;
+  margin-top: 30px;
+  right: 0px;
 `;
 
 type Schedule = {
@@ -63,19 +70,20 @@ const AdminCalendar = () => {
 
   return (
     <AdminCalendarWrapper>
-      <MonthNavigation>
+      <AddSchedule>
         <LabelButton
-          label="+ 일정 추가"
+          label="+ 일정 추가하기"
           isActive={isButtonActive} // isActive 상태 전달
           onClick={handleOpenModal}
         />
-      </MonthNavigation>
+      </AddSchedule>
 
       {/* CustomCalendar 컴포넌트 사용 */}
       <CustomCalendar />
 
       {/* 일정 추가 모달 */}
       <CustomModal
+        modalType="일정 추가하기"
         isOpen={modalIsOpen}
         onRequestClose={handleCloseModal}
         onSave={handleSave}

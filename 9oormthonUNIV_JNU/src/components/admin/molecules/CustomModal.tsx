@@ -101,6 +101,7 @@ type Schedule = {
 };
 
 type CustomModalProps = {
+  modalType: "일정 추가하기" | "일정 수정하기";
   isOpen: boolean;
   onRequestClose: () => void;
   onSave: () => void;
@@ -113,6 +114,7 @@ type CustomModalProps = {
 };
 
 const CustomModal: React.FC<CustomModalProps> = ({
+  modalType,
   isOpen,
   onRequestClose,
   onSave,
@@ -126,7 +128,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
       overlayClassName="modal-overlay"
     >
       <div className="modal_type">
-        <CustomText textStyle="h2">일정 추가</CustomText>
+        <CustomText textStyle="h2">{modalType}</CustomText>
       </div>
       <div className="modal_form">
         <InputField>

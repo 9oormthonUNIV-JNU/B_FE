@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Calendar, { CalendarProps } from "react-calendar";
 import styled from "styled-components";
+import CustomText from "../../common/atoms/CustomText";
 
 const CalendarWrapper = styled.div`
   display: flex;
@@ -126,9 +127,46 @@ const DateText = styled.div<DateTextProps>`
   `}
 `;
 
+type EventProps = {
+  date: string;
+  title: string;
+};
+
+const EventTextContainer = styled.div`
+  margin: 8px 0px;
+  border-radius: 10px;
+  padding: 4px 8px;
+  align-items: center;
+  display: flex;
+  height: 27px;
+  box-sizing: border-box;
+  background-color: #e1ebfd;
+  justify-content: flex-start;
+  width: 100%;
+  margin-top: 8px;
+
+  * {
+    white-space: nowrap; /* 텍스트를 한 줄로 유지 */
+    overflow: hidden; /* 넘치는 부분 숨기기 */
+    text-overflow: ellipsis; /* 넘치는 부분을 ...로 표시 */
+  }
+`;
+
 const CustomCalendar = () => {
   const [date, setDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+
+  // 이벤트 데이터 배열
+  const events: EventProps[] = [
+    { date: "2024-10-15", title: "회의" },
+    { date: "2024-10-22", title: "프로젝트 마감" },
+  ];
+
+  // 날짜에 해당하는 이벤트 찾기
+  const findEvent = (tileDate: Date) => {
+    const dateStr = tileDate.toISOString().split("T")[0]; // YYYY-MM-DD 형식
+    return events.find((event) => event.date === dateStr);
+  };
 
   // 월을 이동하는 함수 (이전 달, 다음 달)
   const handlePrevMonth = () => {
@@ -174,7 +212,7 @@ const CustomCalendar = () => {
 
       {/* 달력 */}
       <StyledCalendar
-        onChange={handleDateClick} // 날짜 클릭 핸들러
+        onChange={handleDateClick}
         value={date}
         locale="en-US"
         formatShortWeekday={(locale, date) =>
@@ -184,11 +222,10 @@ const CustomCalendar = () => {
           tileDate.toDateString() === new Date().toDateString()
             ? "react-calendar__tile--today"
             : ""
-        } // 오늘 날짜에만 클래스 추가
-        /* 숫자를 두 자리 형식으로 표시 */
-        tileContent={
-          ({ date: tileDate, view }) =>
-            view === "month" && tileDate.getMonth() === currentMonth ? (
+        }
+        tileContent={({ date: tileDate, view }) =>
+          view === "month" && tileDate.getMonth() === currentMonth ? (
+            <>
               <DateText
                 isSunday={tileDate.getDay() === 0}
                 isSelected={
@@ -202,7 +239,16 @@ const CustomCalendar = () => {
               >
                 {tileDate.getDate().toString().padStart(2, "0")}
               </DateText>
-            ) : null /* 현재 월에 속하지 않는 날짜는 표시하지 않음 */
+              {/* 이벤트가 있으면 해당 타일에 이벤트 제목 표시 */}
+              {findEvent(tileDate) && (
+                <EventTextContainer>
+                  <CustomText textStyle="nav" onClick={() => {}}>
+                    {findEvent(tileDate)?.title} {/* 올바르게 표시 */}
+                  </CustomText>
+                </EventTextContainer>
+              )}
+            </>
+          ) : null
         }
       />
     </CalendarWrapper>
