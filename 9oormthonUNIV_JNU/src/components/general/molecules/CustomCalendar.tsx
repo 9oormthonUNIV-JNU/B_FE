@@ -132,7 +132,7 @@ type EventProps = {
   title: string;
 };
 
-const EventTextContainer = styled.div`
+const EventText = styled.div`
   margin: 8px 0px;
   border-radius: 10px;
   padding: 4px 8px;
@@ -144,6 +144,7 @@ const EventTextContainer = styled.div`
   justify-content: flex-start;
   width: 100%;
   margin-top: 8px;
+  position: relative;
 
   * {
     white-space: nowrap; /* 텍스트를 한 줄로 유지 */
@@ -152,9 +153,54 @@ const EventTextContainer = styled.div`
   }
 `;
 
+const DropdownMenu = styled.div<{ width: string }>`
+  box-sizing: border-box;
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  background-color: #f7f7f7;
+  border: 10px solid #f7f7f7;
+  border-radius: 10px;
+  box-shadow: 0px 0px 3px 3px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  gap: 8px;
+`;
+
+const DropdownItem = styled.div<{ form: boolean }>`
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 27px;
+  padding: 4px 8px;
+  cursor: pointer;
+  border-radius: 10px;
+  &:hover {
+    background-color: #d8d8d8;
+  }
+`;
+
 const CustomCalendar = () => {
   const [date, setDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [openDropdown, setOpenDropdown] = useState<boolean>(false);
+
+  // 드롭다운 토글 함수
+  const toggleDropdown = () => {
+    setOpenDropdown((prev) => !prev);
+  };
+
+  // 일정 수정 함수
+  const handleEditEvent = () => {
+    alert("일정 수정 클릭됨");
+    setOpenDropdown(false);
+  };
+
+  // 일정 삭제 함수
+  const handleDeleteEvent = () => {
+    alert("일정 삭제 클릭됨");
+    setOpenDropdown(false);
+  };
 
   // 이벤트 데이터 배열
   const events: EventProps[] = [
@@ -241,11 +287,21 @@ const CustomCalendar = () => {
               </DateText>
               {/* 이벤트가 있으면 해당 타일에 이벤트 제목 표시 */}
               {findEvent(tileDate) && (
-                <EventTextContainer>
-                  <CustomText textStyle="nav" onClick={() => {}}>
-                    {findEvent(tileDate)?.title} {/* 올바르게 표시 */}
+                <EventText onClick={toggleDropdown}>
+                  <CustomText textStyle="nav">
+                    {findEvent(tileDate)?.title}
                   </CustomText>
-                </EventTextContainer>
+                  {openDropdown && (
+                    <DropdownMenu width="150px">
+                      <DropdownItem form={true} onClick={handleEditEvent}>
+                        <CustomText textStyle="nav">일정 수정</CustomText>
+                      </DropdownItem>
+                      <DropdownItem form={true} onClick={handleDeleteEvent}>
+                        <CustomText textStyle="nav">일정 삭제</CustomText>
+                      </DropdownItem>
+                    </DropdownMenu>
+                  )}
+                </EventText>
               )}
             </>
           ) : null
