@@ -7,7 +7,7 @@ const ActivityBoxesContainer = styled.div`
   gap: 44px;
   width: 100%;
   justify-items: center;
-  justify-content: center	;
+  justify-content: center;
   box-sizing: border-box;
   align-items:center;
   
