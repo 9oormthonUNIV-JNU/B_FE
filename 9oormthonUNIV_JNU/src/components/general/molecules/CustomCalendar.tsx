@@ -1,6 +1,7 @@
 import { useState } from "react";
-import Calendar from "react-calendar";
+import Calendar, { CalendarProps } from "react-calendar";
 import styled from "styled-components";
+import CustomText from "../../common/atoms/CustomText";
 
 const CalendarWrapper = styled.div`
   display: flex;
@@ -32,7 +33,8 @@ const StyledCalendar = styled(Calendar)`
 
   .react-calendar__tile {
     position: relative;
-    height: 100px;
+    height: 145px;
+    width: 145px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -40,30 +42,27 @@ const StyledCalendar = styled(Calendar)`
     box-sizing: border-box;
     border-top: 1px solid black !important;
     background-color: white;
-    border: none; /* 모든 경계선 제거 */
+    border: none;
+    cursor: pointer;
 
-    /* 기본 숫자 숨기기 */
     & > abbr {
-      display: none; /* 기본 날짜 텍스트 숨기기 */
+      display: none;
     }
   }
 
-  /* 토요일은 검은색으로 설정 */
+  /* 오늘 날짜 타일의 배경색을 설정 */
+  .react-calendar__tile--today {
+    background-color: #f4f4f4 !important; /* 오늘 날짜의 배경색 설정 */
+  }
+
   .react-calendar__month-view__days__day--weekend:nth-child(7n) {
     color: black;
   }
 
-  /* 일요일 텍스트 색상 #ff6d57로 설정 */
   .react-calendar__month-view__weekdays__weekday:nth-child(1) abbr {
-    color: #ff6d57; /* 일요일(SUN)의 글씨 색상을 #ff6d57로 설정 */
+    color: #ff6d57;
   }
 
-  .react-calendar__tile--active {
-    background-color: #006edc;
-    color: white;
-  }
-
-  /* 요일을 대문자 세 글자로 설정 */
   .react-calendar__month-view__weekdays__weekday {
     text-align: center;
     font-size: 1rem;
@@ -72,36 +71,148 @@ const StyledCalendar = styled(Calendar)`
     margin-bottom: 8px;
   }
 
-  /* 요일 스타일 */
   .react-calendar__month-view__weekdays__weekday abbr {
-    font-family: "Pretendard", sans-serif;
+    font-family: "Pretendard";
     font-size: 20px;
     font-weight: 500;
-    text-decoration: none; /* 밑줄 제거 */
+    text-decoration: none;
   }
 
-  /* 기본 네비게이션을 숨깁니다 */
   .react-calendar__navigation {
     display: none;
   }
 `;
 
+const MonthText = styled.div`
+  font-family: "Pretendard";
+  font-size: 32px;
+  font-weight: 500;
+`;
+
+type DateTextProps = {
+  isSunday: boolean;
+  isSelected: boolean;
+};
+
 // 날짜 텍스트 스타일링
-const DateText = styled.div`
+const DateText = styled.div<DateTextProps>`
   font-family: "Pretendard", sans-serif;
   font-size: 20px;
   font-weight: 500;
-  color: ${({ isSunday }) => (isSunday ? "#ff6d57" : "#000")};
+  color: ${({ isSunday, isSelected }) =>
+    isSelected
+      ? "#fff"
+      : isSunday
+      ? "#ff6d57"
+      : "#000"}; /* 선택된 날짜는 흰색, 일요일은 빨간색, 나머지는 검정 */
+  position: relative; /* 동그라미가 숫자 뒤에 위치하도록 설정 */
+  z-index: 1;
+
+  /* 클릭한 날짜 동그라미 스타일 */
+  ${({ isSelected }) =>
+    isSelected &&
+    `
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 30px;
+      height: 30px;
+      background-color: #8FABDE;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      z-index: -1; /* 동그라미가 숫자 뒤에 위치 */
+    }
+  `}
 `;
 
-const EventList = styled.div`
-  margin-top: 10px;
-  font-size: 0.8rem;
-  color: black;
+type EventProps = {
+  date: string;
+  title: string;
+};
+
+const EventText = styled.div`
+  margin: 8px 0px;
+  border-radius: 10px;
+  padding: 4px 8px;
+  align-items: center;
+  display: flex;
+  height: 27px;
+  box-sizing: border-box;
+  background-color: #e1ebfd;
+  justify-content: flex-start;
+  width: 100%;
+  margin-top: 8px;
+  position: relative;
+
+  * {
+    white-space: nowrap; /* 텍스트를 한 줄로 유지 */
+    overflow: hidden; /* 넘치는 부분 숨기기 */
+    text-overflow: ellipsis; /* 넘치는 부분을 ...로 표시 */
+  }
+`;
+
+const DropdownMenu = styled.div<{ width: string }>`
+  box-sizing: border-box;
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  background-color: #f7f7f7;
+  border: 10px solid #f7f7f7;
+  border-radius: 10px;
+  box-shadow: 0px 0px 3px 3px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  gap: 8px;
+`;
+
+const DropdownItem = styled.div<{ form: boolean }>`
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 27px;
+  padding: 4px 8px;
+  cursor: pointer;
+  border-radius: 10px;
+  &:hover {
+    background-color: #d8d8d8;
+  }
 `;
 
 const CustomCalendar = () => {
   const [date, setDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [openDropdown, setOpenDropdown] = useState<boolean>(false);
+
+  // 드롭다운 토글 함수
+  const toggleDropdown = () => {
+    setOpenDropdown((prev) => !prev);
+  };
+
+  // 일정 수정 함수
+  const handleEditEvent = () => {
+    alert("일정 수정 클릭됨");
+    setOpenDropdown(false);
+  };
+
+  // 일정 삭제 함수
+  const handleDeleteEvent = () => {
+    alert("일정 삭제 클릭됨");
+    setOpenDropdown(false);
+  };
+
+  // 이벤트 데이터 배열
+  const events: EventProps[] = [
+    { date: "2024-10-15", title: "회의" },
+    { date: "2024-10-22", title: "프로젝트 마감" },
+  ];
+
+  // 날짜에 해당하는 이벤트 찾기
+  const findEvent = (tileDate: Date) => {
+    const dateStr = tileDate.toISOString().split("T")[0]; // YYYY-MM-DD 형식
+    return events.find((event) => event.date === dateStr);
+  };
 
   // 월을 이동하는 함수 (이전 달, 다음 달)
   const handlePrevMonth = () => {
@@ -115,40 +226,85 @@ const CustomCalendar = () => {
   };
 
   // 월과 연도를 표시하는 형식
-  const formattedMonthYear = date.toLocaleDateString("ko-KR", {
-    year: "numeric",
-    month: "long",
-  });
+  const formattedMonthYear = date
+    ? date.toLocaleDateString("ko-KR", {
+        year: "numeric",
+        month: "long",
+      })
+    : "";
 
   // 현재 월을 저장
   const currentMonth = date.getMonth();
+
+  // 날짜 클릭 핸들러 (선택된 날짜를 설정)
+  const handleDateClick: CalendarProps["onChange"] = (value) => {
+    // value가 단일 날짜일 때 처리
+    if (value instanceof Date) {
+      setSelectedDate(value);
+    } else if (Array.isArray(value)) {
+      // 만약 날짜 배열이라면 첫 번째 값을 선택
+      setSelectedDate(value[0]);
+    }
+  };
 
   return (
     <CalendarWrapper>
       {/* 월 네비게이션 */}
       <MonthNavigation>
         <NavButton onClick={handlePrevMonth}>{"<"}</NavButton>
-        <DateText>{formattedMonthYear}</DateText>
+        <MonthText>{formattedMonthYear}</MonthText>
         <NavButton onClick={handleNextMonth}>{">"}</NavButton>
       </MonthNavigation>
 
       {/* 달력 */}
       <StyledCalendar
-        onChange={setDate}
+        onChange={handleDateClick}
         value={date}
         locale="en-US"
         formatShortWeekday={(locale, date) =>
           date.toLocaleDateString("en-US", { weekday: "short" }).toUpperCase()
         }
-        /* 숫자를 두 자리 형식으로 표시 */
-        tileContent={
-          ({ date, view }) =>
-            view === "month" && date.getMonth() === currentMonth ? (
-              <DateText isSunday={date.getDay() === 0}>
-                {date.getDate().toString().padStart(2, "0")}
-                {/* 숫자를 두 자리로 */}
+        tileClassName={({ date: tileDate }) =>
+          tileDate.toDateString() === new Date().toDateString()
+            ? "react-calendar__tile--today"
+            : ""
+        }
+        tileContent={({ date: tileDate, view }) =>
+          view === "month" && tileDate.getMonth() === currentMonth ? (
+            <>
+              <DateText
+                isSunday={tileDate.getDay() === 0}
+                isSelected={
+                  !!(
+                    selectedDate &&
+                    tileDate.getDate() === selectedDate.getDate() &&
+                    tileDate.getMonth() === selectedDate.getMonth() &&
+                    tileDate.getFullYear() === selectedDate.getFullYear()
+                  )
+                }
+              >
+                {tileDate.getDate().toString().padStart(2, "0")}
               </DateText>
-            ) : null /* 현재 월에 속하지 않는 날짜는 표시하지 않음 */
+              {/* 이벤트가 있으면 해당 타일에 이벤트 제목 표시 */}
+              {findEvent(tileDate) && (
+                <EventText onClick={toggleDropdown}>
+                  <CustomText textStyle="nav">
+                    {findEvent(tileDate)?.title}
+                  </CustomText>
+                  {openDropdown && (
+                    <DropdownMenu width="150px">
+                      <DropdownItem form={true} onClick={handleEditEvent}>
+                        <CustomText textStyle="nav">일정 수정</CustomText>
+                      </DropdownItem>
+                      <DropdownItem form={true} onClick={handleDeleteEvent}>
+                        <CustomText textStyle="nav">일정 삭제</CustomText>
+                      </DropdownItem>
+                    </DropdownMenu>
+                  )}
+                </EventText>
+              )}
+            </>
+          ) : null
         }
       />
     </CalendarWrapper>
