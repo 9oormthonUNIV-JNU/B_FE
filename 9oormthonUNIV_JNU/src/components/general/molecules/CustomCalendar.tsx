@@ -241,6 +241,7 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ admin }) => {
     member: "",
     description: "",
   });
+  const [isEditing, setIsEditing] = useState(false); // 추가: 수정 모드 여부
 
   const [events, setEvents] = useState<Schedule[]>([
     {
@@ -267,41 +268,47 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ admin }) => {
     width: 0,
   });
 
-  const toggleDropdown = (
-    date: string,
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
-    const rect = (
-      event.currentTarget as HTMLDivElement
-    ).getBoundingClientRect();
-    setDropdownPosition({
-      top: rect.bottom + window.scrollY,
-      left: rect.left + window.scrollX,
-      width: rect.width,
-    });
-    setOpenDropdown(openDropdown === date ? null : date); // 현재 열려있는 드롭다운을 클릭하면 닫음, 다른 타일을 클릭하면 열림
+  // 일정 수정 핸들러
+  const handleEditEvent = (eventToEdit: Schedule) => {
+    setModalForm(eventToEdit);
+    setIsEditing(true);
+    setModalIsOpen(true);
+    setOpenDropdown(null);
   };
 
-  const handleEditEvent = () => {
-    alert("일정 수정 클릭됨");
-    setOpenDropdown(null); // 수정 후 드롭다운 닫음
+  // 일정 삭제 핸들러
+  const handleDeleteEvent = (eventToDelete: Schedule) => {
+    if (window.confirm(`"${eventToDelete.name}" 일정을 삭제하시겠습니까?`)) {
+      setEvents(events.filter((event) => event.date !== eventToDelete.date));
+      setOpenDropdown(null);
+    }
   };
 
-  const handleDeleteEvent = () => {
-    alert("일정 삭제 클릭됨");
-    setEvents(events.filter((event) => event.date !== modalForm.date));
-    setOpenDropdown(null); // 삭제 후 드롭다운 닫음
-  };
-
+  // 일정 추가 모달 열기 핸들러
   const handleOpenModal = () => {
+    setIsEditing(false);
+    setModalForm({
+      date: "",
+      name: "",
+      member: "",
+      description: "",
+    });
     setModalIsOpen(true);
   };
 
+  // 모달 닫기 핸들러
   const handleCloseModal = () => {
     setModalIsOpen(false);
-    setModalForm({ date: "", name: "", member: "", description: "" });
+    setModalForm({
+      date: "",
+      name: "",
+      member: "",
+      description: "",
+    });
+    setIsEditing(false);
   };
 
+  // 모달 입력 변경 핸들러
   const handleModalChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -313,21 +320,40 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ admin }) => {
     });
   };
 
+  // 모달 저장 핸들러
   const handleSave = () => {
-    setEvents([...events, modalForm]);
+    if (isEditing) {
+      // 수정 모드: 기존 일정을 업데이트
+      setEvents(
+        events.map((event) =>
+          event.date === modalForm.date ? modalForm : event
+        )
+      );
+    } else {
+      // 추가 모드: 새로운 일정을 추가
+      // 중복 날짜 확인
+      if (events.some((event) => event.date === modalForm.date)) {
+        alert("해당 날짜에 이미 일정이 존재합니다.");
+        return;
+      }
+      setEvents([...events, modalForm]);
+    }
     handleCloseModal();
   };
 
+  // 특정 날짜의 이벤트 찾기
   const findEvent = (tileDate: Date) => {
     const dateStr = tileDate.toISOString().split("T")[0];
     return events.find((event) => event.date === dateStr);
   };
 
+  // 이전 달로 이동
   const handlePrevMonth = () => {
     const prevMonth = new Date(date.setMonth(date.getMonth() - 1));
     setDate(prevMonth);
   };
 
+  // 다음 달로 이동
   const handleNextMonth = () => {
     const nextMonth = new Date(date.setMonth(date.getMonth() + 1));
     setDate(nextMonth);
@@ -348,6 +374,22 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ admin }) => {
     } else if (Array.isArray(value)) {
       setSelectedDate(value[0]);
     }
+  };
+
+  // 드롭다운 토글 핸들러
+  const toggleDropdown = (
+    dateStr: string,
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
+    const rect = (
+      event.currentTarget as HTMLDivElement
+    ).getBoundingClientRect();
+    setDropdownPosition({
+      top: rect.bottom + window.scrollY,
+      left: rect.left + window.scrollX,
+      width: rect.width,
+    });
+    setOpenDropdown(openDropdown === dateStr ? null : dateStr); // 현재 열려있는 드롭다운을 클릭하면 닫음, 다른 타일을 클릭하면 열림
   };
 
   return (
@@ -377,8 +419,16 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ admin }) => {
             ? "react-calendar__tile--today"
             : ""
         }
-        tileContent={({ date: tileDate, view }) =>
-          view === "month" && tileDate.getMonth() === currentMonth ? (
+        tileContent={({ date: tileDate, view }) => {
+          if (view !== "month" || tileDate.getMonth() !== currentMonth) {
+            return null;
+          }
+
+          const event = findEvent(tileDate);
+          const dateStr = tileDate.toISOString().split("T")[0];
+          const isOpen = openDropdown === dateStr;
+
+          return (
             <>
               <DateText
                 isSunday={tileDate.getDay() === 0}
@@ -393,37 +443,36 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ admin }) => {
               >
                 {tileDate.getDate().toString().padStart(2, "0")}
               </DateText>
-              {findEvent(tileDate) && (
-                <EventText
-                  onClick={(e) =>
-                    toggleDropdown(tileDate.toISOString().split("T")[0], e)
-                  }
-                >
-                  <CustomText textStyle="nav">
-                    {findEvent(tileDate)?.name}
-                  </CustomText>
-                  {openDropdown === tileDate.toISOString().split("T")[0] &&
-                    admin && (
-                      <DropdownMenuPortal position={dropdownPosition}>
-                        <DropdownItem form={true} onClick={handleEditEvent}>
-                          <CustomText textStyle="nav">일정 수정</CustomText>
-                        </DropdownItem>
-                        <DropdownItem form={true} onClick={handleDeleteEvent}>
-                          <CustomText textStyle="nav">일정 삭제</CustomText>
-                        </DropdownItem>
-                      </DropdownMenuPortal>
-                    )}
+              {event && (
+                <EventText onClick={(e) => toggleDropdown(dateStr, e)}>
+                  <CustomText textStyle="nav">{event.name}</CustomText>
+                  {isOpen && admin && (
+                    <DropdownMenuPortal position={dropdownPosition}>
+                      <DropdownItem
+                        form={true}
+                        onClick={() => handleEditEvent(event)}
+                      >
+                        <CustomText textStyle="nav">일정 수정</CustomText>
+                      </DropdownItem>
+                      <DropdownItem
+                        form={true}
+                        onClick={() => handleDeleteEvent(event)}
+                      >
+                        <CustomText textStyle="nav">일정 삭제</CustomText>
+                      </DropdownItem>
+                    </DropdownMenuPortal>
+                  )}
                 </EventText>
               )}
             </>
-          ) : null
-        }
+          );
+        }}
       />
 
-      {/* 일정 추가 모달 - admin 모드일 때만 표시 */}
+      {/* 일정 추가/수정 모달 - admin 모드일 때만 표시 */}
       {admin && (
         <CustomModal
-          modalType="일정 추가하기"
+          modalType={isEditing ? "일정 수정하기" : "일정 추가하기"}
           isOpen={modalIsOpen}
           onRequestClose={handleCloseModal}
           onSave={handleSave}
