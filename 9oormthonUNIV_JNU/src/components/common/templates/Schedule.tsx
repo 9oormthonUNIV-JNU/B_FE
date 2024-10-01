@@ -50,6 +50,7 @@ const Schedule = () => {
           onClick={() => setSelectedTab(2)}
         />
       </div>
+
       <ScheduleBoxes ScheduleData={ScheduleData} />
     </ScheduleContainer>
   );

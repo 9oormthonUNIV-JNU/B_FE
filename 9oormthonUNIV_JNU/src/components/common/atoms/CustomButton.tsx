@@ -43,7 +43,7 @@ const CustomButton: React.FC<ButtonProps & { children: React.ReactNode }> = ({
       height={height}
       onClick={onClick}
     >
-      <CustomText textStyle={textStyle} color={textColor}>
+      <CustomText onClick={() => {}} textStyle={textStyle} color={textColor}>
         {children}
       </CustomText>
     </StyledButton>
