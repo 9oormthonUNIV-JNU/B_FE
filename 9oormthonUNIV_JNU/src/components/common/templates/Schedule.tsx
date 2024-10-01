@@ -4,9 +4,10 @@ import ScheduleBoxes from "../organisms/ScheduleBoxes";
 import CustomText from "../atoms/CustomText";
 import { RecruitData, EventData } from "../../../constants/ScheduleList";
 import LabelButton from "../atoms/LabelButton";
+import backgroundschedule from "../../../assets/images/background_schedule.svg";
 
 const ScheduleContainer = styled.div`
-  background-color: #f5f9fe;
+  background-image: url(${backgroundschedule});
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -22,7 +23,7 @@ const ScheduleContainer = styled.div`
   .button_container {
     display: flex;
     justify-content: center;
-    width: 20%;
+    width: 25%;
     gap: 8px;
     margin-bottom: 206px;
   }

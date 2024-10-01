@@ -3,7 +3,6 @@ import MemberBoxes from "../organisms/MemberBoxes";
 import styled from "styled-components";
 import CustomText from "../atoms/CustomText";
 import FilterButton from "../atoms/FilterButton";
-
 const MemberTemplateContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -13,11 +12,11 @@ const MemberTemplateContainer = styled.div`
   box-sizing: border-box;
   max-width: 1200px;
   margin: 0 auto;
-
   .member_content {
     margin: 60px 0px;
+    padding: 80px;
+    margin-bottom: 20px;
   }
-
   .filter_button {
     display: flex;
     flex-direction: row;
