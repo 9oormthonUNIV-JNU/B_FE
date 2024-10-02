@@ -222,6 +222,7 @@ const DropdownMenuPortal = ({
         top: position.top,
         left: position.left,
         width: `${position.width}px`,
+        boxShadow: "0px 3px 10px 0px rgba(0, 0, 0, 0.25)",
       }}
     >
       {children}

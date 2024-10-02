@@ -20,7 +20,7 @@ const AdminPageConatiner = styled.div`
 `;
 
 const AdminPage = () => {
-  const [selectedMenu, setSelectedMenu] = useState("게시글 관리");
+  const [selectedMenu, setSelectedMenu] = useState("일정 관리");
 
   const renderContent = () => {
     switch (selectedMenu) {
