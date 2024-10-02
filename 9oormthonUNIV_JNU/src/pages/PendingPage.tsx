@@ -1,5 +1,7 @@
+import Pending from "../components/common/templates/Pending";
+
 const PendingPage = () => {
-  return <div>Pending Page</div>;
+  return <Pending />;
 };
 
 export default PendingPage;

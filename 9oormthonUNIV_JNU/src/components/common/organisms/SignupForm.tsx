@@ -4,6 +4,7 @@ import EmailVerification from "../molecules/EmailVerification";
 import styled from "styled-components";
 import DropdownButton from "../atoms/DropdownButton";
 import CustomButton from "../atoms/CustomButton";
+import { useNavigate } from "react-router-dom";
 
 const SignupFormContainer = styled.div`
   width: 50%;
@@ -60,6 +61,8 @@ const Notification = styled.div`
 `;
 
 const SignupForm = () => {
+  const navigate = useNavigate();
+
   return (
     <SignupFormContainer>
       <div className="signup">
@@ -91,9 +94,7 @@ const SignupForm = () => {
         <CustomButton
           textStyle="b3"
           textColor="#2B2D36"
-          onClick={() => {
-            <PendingApproval />;
-          }}
+          onClick={() => navigate("/pending")}
         >
           SIGN UP
         </CustomButton>
