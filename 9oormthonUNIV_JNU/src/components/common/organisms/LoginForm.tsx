@@ -9,12 +9,12 @@ const LoginFormContainer = styled.div`
   flex-direction: column;
   width: 100%;
   align-items: center;
-  gap: 40px;
 
   .login {
     display: flex;
     width: 100%;
     justify-content: center;
+    margin-bottom: 40px;
   }
 
   .login_input {
@@ -22,11 +22,13 @@ const LoginFormContainer = styled.div`
     flex-direction: column;
     gap: 10px;
     width: 50%;
+    margin-bottom: 40px;
   }
 
   .login_button {
     display: flex;
     width: 50%;
+    margin-bottom: 22px;
   }
 `;
 
@@ -46,19 +48,13 @@ const LoginForm = () => {
           LOGIN
         </CustomButton>
       </div>
-      <div>
-        <CustomText color=" #797979" textStyle="nav">
-          비밀번호 찾기
-        </CustomText>
-        &nbsp;&nbsp;|&nbsp;&nbsp;
-        <CustomText
-          color=" #797979"
-          textStyle="nav"
-          onClick={() => nav("/signup")}
-        >
-          회원가입
-        </CustomText>
-      </div>
+      <CustomText
+        color=" #797979"
+        textStyle="nav"
+        onClick={() => nav("/signup")}
+      >
+        회원가입
+      </CustomText>
     </LoginFormContainer>
   );
 };
