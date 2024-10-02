@@ -88,7 +88,13 @@ const SignupForm = () => {
         <DropdownButton label="파트 선택" options={["PM", "PD", "FE", "BE"]} />
       </div>
       <div className="signup_button">
-        <CustomButton textStyle="b3" textColor="#2B2D36">
+        <CustomButton
+          textStyle="b3"
+          textColor="#2B2D36"
+          onClick={() => {
+            <PendingApproval />;
+          }}
+        >
           SIGN UP
         </CustomButton>
       </div>
