@@ -14,7 +14,7 @@ const LoginFormContainer = styled.div`
     display: flex;
     width: 100%;
     justify-content: center;
-    margin-bottom: 40px;
+    margin-bottom: 75px;
   }
 
   .login_input {
@@ -22,7 +22,7 @@ const LoginFormContainer = styled.div`
     flex-direction: column;
     gap: 10px;
     width: 50%;
-    margin-bottom: 40px;
+    margin-bottom: 45px;
   }
 
   .login_button {
