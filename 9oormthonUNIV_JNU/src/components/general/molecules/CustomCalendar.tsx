@@ -2,13 +2,30 @@ import { useState } from "react";
 import Calendar, { CalendarProps } from "react-calendar";
 import styled from "styled-components";
 import CustomText from "../../common/atoms/CustomText";
+import CustomModal from "../../admin/molecules/CustomModal";
+import LabelButton from "../../common/atoms/LabelButton";
+import ReactDOM from "react-dom";
 
 const CalendarWrapper = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   width: 100%;
-  background-color: white; /* 전체 배경 흰색 */
-  padding: 20px;
+  background-color: white;
+  z-index: 1; /* 추가 */
+
+  .calendar_schedule_add {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    right: 0px;
+  }
 `;
 
 const MonthNavigation = styled.div`
@@ -44,6 +61,7 @@ const StyledCalendar = styled(Calendar)`
     background-color: white;
     border: none;
     cursor: pointer;
+    overflow: visible; /* 추가 */
 
     & > abbr {
       display: none;
@@ -94,21 +112,15 @@ type DateTextProps = {
   isSelected: boolean;
 };
 
-// 날짜 텍스트 스타일링
 const DateText = styled.div<DateTextProps>`
   font-family: "Pretendard", sans-serif;
   font-size: 20px;
   font-weight: 500;
   color: ${({ isSunday, isSelected }) =>
-    isSelected
-      ? "#fff"
-      : isSunday
-      ? "#ff6d57"
-      : "#000"}; /* 선택된 날짜는 흰색, 일요일은 빨간색, 나머지는 검정 */
-  position: relative; /* 동그라미가 숫자 뒤에 위치하도록 설정 */
+    isSelected ? "#fff" : isSunday ? "#ff6d57" : "#000"};
+  position: relative;
   z-index: 1;
 
-  /* 클릭한 날짜 동그라미 스타일 */
   ${({ isSelected }) =>
     isSelected &&
     `
@@ -122,14 +134,16 @@ const DateText = styled.div<DateTextProps>`
       background-color: #8FABDE;
       border-radius: 50%;
       transform: translate(-50%, -50%);
-      z-index: -1; /* 동그라미가 숫자 뒤에 위치 */
+      z-index: -1;
     }
   `}
 `;
 
-type EventProps = {
+type Schedule = {
   date: string;
-  title: string;
+  name: string;
+  member: string;
+  description: string;
 };
 
 const EventText = styled.div`
@@ -145,87 +159,205 @@ const EventText = styled.div`
   width: 100%;
   margin-top: 8px;
   position: relative;
+  cursor: pointer;
 
   * {
-    white-space: nowrap; /* 텍스트를 한 줄로 유지 */
-    overflow: hidden; /* 넘치는 부분 숨기기 */
-    text-overflow: ellipsis; /* 넘치는 부분을 ...로 표시 */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 `;
 
-const DropdownMenu = styled.div<{ width: string }>`
+const DropdownMenu = styled.div`
+  display: flex;
+  margin-top: 5px;
+  flex-direction: column;
+  gap: 12px;
   box-sizing: border-box;
   position: absolute;
-  top: calc(100% + 10px);
-  left: 0;
   background-color: #f7f7f7;
-  border: 10px solid #f7f7f7;
   border-radius: 10px;
+  padding: 14px 12px;
   box-shadow: 0px 0px 3px 3px rgba(0, 0, 0, 0.05);
-  width: 100%;
-  gap: 8px;
+  z-index: 10000; /* 더 높은 z-index 설정 */
+
+  * {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 `;
 
 const DropdownItem = styled.div<{ form: boolean }>`
   box-sizing: border-box;
+  padding: 0px 8px;
   display: flex;
   align-items: center;
   justify-content: flex-start;
   height: 27px;
-  padding: 4px 8px;
   cursor: pointer;
   border-radius: 10px;
+
   &:hover {
     background-color: #d8d8d8;
   }
 `;
 
-const CustomCalendar = () => {
+type CustomCalendarProps = {
+  admin?: boolean;
+};
+
+const DropdownMenuPortal = ({
+  children,
+  position,
+}: {
+  children: React.ReactNode;
+  position: { top: number; left: number; width: number };
+}) => {
+  return ReactDOM.createPortal(
+    <DropdownMenu
+      style={{
+        top: position.top,
+        left: position.left,
+        width: `${position.width}px`,
+        boxShadow: "0px 3px 10px 0px rgba(0, 0, 0, 0.25)",
+      }}
+    >
+      {children}
+    </DropdownMenu>,
+    document.body
+  );
+};
+
+const CustomCalendar: React.FC<CustomCalendarProps> = ({ admin }) => {
   const [date, setDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [openDropdown, setOpenDropdown] = useState<boolean>(false);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null); // 드롭다운 열릴 때 이벤트의 날짜를 기억
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalForm, setModalForm] = useState<Schedule>({
+    date: "",
+    name: "",
+    member: "",
+    description: "",
+  });
+  const [isEditing, setIsEditing] = useState(false); // 추가: 수정 모드 여부
 
-  // 드롭다운 토글 함수
-  const toggleDropdown = () => {
-    setOpenDropdown((prev) => !prev);
+  const [events, setEvents] = useState<Schedule[]>([
+    {
+      date: "2024-10-15",
+      name: "회의",
+      member: "최지원",
+      description: "팀 회의",
+    },
+    {
+      date: "2024-10-22",
+      name: "프로젝트 마감",
+      member: "최지원",
+      description: "최종 마감",
+    },
+  ]); // 이벤트 데이터
+
+  const [dropdownPosition, setDropdownPosition] = useState<{
+    top: number;
+    left: number;
+    width: number;
+  }>({
+    top: 0,
+    left: 0,
+    width: 0,
+  });
+
+  // 일정 수정 핸들러
+  const handleEditEvent = (eventToEdit: Schedule) => {
+    setModalForm(eventToEdit);
+    setIsEditing(true);
+    setModalIsOpen(true);
+    setOpenDropdown(null);
   };
 
-  // 일정 수정 함수
-  const handleEditEvent = () => {
-    alert("일정 수정 클릭됨");
-    setOpenDropdown(false);
+  // 일정 삭제 핸들러
+  const handleDeleteEvent = (eventToDelete: Schedule) => {
+    if (window.confirm(`"${eventToDelete.name}" 일정을 삭제하시겠습니까?`)) {
+      setEvents(events.filter((event) => event.date !== eventToDelete.date));
+      setOpenDropdown(null);
+    }
   };
 
-  // 일정 삭제 함수
-  const handleDeleteEvent = () => {
-    alert("일정 삭제 클릭됨");
-    setOpenDropdown(false);
+  // 일정 추가 모달 열기 핸들러
+  const handleOpenModal = () => {
+    setIsEditing(false);
+    setModalForm({
+      date: "",
+      name: "",
+      member: "",
+      description: "",
+    });
+    setModalIsOpen(true);
   };
 
-  // 이벤트 데이터 배열
-  const events: EventProps[] = [
-    { date: "2024-10-15", title: "회의" },
-    { date: "2024-10-22", title: "프로젝트 마감" },
-  ];
+  // 모달 닫기 핸들러
+  const handleCloseModal = () => {
+    setModalIsOpen(false);
+    setModalForm({
+      date: "",
+      name: "",
+      member: "",
+      description: "",
+    });
+    setIsEditing(false);
+  };
 
-  // 날짜에 해당하는 이벤트 찾기
+  // 모달 입력 변경 핸들러
+  const handleModalChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
+  ) => {
+    setModalForm({
+      ...modalForm,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  // 모달 저장 핸들러
+  const handleSave = () => {
+    if (isEditing) {
+      // 수정 모드: 기존 일정을 업데이트
+      setEvents(
+        events.map((event) =>
+          event.date === modalForm.date ? modalForm : event
+        )
+      );
+    } else {
+      // 추가 모드: 새로운 일정을 추가
+      // 중복 날짜 확인
+      if (events.some((event) => event.date === modalForm.date)) {
+        alert("해당 날짜에 이미 일정이 존재합니다.");
+        return;
+      }
+      setEvents([...events, modalForm]);
+    }
+    handleCloseModal();
+  };
+
+  // 특정 날짜의 이벤트 찾기
   const findEvent = (tileDate: Date) => {
-    const dateStr = tileDate.toISOString().split("T")[0]; // YYYY-MM-DD 형식
+    const dateStr = tileDate.toISOString().split("T")[0];
     return events.find((event) => event.date === dateStr);
   };
 
-  // 월을 이동하는 함수 (이전 달, 다음 달)
+  // 이전 달로 이동
   const handlePrevMonth = () => {
     const prevMonth = new Date(date.setMonth(date.getMonth() - 1));
     setDate(prevMonth);
   };
 
+  // 다음 달로 이동
   const handleNextMonth = () => {
     const nextMonth = new Date(date.setMonth(date.getMonth() + 1));
     setDate(nextMonth);
   };
 
-  // 월과 연도를 표시하는 형식
   const formattedMonthYear = date
     ? date.toLocaleDateString("ko-KR", {
         year: "numeric",
@@ -233,28 +365,45 @@ const CustomCalendar = () => {
       })
     : "";
 
-  // 현재 월을 저장
   const currentMonth = date.getMonth();
 
-  // 날짜 클릭 핸들러 (선택된 날짜를 설정)
   const handleDateClick: CalendarProps["onChange"] = (value) => {
-    // value가 단일 날짜일 때 처리
     if (value instanceof Date) {
       setSelectedDate(value);
     } else if (Array.isArray(value)) {
-      // 만약 날짜 배열이라면 첫 번째 값을 선택
       setSelectedDate(value[0]);
     }
   };
 
+  // 드롭다운 토글 핸들러
+  const toggleDropdown = (
+    dateStr: string,
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
+    const rect = (
+      event.currentTarget as HTMLDivElement
+    ).getBoundingClientRect();
+    setDropdownPosition({
+      top: rect.bottom + window.scrollY,
+      left: rect.left + window.scrollX,
+      width: rect.width,
+    });
+    setOpenDropdown(openDropdown === dateStr ? null : dateStr); // 현재 열려있는 드롭다운을 클릭하면 닫음, 다른 타일을 클릭하면 열림
+  };
+
   return (
     <CalendarWrapper>
-      {/* 월 네비게이션 */}
+      {/* 월 네비게이션 - 일정 추가하기 버튼을 오른쪽에 위치 */}
       <MonthNavigation>
         <NavButton onClick={handlePrevMonth}>{"<"}</NavButton>
         <MonthText>{formattedMonthYear}</MonthText>
         <NavButton onClick={handleNextMonth}>{">"}</NavButton>
       </MonthNavigation>
+      {admin && (
+        <div className="calendar_schedule_add">
+          <LabelButton label="+ 일정 추가" onClick={handleOpenModal} />
+        </div>
+      )}
 
       {/* 달력 */}
       <StyledCalendar
@@ -269,8 +418,16 @@ const CustomCalendar = () => {
             ? "react-calendar__tile--today"
             : ""
         }
-        tileContent={({ date: tileDate, view }) =>
-          view === "month" && tileDate.getMonth() === currentMonth ? (
+        tileContent={({ date: tileDate, view }) => {
+          if (view !== "month" || tileDate.getMonth() !== currentMonth) {
+            return null;
+          }
+
+          const event = findEvent(tileDate);
+          const dateStr = tileDate.toISOString().split("T")[0];
+          const isOpen = openDropdown === dateStr;
+
+          return (
             <>
               <DateText
                 isSunday={tileDate.getDay() === 0}
@@ -285,28 +442,43 @@ const CustomCalendar = () => {
               >
                 {tileDate.getDate().toString().padStart(2, "0")}
               </DateText>
-              {/* 이벤트가 있으면 해당 타일에 이벤트 제목 표시 */}
-              {findEvent(tileDate) && (
-                <EventText onClick={toggleDropdown}>
-                  <CustomText textStyle="nav">
-                    {findEvent(tileDate)?.title}
-                  </CustomText>
-                  {openDropdown && (
-                    <DropdownMenu width="150px">
-                      <DropdownItem form={true} onClick={handleEditEvent}>
+              {event && (
+                <EventText onClick={(e) => toggleDropdown(dateStr, e)}>
+                  <CustomText textStyle="nav">{event.name}</CustomText>
+                  {isOpen && admin && (
+                    <DropdownMenuPortal position={dropdownPosition}>
+                      <DropdownItem
+                        form={true}
+                        onClick={() => handleEditEvent(event)}
+                      >
                         <CustomText textStyle="nav">일정 수정</CustomText>
                       </DropdownItem>
-                      <DropdownItem form={true} onClick={handleDeleteEvent}>
+                      <DropdownItem
+                        form={true}
+                        onClick={() => handleDeleteEvent(event)}
+                      >
                         <CustomText textStyle="nav">일정 삭제</CustomText>
                       </DropdownItem>
-                    </DropdownMenu>
+                    </DropdownMenuPortal>
                   )}
                 </EventText>
               )}
             </>
-          ) : null
-        }
+          );
+        }}
       />
+
+      {/* 일정 추가/수정 모달 - admin 모드일 때만 표시 */}
+      {admin && (
+        <CustomModal
+          modalType={isEditing ? "일정 수정하기" : "일정 추가하기"}
+          isOpen={modalIsOpen}
+          onRequestClose={handleCloseModal}
+          onSave={handleSave}
+          modalForm={modalForm}
+          handleModalChange={handleModalChange}
+        />
+      )}
     </CalendarWrapper>
   );
 };

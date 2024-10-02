@@ -8,15 +8,30 @@ import CustomText from "../components/common/atoms/CustomText";
 
 const AdminPageConatiner = styled.div`
   display: flex;
-  width: 100%;
-  align-items: center;
-  margin-top: 90px;
+  margin: 90px 0px 150px 150px;
   flex-direction: column;
-  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
 
-  .admin {
-    margin-bottom: 30px;
+  .admin_content {
+    margin-top: 80px;
+    margin-bottom: 130px;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: flex-start;
   }
+`;
+
+const MenubarContainer = styled.div`
+  display: flex;
+  width: 20%;
+  align-items: center;
+`;
+
+const AdminTemplate = styled.div`
+  display: flex;
+  width: 70%;
 `;
 
 const AdminPage = () => {
@@ -40,16 +55,17 @@ const AdminPage = () => {
       <div className="admin">
         <CustomText textStyle="h1">Admin Page</CustomText>
       </div>
-      <div>{renderContent()}</div>
+      <div className="admin_content">
+        <MenubarContainer>
+          <MenuBar
+            options={["회원 관리", "일정 관리", "게시글 관리"]}
+            onOptionClick={setSelectedMenu}
+          />
+        </MenubarContainer>
+        <AdminTemplate>{renderContent()}</AdminTemplate>
+      </div>
     </AdminPageConatiner>
   );
 };
 
 export default AdminPage;
-
-{
-  /* <MenuBar
-        options={["회원 관리", "일정 관리", "게시글 관리"]}
-        onOptionClick={setSelectedMenu}
-      /> */
-}

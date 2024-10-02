@@ -10,6 +10,8 @@ const MemberBoxesContainer = styled.div`
   margin: 100px 200px;
   justify-items: center;
   box-sizing: border-box;
+  max-width: 1200px;
+  margin: 100px auto;
 `;
 
 const MemberBoxes: React.FC<{

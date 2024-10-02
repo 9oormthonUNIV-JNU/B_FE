@@ -63,7 +63,7 @@ const InputField = styled.div`
 
   input[type="date"],
   input[type="text"],
-  input[type="textarea"] {
+  textarea {
     font-family: "Pretendard";
     font-size: 16px;
     padding: 10px;
@@ -182,7 +182,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
       </div>
       <div className="modal_button">
         <CustomButton onClick={onSave} radius={10} width={200} height={46}>
-          추가하기
+          {modalType === "일정 추가하기" ? "추가하기" : "수정하기"}
         </CustomButton>
         <CustomButton
           onClick={onRequestClose}

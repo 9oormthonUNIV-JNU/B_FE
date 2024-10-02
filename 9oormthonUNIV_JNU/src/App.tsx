@@ -10,6 +10,7 @@ import RecruitPage from "./pages/RecruitPage";
 import SignupPage from "./pages/SignupPage";
 import MyPage from "./pages/MyPage";
 import AdminPage from "./pages/AdminPage";
+import PendingPage from "./pages/PendingPage";
 
 const AppContainer = styled.div`
   display: flex;
@@ -39,6 +40,7 @@ const App = () => {
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/admin" element={<AdminPage />} />
+            <Route path="/pending" element={<PendingPage />} />
           </Routes>
         </MainContainer>
         <Footer />
