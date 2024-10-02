@@ -12,8 +12,6 @@ const CalendarWrapper = styled.div`
   flex-direction: column;
   width: 100%;
   background-color: white;
-  padding: 20px;
-  margin-top: 80px;
   z-index: 1; /* 추가 */
 
   .calendar_schedule_add {

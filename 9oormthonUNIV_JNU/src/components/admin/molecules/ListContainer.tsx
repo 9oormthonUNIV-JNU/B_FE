@@ -4,8 +4,6 @@ export const MemberListContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  justify-content: center;
-  margin-bottom: 60px;
 
   .memberlist {
     margin-bottom: 20px;

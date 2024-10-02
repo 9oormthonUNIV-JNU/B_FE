@@ -9,17 +9,17 @@ type MenuBarProps = {
 
 const MenuBarContainer = styled.div`
   background-color: white;
-  position: fixed;
   width: 270px;
+  height: auto;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   padding: 23px 20px;
   gap: 18px;
   border-radius: 10px;
   border: 1px solid #e5e5e5;
+  z-index: 9999;
 `;
 
 const MenuBarItem = styled.div<{ isActive: boolean }>`

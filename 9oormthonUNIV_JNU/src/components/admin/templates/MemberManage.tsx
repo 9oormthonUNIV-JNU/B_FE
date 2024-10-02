@@ -3,13 +3,14 @@ import ApprovedMemberList from "../organisms/ApprovedMemberList";
 import styled from "styled-components";
 
 const MemberManageContainer = styled.div`
+  width: 100%;
+  justify-content: center;
   display: flex;
   flex-direction: column;
-  margin-top: 80px;
-  margin-bottom: 130px;
+  gap: 55px;
 `;
 
-const MemeberManage = () => {
+const MemberManage = () => {
   return (
     <div>
       <MemberManageContainer>
@@ -20,4 +21,4 @@ const MemeberManage = () => {
   );
 };
 
-export default MemeberManage;
+export default MemberManage;

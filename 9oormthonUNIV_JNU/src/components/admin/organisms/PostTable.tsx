@@ -7,7 +7,7 @@ import LabelButton from "../../common/atoms/LabelButton";
 export type Post = {
   id: string;
   name: string;
-  category: string;
+  category: "세미나" | "네트워킹" | "프로젝트" | "스터디";
   date: string;
 };
 
@@ -15,10 +15,8 @@ const PostTableContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  margin: 40px 100px 100px;
   font-family: "Pretendard";
 
-  /* 말줄임표를 적용할 클래스 */
   .truncate {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -82,7 +80,7 @@ const PostTableContainer = styled.div`
 const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
-  table-layout: fixed; /* 고정 레이아웃으로 설정 */
+  table-layout: fixed;
 `;
 
 // 테이블 헤더 스타일
@@ -101,7 +99,6 @@ const Th = styled.th`
   font-weight: 500;
   line-height: 30px;
 
-  /* 각 열의 너비를 고정하거나 비율로 설정 */
   &:nth-child(1) {
     width: 40%; /* 게시글 이름 */
   }

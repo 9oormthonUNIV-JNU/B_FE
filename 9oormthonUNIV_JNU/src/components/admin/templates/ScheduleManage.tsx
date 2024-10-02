@@ -6,9 +6,6 @@ const ScheduleManageContainer = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  margin-top: 20px;
-  width: 80%;
-  margin: 0 auto 130px;
 `;
 
 const ScheduleManage = () => {
