@@ -52,12 +52,25 @@ const SignupFormContainer = styled.div`
   }
 `;
 
+const Notification = styled.div`
+  display: flex;
+  background-color: #e5e5e5;
+  padding: 20px;
+  border-radius: 20px;
+`;
+
 const SignupForm = () => {
   return (
     <SignupFormContainer>
       <div className="signup">
         <CustomText textStyle="h1">SIGN UP</CustomText>
       </div>
+      <Notification>
+        <CustomText textStyle="b3" line={30}>
+          회원가입 대상자는 구름톤 유니브 전남대 회원입니다. 그 외 사용자가
+          회원가입 할 경우 회원가입 승인 처리가 되지 않습니다.
+        </CustomText>
+      </Notification>
       <CustomInput label="이름" placeholder="김구름" />
       <EmailVerification />
       <div className="signup_password">
