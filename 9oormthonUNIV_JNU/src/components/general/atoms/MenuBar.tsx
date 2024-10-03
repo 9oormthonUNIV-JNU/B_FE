@@ -19,7 +19,7 @@ const MenuBarContainer = styled.div`
   gap: 18px;
   border-radius: 10px;
   border: 1px solid #e5e5e5;
-  z-index: 9999;
+  z-index: 999;
 `;
 
 const MenuBarItem = styled.div<{ isActive: boolean }>`
