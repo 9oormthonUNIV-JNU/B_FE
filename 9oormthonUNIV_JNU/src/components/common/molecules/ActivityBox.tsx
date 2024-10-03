@@ -8,6 +8,7 @@ const ActivityContainer = styled.div`
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
+  cursor: pointer;
 `;
 
 const ActivityImage = styled.img`
@@ -34,24 +35,19 @@ type ActivityBoxProps = {
   image: string;
   subject: string;
   tag: string[];
+  onClick?: () => void;
 };
 
-const ActivityBox: React.FC<ActivityBoxProps> = ({ image, subject, tag }) => {
+const ActivityBox: React.FC<ActivityBoxProps> = ({ image, subject, tag, onClick }) => {
   return (
-    <CustomBox width={480} height={376}>
+    <CustomBox width={480} height={376} onClick={onClick}> 
       <ActivityContainer>
         <ActivityImage src={image} />
         <ActivityContents>
           <CustomText textStyle="b2">{subject}</CustomText>
           <TagContainer>
-            {tag.map((tagItem, index) => (
-              <CustomTag
-                key={index}
-                backgroundColor={index === 0 ? "#E1EBFD" : "#F7F7F7"}
-                color="#000" 
-              >
-                {tagItem}
-              </CustomTag>
+            {tag.map((tag, index) => (
+              <CustomTag key={index} backgroundColor={index === 0 ? "#E1EBFD" : "#F7F7F7"}>{tag}</CustomTag>
             ))}
           </TagContainer>
         </ActivityContents>

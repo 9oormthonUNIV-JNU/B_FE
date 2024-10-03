@@ -32,8 +32,10 @@ const ActivityContainer = styled.div`
   }
 `;
 
+
 type ActivityProps = {
   activityType: number;
+  Type:string;
 };
 
 const Activity: React.FC<ActivityProps> = ({ activityType }) => {
@@ -49,6 +51,17 @@ const Activity: React.FC<ActivityProps> = ({ activityType }) => {
       ? NetworkingData
       : [];
 
+      const Type =
+      selectedTab === 1
+        ? "프로젝트"
+        : selectedTab === 2
+        ? "세미나"
+        : selectedTab === 3
+        ? "스터디"
+        : selectedTab === 4
+        ? "네트워킹"
+        : "";
+  
   return (
     <ActivityContainer>
       <div className="activity_content">
@@ -79,7 +92,7 @@ const Activity: React.FC<ActivityProps> = ({ activityType }) => {
           onClick={() => setSelectedTab(4)}
         />
       </div>
-      <ActivityBoxes ActivityData={ActivityData} />
+      <ActivityBoxes ActivityData={ActivityData} Type={Type} />
     </ActivityContainer>
   );
 };
