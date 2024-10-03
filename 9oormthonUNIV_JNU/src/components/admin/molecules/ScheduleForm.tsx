@@ -1,44 +1,29 @@
 import React from "react";
-import Modal from "react-modal";
 import styled from "styled-components";
 import CustomText from "../../common/atoms/CustomText";
 import DropdownButton from "../../common/atoms/DropdownButton";
 import CustomButton from "../../common/atoms/CustomButton";
 
-const ModalWrapper = styled(Modal)`
+const ScheduleFormContainer = styled.div`
   display: flex;
   flex-direction: column;
-  position: absolute;
-  align-items: center;
-  justify-content: center;
-  top: 50%;
-  left: 50%;
-  right: auto;
-  bottom: auto;
-  margin-right: -50%;
-  transform: translate(-50%, -50%);
-  background-color: white;
-  padding: 60px;
-  border-radius: 40px;
-  max-width: 500px;
   width: 100%;
-  box-shadow: 0px 0px 20px 12px rgba(0, 0, 0, 0.15);
-  z-index: 1001;
 
   .modal_type {
-    margin-bottom: 40px;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 50px;
   }
 
   .modal_form {
     display: flex;
     flex-direction: column;
-    width: 100%;
     gap: 12px;
   }
 
   .modal_button {
     display: flex;
-    flex: row;
+    flex-direction: row;
     justify-content: center;
     gap: 10px;
   }
@@ -100,33 +85,25 @@ type Schedule = {
   description: string;
 };
 
-type CustomModalProps = {
+type ScheduleFormProps = {
   modalType: "일정 추가하기" | "일정 수정하기";
-  isOpen: boolean;
-  onRequestClose: () => void;
-  onSave: () => void;
   modalForm: Schedule;
   handleModalChange: (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
+  onSave: () => void;
+  onRequestClose: () => void;
 };
 
-const CustomModal: React.FC<CustomModalProps> = ({
+const ScheduleForm: React.FC<ScheduleFormProps> = ({
   modalType,
-  isOpen,
-  onRequestClose,
-  onSave,
   modalForm,
   handleModalChange,
+  onSave,
+  onRequestClose,
 }) => {
   return (
-    <ModalWrapper
-      isOpen={isOpen}
-      onRequestClose={onRequestClose}
-      overlayClassName="modal-overlay"
-    >
+    <ScheduleFormContainer>
       <div className="modal_type">
         <CustomText textStyle="h2">{modalType}</CustomText>
       </div>
@@ -195,22 +172,8 @@ const CustomModal: React.FC<CustomModalProps> = ({
           취소하기
         </CustomButton>
       </div>
-
-      <style>
-        {`
-          .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-          }
-        `}
-      </style>
-    </ModalWrapper>
+    </ScheduleFormContainer>
   );
 };
 
-export default CustomModal;
+export default ScheduleForm;

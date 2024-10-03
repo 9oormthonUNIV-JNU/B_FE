@@ -2,7 +2,8 @@ import { useState } from "react";
 import Calendar, { CalendarProps } from "react-calendar";
 import styled from "styled-components";
 import CustomText from "../../common/atoms/CustomText";
-import CustomModal from "../../admin/molecules/CustomModal";
+import CustomModal from "../../admin/atoms/CustomModal";
+import ScheduleForm from "../../admin/molecules/ScheduleForm";
 import LabelButton from "../../common/atoms/LabelButton";
 import ReactDOM from "react-dom";
 
@@ -240,7 +241,7 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ admin }) => {
     member: "",
     description: "",
   });
-  const [isEditing, setIsEditing] = useState(false); // 추가: 수정 모드 여부
+  const [isEditing, setIsEditing] = useState(false);
 
   const [events, setEvents] = useState<Schedule[]>([
     {
@@ -295,16 +296,8 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ admin }) => {
     setModalIsOpen(true);
   };
 
-  // 모달 닫기 핸들러
   const handleCloseModal = () => {
     setModalIsOpen(false);
-    setModalForm({
-      date: "",
-      name: "",
-      member: "",
-      description: "",
-    });
-    setIsEditing(false);
   };
 
   // 모달 입력 변경 핸들러
@@ -329,12 +322,6 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ admin }) => {
         )
       );
     } else {
-      // 추가 모드: 새로운 일정을 추가
-      // 중복 날짜 확인
-      if (events.some((event) => event.date === modalForm.date)) {
-        alert("해당 날짜에 이미 일정이 존재합니다.");
-        return;
-      }
       setEvents([...events, modalForm]);
     }
     handleCloseModal();
@@ -470,14 +457,15 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ admin }) => {
 
       {/* 일정 추가/수정 모달 - admin 모드일 때만 표시 */}
       {admin && (
-        <CustomModal
-          modalType={isEditing ? "일정 수정하기" : "일정 추가하기"}
-          isOpen={modalIsOpen}
-          onRequestClose={handleCloseModal}
-          onSave={handleSave}
-          modalForm={modalForm}
-          handleModalChange={handleModalChange}
-        />
+        <CustomModal isOpen={modalIsOpen} onRequestClose={handleCloseModal}>
+          <ScheduleForm
+            modalType={isEditing ? "일정 수정하기" : "일정 추가하기"}
+            modalForm={modalForm}
+            handleModalChange={handleModalChange}
+            onSave={handleSave}
+            onRequestClose={handleCloseModal}
+          />
+        </CustomModal>
       )}
     </CalendarWrapper>
   );
