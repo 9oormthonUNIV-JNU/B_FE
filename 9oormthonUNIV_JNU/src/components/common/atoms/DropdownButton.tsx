@@ -70,6 +70,8 @@ const DropdownMenu = styled.div<{ width: string }>`
 `;
 
 const DropdownItem = styled.div<{ form: boolean }>`
+  display: flex;
+  align-items: center;
   height: ${({ form }) => (form ? "30px" : "64px")};
   padding: ${({ form }) => (form ? "4px 8px" : "20px 30px")};
   cursor: pointer;
