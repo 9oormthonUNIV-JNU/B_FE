@@ -31,7 +31,7 @@ const CustomTag: React.FC<CustomTagProps> = ({
       clickable={!!onClick}
       onClick={onClick}
     >
-      <CustomText onClick={() => {}} textStyle="b3" color={color}>
+      <CustomText onClick={() => { }} textStyle="b3" color={color}>
         {children}
       </CustomText>
     </StyledTag>

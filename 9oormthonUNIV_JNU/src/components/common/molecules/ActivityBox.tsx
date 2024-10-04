@@ -32,7 +32,7 @@ const TagContainer = styled.div`
 `;
 
 type ActivityBoxProps = {
-  image: string;
+  image: string[];
   subject: string;
   tag: string[];
   onClick?: () => void;
@@ -40,9 +40,9 @@ type ActivityBoxProps = {
 
 const ActivityBox: React.FC<ActivityBoxProps> = ({ image, subject, tag, onClick }) => {
   return (
-    <CustomBox width={480} height={376} onClick={onClick}> 
+    <CustomBox width={480} height={376} onClick={onClick}>
       <ActivityContainer>
-        <ActivityImage src={image} />
+        <ActivityImage src={image[0]} />
         <ActivityContents>
           <CustomText textStyle="b2">{subject}</CustomText>
           <TagContainer>

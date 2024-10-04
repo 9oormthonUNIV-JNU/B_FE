@@ -1,10 +1,10 @@
 import LabelButton from "../atoms/LabelButton";
 import styled from "styled-components";
 import {
-  ProjectData,
-  SeminarData,
-  StudyData,
-  NetworkingData,
+    ProjectData,
+    SeminarData,
+    StudyData,
+    NetworkingData,
 } from "../../../constants/ActivityList";
 import { useState } from "react";
 import ActivityBoxes from "../organisms/ActivityBoxes";
@@ -34,66 +34,66 @@ const ActivityContainer = styled.div`
 
 
 type ActivityProps = {
-  activityType: number;
-  Type:string;
+    activityType: number;
+    Type: string;
 };
 
 const Activity: React.FC<ActivityProps> = ({ activityType }) => {
-  const [selectedTab, setSelectedTab] = useState<number>(activityType);
-  const ActivityData =
-    selectedTab === 1
-      ? ProjectData
-      : selectedTab === 2
-      ? SeminarData
-      : selectedTab === 3
-      ? StudyData
-      : selectedTab === 4
-      ? NetworkingData
-      : [];
+    const [selectedTab, setSelectedTab] = useState<number>(activityType);
+    const ActivityData =
+        selectedTab === 1
+            ? ProjectData
+            : selectedTab === 2
+                ? SeminarData
+                : selectedTab === 3
+                    ? StudyData
+                    : selectedTab === 4
+                        ? NetworkingData
+                        : [];
 
-      const Type =
-      selectedTab === 1
-        ? "프로젝트"
-        : selectedTab === 2
-        ? "세미나"
-        : selectedTab === 3
-        ? "스터디"
-        : selectedTab === 4
-        ? "네트워킹"
-        : "";
-  
-  return (
-    <ActivityContainer>
-      <div className="activity_content">
-        <CustomText textStyle="h1">Activities</CustomText>
-      </div>
+    const Type =
+        selectedTab === 1
+            ? "프로젝트"
+            : selectedTab === 2
+                ? "세미나"
+                : selectedTab === 3
+                    ? "스터디"
+                    : selectedTab === 4
+                        ? "네트워킹"
+                        : "";
 
-      <div className="button_container">
-        <LabelButton
-          label="프로젝트"
-          isActive={selectedTab === 1}
-          onClick={() => setSelectedTab(1)}
-        />
-        <LabelButton
-          label="세미나"
-          isActive={selectedTab === 2}
-          onClick={() => setSelectedTab(2)}
-        />
+    return (
+        <ActivityContainer>
+            <div className="activity_content">
+                <CustomText textStyle="h1">Activities</CustomText>
+            </div>
 
-        <LabelButton
-          label="스터디"
-          isActive={selectedTab === 3}
-          onClick={() => setSelectedTab(3)}
-        />
+            <div className="button_container">
+                <LabelButton
+                    label="프로젝트"
+                    isActive={selectedTab === 1}
+                    onClick={() => setSelectedTab(1)}
+                />
+                <LabelButton
+                    label="세미나"
+                    isActive={selectedTab === 2}
+                    onClick={() => setSelectedTab(2)}
+                />
 
-        <LabelButton
-          label="네트워킹"
-          isActive={selectedTab === 4}
-          onClick={() => setSelectedTab(4)}
-        />
-      </div>
-      <ActivityBoxes ActivityData={ActivityData} Type={Type} />
-    </ActivityContainer>
-  );
+                <LabelButton
+                    label="스터디"
+                    isActive={selectedTab === 3}
+                    onClick={() => setSelectedTab(3)}
+                />
+
+                <LabelButton
+                    label="네트워킹"
+                    isActive={selectedTab === 4}
+                    onClick={() => setSelectedTab(4)}
+                />
+            </div>
+            <ActivityBoxes ActivityData={ActivityData} Type={Type} />
+        </ActivityContainer>
+    );
 };
 export default Activity;
