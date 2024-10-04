@@ -3,6 +3,10 @@ import styled from "styled-components";
 import CustomText from "../../common/atoms/CustomText";
 import CustomTag from "../../common/atoms/CustomTag";
 import LabelButton from "../../common/atoms/LabelButton";
+import CustomModal from "../atoms/CustomModal";
+import PostForm from "../molecules/PostForm";
+import DropdownButton from "../../common/atoms/DropdownButton";
+import CustomButton from "../../common/atoms/CustomButton";
 
 export type Post = {
   id: string;
@@ -76,57 +80,50 @@ const PostTableContainer = styled.div`
   }
 `;
 
-// 테이블 전체 스타일
 const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
   table-layout: fixed;
 `;
 
-// 테이블 헤더 스타일
 const Thead = styled.thead`
   width: 100%;
   background-color: #e1ebfd;
 `;
 
-// 테이블 헤더 셀 스타일
 const Th = styled.th`
   text-align: left;
   padding: 16px 12px;
-
   color: black;
   font-size: 20px;
   font-weight: 500;
   line-height: 30px;
 
   &:nth-child(1) {
-    width: 40%; /* 게시글 이름 */
+    width: 40%;
   }
   &:nth-child(2) {
-    width: 20%; /* 카테고리 */
+    width: 20%;
   }
   &:nth-child(3) {
-    width: 25%; /* 등록/수정일 */
+    width: 25%;
   }
   &:nth-child(4) {
-    width: 15%; /* 버튼 */
+    width: 15%;
   }
 `;
 
-// 테이블 바디 스타일
 const Tbody = styled.tbody``;
 
-// 테이블 행 스타일
 const Tr = styled.tr`
   border-top: 1px solid black;
   border-bottom: 1px solid black;
 `;
 
-// 테이블 데이터 셀 스타일
 const Td = styled.td`
   padding: 16px 12px;
   border-bottom: 1px solid black;
-  word-wrap: break-word; /* 긴 텍스트 줄바꿈 */
+  word-wrap: break-word;
 
   color: #484848;
   font-size: 20px;
@@ -140,7 +137,6 @@ const Td = styled.td`
   }
 `;
 
-// 날짜를 "YYYY. MM. DD" 형식으로 포맷팅하는 함수
 const formatDate = (dateStr: string): string => {
   const date = new Date(dateStr);
   const year = date.getFullYear();
@@ -155,23 +151,30 @@ type PostTableProps = {
 
 const PostTable: React.FC<PostTableProps> = ({ posts }) => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+  const [isPostFormModalOpen, setIsPostFormModalOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<
+    "프로젝트" | "스터디" | "세미나" | "네트워킹"
+  >("프로젝트");
+  const [modalForm, setModalForm] = useState({
+    name: "",
+    description: "",
+    photos: undefined,
+  });
+
   const postsPerPage = 10;
 
-  // 현재 페이지에 표시할 게시글 계산
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
 
-  // 전체 페이지 수 계산
   const totalPages = Math.ceil(posts.length / postsPerPage);
 
-  // 페이지 번호 생성
   const pageNumbers = [];
   for (let i = 1; i <= totalPages; i++) {
     pageNumbers.push(i);
   }
 
-  // 페이지 변경 핸들러
   const handleClickPage = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
@@ -184,6 +187,35 @@ const PostTable: React.FC<PostTableProps> = ({ posts }) => {
     setCurrentPage((prev) => prev + 1);
   };
 
+  const handleModalChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setModalForm({ ...modalForm, [e.target.name]: e.target.value });
+  };
+
+  const handleModalSave = () => {
+    console.log("Modal Form Data: ", modalForm);
+    setIsPostFormModalOpen(false);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files) {
+      console.log("Selected files: ", files);
+    }
+  };
+
+  const handleCategoryChange = (selected: string) => {
+    setSelectedCategory(
+      selected as "프로젝트" | "스터디" | "세미나" | "네트워킹"
+    );
+  };
+
+  const handleCategorySubmit = () => {
+    setIsCategoryModalOpen(false);
+    setIsPostFormModalOpen(true);
+  };
+
   return (
     <PostTableContainer>
       <div className="post_header">
@@ -191,12 +223,11 @@ const PostTable: React.FC<PostTableProps> = ({ posts }) => {
         <div className="post_add">
           <LabelButton
             label="+ 게시글 추가"
-            onClick={() => {
-              /* 추가 버튼 클릭 시 처리 로직 */
-            }}
+            onClick={() => setIsCategoryModalOpen(true)}
           />
         </div>
       </div>
+
       <Table>
         <Thead>
           <Tr>
@@ -215,7 +246,6 @@ const PostTable: React.FC<PostTableProps> = ({ posts }) => {
               <Td className="post_button">
                 <CustomTag
                   onClick={() => {
-                    // 수정 버튼 클릭 시 처리 로직 추가
                     console.log(`수정: ${post.id}`);
                   }}
                   backgroundColor="#F7F7F7"
@@ -225,7 +255,6 @@ const PostTable: React.FC<PostTableProps> = ({ posts }) => {
                 </CustomTag>
                 <CustomTag
                   onClick={() => {
-                    // 삭제 버튼 클릭 시 처리 로직 추가
                     console.log(`삭제: ${post.id}`);
                   }}
                   backgroundColor="#F7F7F7"
@@ -238,12 +267,10 @@ const PostTable: React.FC<PostTableProps> = ({ posts }) => {
           ))}
         </Tbody>
       </Table>
-      {/* 페이지네이션 컨트롤 */}
+
       <div className="pagination">
         <button onClick={handlePrevPage} disabled={currentPage === 1}>
-          <CustomText textStyle="b3" onClick={() => {}}>
-            {"<"} 이전
-          </CustomText>
+          <CustomText textStyle="b3">{"<"} 이전</CustomText>
         </button>
         {pageNumbers.map((number) => (
           <span
@@ -256,11 +283,44 @@ const PostTable: React.FC<PostTableProps> = ({ posts }) => {
           </span>
         ))}
         <button onClick={handleNextPage} disabled={currentPage === totalPages}>
-          <CustomText onClick={() => {}} textStyle="b3">
-            다음 {">"}
-          </CustomText>
+          <CustomText textStyle="b3">다음 {">"}</CustomText>
         </button>
       </div>
+
+      {/* 카테고리 선택 모달 */}
+      <CustomModal
+        isOpen={isCategoryModalOpen}
+        onRequestClose={() => setIsCategoryModalOpen(false)}
+      >
+        <div>
+          <CustomText textStyle="h2">
+            작성할 게시글의 카테고리를 선택하세요
+          </CustomText>
+          <DropdownButton
+            form={true}
+            options={["프로젝트", "스터디", "세미나", "네트워킹"]}
+            onChange={handleCategoryChange} // 이벤트 핸들러 변경
+          />
+          <CustomButton onClick={handleCategorySubmit}>확인</CustomButton>
+        </div>
+      </CustomModal>
+
+      {/* 게시글 작성 모달 */}
+      {isPostFormModalOpen && (
+        <CustomModal
+          isOpen={isPostFormModalOpen}
+          onRequestClose={() => setIsPostFormModalOpen(false)}
+        >
+          <PostForm
+            modalType={selectedCategory}
+            modalForm={modalForm}
+            handleModalChange={handleModalChange}
+            handleFileChange={handleFileChange}
+            onSave={handleModalSave}
+            onRequestClose={() => setIsPostFormModalOpen(false)}
+          />
+        </CustomModal>
+      )}
     </PostTableContainer>
   );
 };
