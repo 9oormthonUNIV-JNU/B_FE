@@ -314,7 +314,7 @@ const PostTable: React.FC<PostTableProps> = ({ posts }) => {
           </CustomText>
           <DropdownButton
             options={["프로젝트", "스터디", "세미나", "네트워킹"]}
-            onChange={handleCategoryChange} // 이벤트 핸들러 변경
+            onChange={handleCategoryChange}
           />
           <CustomButton onClick={handleCategorySubmit}>확인</CustomButton>
         </CategoryModal>
