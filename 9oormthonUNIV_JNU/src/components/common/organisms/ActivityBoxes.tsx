@@ -16,14 +16,13 @@ const ActivityBoxesContainer = styled.div`
   align-items: center;
 `;
 
-
 const ActivityBoxes: React.FC<{
   ActivityData?: Array<{
-    image: string;
+    image: string[];  // Image array
     subject: string;
     tag: string[];
   }>;
-  Type:string;
+  Type: string;
 }> = ({ ActivityData, Type }) => {
   if (!ActivityData || ActivityData.length === 0) {
     return null;
@@ -46,21 +45,21 @@ const ActivityBoxes: React.FC<{
       {ActivityData.map((data, index) => (
         <ActivityBox
           key={index}
-          image={data.image}
+          image={data.image}  // Show the first image as thumbnail
           subject={data.subject}
           tag={data.tag}
           onClick={() => handleOpenModal(data)}
         />
       ))}
 
-        {selectedActivity && (
+      {selectedActivity && (
         <CustomModal
-        type={Type}
+          type={Type}
           isOpen={isOpen}
           onClose={handleCloseModal}
           image={selectedActivity.image}
           subject={selectedActivity.subject}
-          description="This is a description of the activity."
+          description="상세 설명"
           tag={selectedActivity.tag}
         />
       )}

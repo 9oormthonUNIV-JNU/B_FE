@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 import CustomText from "./CustomText";
 import CustomTag from "./CustomTag";
+import { Carousel } from "react-responsive-carousel";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -25,7 +27,7 @@ const ModalContent = styled.div`
   bottom: auto;
   transform: translate(-50%, -50%);
   background-color: white;
-  padding: 60px;
+  padding: 50px;
   border-radius: 40px;
   max-width: 500px;
   width: 100%;
@@ -33,17 +35,17 @@ const ModalContent = styled.div`
   box-shadow: 0px 0px 20px 12px rgba(0, 0, 0, 0.15);
   z-index: 1001;
 
-  .Context{
-   display: flex;
-  align-items: center;
-  justify-content: center;
+  .Content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 50px;
   }
-`;
 
-const Image = styled.img`
-  width: 100%;
-  margin-bottom:66.5px;
-  margin-top:50px;
+  .ImageContainer {
+      margin-bottom: 55px;
+
+  }
 `;
 
 const TagContainer = styled.div`
@@ -66,25 +68,32 @@ const CloseButton = styled.button`
 type CustomModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  image: string;
+  image: string[];
   subject: string;
   description: string;
   tag: string[];
-  type:string;
+  type: string;
 };
 
-const CustomModal: React.FC<CustomModalProps> = ({ isOpen, type, onClose, image, subject, description, tag }) => {
-
-    useEffect(() => {
-        if (isOpen) {
-          document.body.style.overflow = 'hidden';
-        } else {
-          document.body.style.overflow = 'unset';
-        }
-            return () => {
-          document.body.style.overflow = 'unset';
-        };
-      }, [isOpen]);
+const CustomModal: React.FC<CustomModalProps> = ({
+  isOpen,
+  type,
+  onClose,
+  image,
+  subject,
+  description,
+  tag,
+}) => {
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -92,12 +101,20 @@ const CustomModal: React.FC<CustomModalProps> = ({ isOpen, type, onClose, image,
     <ModalOverlay>
       <ModalContent>
         <CloseButton onClick={onClose}>X</CloseButton>
-        <div className="Context">
-        <CustomText textStyle="h1">{type}</CustomText>
+        <div className="Content">
+          <CustomText textStyle="h1">{type}</CustomText>
         </div>
-        <Image src={image} alt={subject} />
+        <div className="ImageContainer">
+        <Carousel showThumbs={false} infiniteLoop useKeyboardArrows autoPlay showIndicators={true}>
+          {image.map((imgSrc, index) => (
+            <div key={index}>
+              <img src={imgSrc} alt={`slide-${index}`} />
+            </div>
+          ))}
+        </Carousel>
+        </div>
         <CustomText textStyle="h2">{subject}</CustomText>
-        <br/>
+        <br />
         <CustomText textStyle="b3">{description}</CustomText>
         <TagContainer>
           {tag.map((t, index) => (
