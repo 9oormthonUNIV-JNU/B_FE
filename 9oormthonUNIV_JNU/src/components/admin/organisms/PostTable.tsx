@@ -213,10 +213,18 @@ const PostTable: React.FC<PostTableProps> = ({ posts }) => {
     }
   };
 
-  const handleCategoryChange = (selected: string) => {
-    setSelectedCategory(
-      selected as "프로젝트" | "스터디" | "세미나" | "네트워킹"
-    );
+  const handleCategoryChange = (selected: string | string[]) => {
+    // 단일 선택일 경우 selected는 string, 다중 선택일 경우 string[]
+    if (typeof selected === "string") {
+      setSelectedCategory(
+        selected as "프로젝트" | "스터디" | "세미나" | "네트워킹"
+      );
+    } else {
+      // 다중 선택인 경우 첫 번째 선택된 값을 사용하거나 필요에 따라 처리
+      setSelectedCategory(
+        selected[0] as "프로젝트" | "스터디" | "세미나" | "네트워킹"
+      );
+    }
   };
 
   const handleCategorySubmit = () => {
