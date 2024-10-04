@@ -76,6 +76,7 @@ const DropdownItem = styled.div<{ form: boolean }>`
   padding: ${({ form }) => (form ? "4px 8px" : "20px 30px")};
   cursor: pointer;
   border-radius: 10px;
+  box-sizing: border-box;
 
   &:hover {
     background-color: #d8d8d8;

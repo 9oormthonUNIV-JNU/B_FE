@@ -137,6 +137,14 @@ const Td = styled.td`
   }
 `;
 
+const CategoryModal = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 27px;
+`;
+
 const formatDate = (dateStr: string): string => {
   const date = new Date(dateStr);
   const year = date.getFullYear();
@@ -292,17 +300,16 @@ const PostTable: React.FC<PostTableProps> = ({ posts }) => {
         isOpen={isCategoryModalOpen}
         onRequestClose={() => setIsCategoryModalOpen(false)}
       >
-        <div>
-          <CustomText textStyle="h2">
+        <CategoryModal>
+          <CustomText textStyle="b2">
             작성할 게시글의 카테고리를 선택하세요
           </CustomText>
           <DropdownButton
-            form={true}
             options={["프로젝트", "스터디", "세미나", "네트워킹"]}
             onChange={handleCategoryChange} // 이벤트 핸들러 변경
           />
           <CustomButton onClick={handleCategorySubmit}>확인</CustomButton>
-        </div>
+        </CategoryModal>
       </CustomModal>
 
       {/* 게시글 작성 모달 */}
