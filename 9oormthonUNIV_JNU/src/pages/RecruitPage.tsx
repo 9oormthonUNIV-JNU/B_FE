@@ -1,5 +1,7 @@
+import Recruit from "../components/common/templates/Recruit";
+
 const RecruitPage = () => {
-  return <div>RecruitPage</div>;
+  return <div><Recruit/></div>;
 };
 
 export default RecruitPage;
