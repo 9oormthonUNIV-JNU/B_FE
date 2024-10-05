@@ -6,8 +6,9 @@ import icon_down from "../../../assets/images/icon_down.svg";
 type DropdownButtonProps = {
   label?: string;
   options: string[];
-  value?: string;
-  onChange?: (selected: string) => void;
+  value?: string | string[]; // 다중 선택 시 string[]
+  onChange?: (selected: string[]) => void; // 다중 선택에만 집중할 경우 string[]로 변경
+  multi?: boolean; // 다중 선택 여부
   style?: React.CSSProperties;
   form?: boolean;
 };
@@ -16,7 +17,6 @@ const DropdownContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  gap: 10px;
   position: relative;
 
   .dropdown_label {
@@ -24,7 +24,6 @@ const DropdownContainer = styled.div`
   }
 `;
 
-// form 속성에 따라 스타일을 다르게 적용
 const StyledDropdownButton = styled.button<{ form?: boolean }>`
   border-radius: ${({ form }) => (form ? "10px" : "20px")};
   border: ${({ form }) => (form ? "none" : "1px solid #e5e5e5")};
@@ -52,7 +51,7 @@ const StyledDropdownButton = styled.button<{ form?: boolean }>`
   &:focus {
     outline: none;
     box-shadow: ${({ form }) =>
-      form ? "none" : " 0 0 0 1px rgba(159, 190, 247, 0.5);"};
+      form ? "none" : "0 0 0 1px rgba(159, 190, 247, 0.5);"};
   }
 `;
 
@@ -69,13 +68,15 @@ const DropdownMenu = styled.div<{ width: string }>`
   z-index: 1;
 `;
 
-const DropdownItem = styled.div<{ form: boolean }>`
+const DropdownItem = styled.div<{ form: boolean; selected?: boolean }>`
   display: flex;
   align-items: center;
-  height: ${({ form }) => (form ? "30px" : "64px")};
+  height: ${({ form }) => (form ? "35px" : "64px")};
   padding: ${({ form }) => (form ? "4px 8px" : "20px 30px")};
   cursor: pointer;
   border-radius: 10px;
+  box-sizing: border-box;
+  background-color: ${({ selected }) => (selected ? "#d8d8d8" : "transparent")};
 
   &:hover {
     background-color: #d8d8d8;
@@ -89,9 +90,12 @@ const DropdownButton: React.FC<DropdownButtonProps> = ({
   onChange,
   style,
   form = false,
+  multi = false,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(value || label);
+  const [selectedOptions, setSelectedOptions] = useState<string[]>(
+    Array.isArray(value) ? value : []
+  );
   const buttonRef = useRef<HTMLButtonElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [dropdownWidth, setDropdownWidth] = useState("200px");
@@ -101,9 +105,18 @@ const DropdownButton: React.FC<DropdownButtonProps> = ({
   };
 
   const handleOptionClick = (option: string) => {
-    setSelectedOption(option);
-    setIsOpen(false);
-    if (onChange) onChange(option);
+    if (multi) {
+      // 다중 선택일 경우
+      const updatedSelection = selectedOptions.includes(option)
+        ? selectedOptions.filter((selected) => selected !== option)
+        : [...selectedOptions, option];
+      setSelectedOptions(updatedSelection);
+      if (onChange) onChange(updatedSelection); // 다중 선택일 경우 배열 전달
+    } else {
+      setSelectedOptions([option]);
+      setIsOpen(false);
+      if (onChange) onChange([option]); // 단일 선택도 배열 형태로 전달
+    }
   };
 
   const handleClickOutside = (e: MouseEvent) => {
@@ -148,7 +161,7 @@ const DropdownButton: React.FC<DropdownButtonProps> = ({
         form={form}
       >
         <CustomText textStyle="b3" color="#797979">
-          {selectedOption}
+          {selectedOptions.length > 0 ? selectedOptions.join(", ") : label}
         </CustomText>
         <img src={icon_down} alt="down arrow" />
       </StyledDropdownButton>
@@ -158,6 +171,7 @@ const DropdownButton: React.FC<DropdownButtonProps> = ({
             <DropdownItem
               form={form}
               key={option}
+              selected={selectedOptions.includes(option)}
               onClick={() => handleOptionClick(option)}
             >
               <CustomText textStyle="b3">{option}</CustomText>

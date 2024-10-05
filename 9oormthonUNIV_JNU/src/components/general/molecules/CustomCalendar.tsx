@@ -180,7 +180,7 @@ const DropdownMenu = styled.div`
   border-radius: 10px;
   padding: 14px 12px;
   box-shadow: 0px 0px 3px 3px rgba(0, 0, 0, 0.05);
-  z-index: 10000; /* 더 높은 z-index 설정 */
+  z-index: 500; /* 더 높은 z-index 설정 */
 
   * {
     white-space: nowrap;
