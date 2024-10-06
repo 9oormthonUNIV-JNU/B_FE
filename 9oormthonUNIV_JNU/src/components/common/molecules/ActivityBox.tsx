@@ -7,6 +7,7 @@ const ActivityContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  width:100%;
   height: 100%;
   cursor: pointer;
 `;
@@ -40,7 +41,7 @@ type ActivityBoxProps = {
 
 const ActivityBox: React.FC<ActivityBoxProps> = ({ image, subject, tag, onClick }) => {
   return (
-    <CustomBox width={480} height={376} onClick={onClick}>
+    <CustomBox width={400} height={376} onClick={onClick}>
       <ActivityContainer>
         <ActivityImage src={image[0]} />
         <ActivityContents>

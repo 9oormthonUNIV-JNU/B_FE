@@ -6,12 +6,12 @@ import CustomModal from "../atoms/CustomModal";
 const ActivityBoxesContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  max-width: 1200px;
+  max-width:100%;
   margin-bottom: 200px;
-  gap: 44px;
-  width: 100%;
+  row-gap: 44px;
+  column-gap: 40px;
   justify-items: center;
-  justify-content: center;
+  justify-content: space-between;
   box-sizing: border-box;
   align-items: center;
 `;
