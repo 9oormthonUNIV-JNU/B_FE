@@ -21,6 +21,7 @@ const DropdownContainer = styled.div`
 
   .dropdown_label {
     margin-left: 10px;
+    margin-bottom: 10px;
   }
 `;
 
