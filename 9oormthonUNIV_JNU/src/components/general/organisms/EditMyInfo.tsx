@@ -57,6 +57,7 @@ const InputContainer = styled.div`
 `;
 
 const EditMyInfo: React.FC = () => {
+    //현재 유저 정보
     const [userProfile, setUserProfile] = useState<UserProfile>({
         name: '김구름',
         email: 'abcd123@email.com',
