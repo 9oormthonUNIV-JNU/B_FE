@@ -6,7 +6,7 @@ const SignupContainer = styled.div`
   align-items: center;
   justify-content: center;
   margin: 100px 0px;
-  width: 100%;
+  width: 60%;
   margin: 120px auto;
 `;
 

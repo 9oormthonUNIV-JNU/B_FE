@@ -1,4 +1,4 @@
-import React from "react";
+import React, { forwardRef } from "react";
 import styled from "styled-components";
 import CustomText from "./CustomText";
 import "../../../assets/fonts/font.css";
@@ -63,26 +63,23 @@ type CustomInputProps = {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-const CustomInput: React.FC<CustomInputProps> = ({
-  label,
-  placeholder,
-  value,
-  type = "text",
-  onChange,
-}) => {
-  return (
-    <InputContainer>
-      <div className="input_label">
-        {label && <CustomText textStyle="b3">{label}</CustomText>}
-      </div>
-      <StyledInput
-        type={type}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-      />
-    </InputContainer>
-  );
-};
+const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
+  ({ label, placeholder, value, type = "text", onChange }, ref) => {
+    return (
+      <InputContainer>
+        <div className="input_label">
+          {label && <CustomText textStyle="b3">{label}</CustomText>}
+        </div>
+        <StyledInput
+          ref={ref}
+          type={type}
+          placeholder={placeholder}
+          value={value}
+          onChange={onChange}
+        />
+      </InputContainer>
+    );
+  }
+);
 
 export default CustomInput;
