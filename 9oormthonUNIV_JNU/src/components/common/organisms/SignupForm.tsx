@@ -144,7 +144,7 @@ const SignupForm = () => {
         email,
         password,
         name,
-        user_cardinal: Number(cardinal),
+        user_cardinal: cardinal,
         user_part: part,
       });
 

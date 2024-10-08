@@ -5,9 +5,10 @@ import { instance } from "../../../apis/instance";
 import { useState, useEffect } from "react";
 
 type Member = {
+  userId: string;
   name: string;
   email: string;
-  applicationDate: string;
+  createdAt: string;
 };
 
 const PendingMemberList = () => {
@@ -17,7 +18,8 @@ const PendingMemberList = () => {
     const fetchMembers = async () => {
       try {
         const response = await instance.get("/api/admin/state");
-        setMembers(response.data);
+        const pendingList = response.data.PendingList;
+        setMembers(pendingList);
       } catch (error) {
         console.error(error);
       }
@@ -50,9 +52,10 @@ const PendingMemberList = () => {
         {members.map((member) => (
           <PendingMemberItem
             key={member.email}
+            userId={member.userId}
             name={member.name}
             email={member.email}
-            applicationDate={member.applicationDate}
+            createdAt={member.createdAt}
           />
         ))}
       </MemberList>
