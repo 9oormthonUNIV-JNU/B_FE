@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { MemberData as AllMembers } from "../../../constants/MemberList";
+import { useState, useEffect } from "react";
 import MemberBoxes from "../organisms/MemberBoxes";
 import styled from "styled-components";
 import CustomText from "../atoms/CustomText";
 import FilterButton from "../atoms/FilterButton";
+import { instance } from "../../../apis/instance";
 
 const MemberTemplateContainer = styled.div`
   display: flex;
@@ -29,10 +29,42 @@ const MemberTemplateContainer = styled.div`
 `;
 
 const MemberTemplate = () => {
+  const [members, setMembers] = useState<any[]>([]);
   const [selectedPart, setSelectedPart] = useState<string>("전체");
   const [selectedGeneration, setSelectedGeneration] = useState<string>("전체");
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const filteredMembers = AllMembers.filter((member) => {
+  // API 호출을 위한 useEffect
+  useEffect(() => {
+    const fetchMembers = async () => {
+      try {
+        setLoading(true);
+        const response = await instance.get("/members"); // instance 사용
+        const responseData = response.data.response;
+
+        // API 응답 데이터를 상태로 설정
+        const formattedMembers = responseData.map((member: any) => ({
+          image: member.imageURL,
+          name: member.name,
+          generations: [member.cardinal],
+          part: member.part,
+        }));
+
+        setMembers(formattedMembers);
+        setError(null);
+      } catch (error) {
+        setError("데이터를 불러오는 중 오류가 발생했습니다.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMembers();
+  }, []);
+
+  // 필터링된 멤버 데이터
+  const filteredMembers = members.filter((member) => {
     const isPartMatch = selectedPart === "전체" || member.part === selectedPart;
     const isGenerationMatch =
       selectedGeneration === "전체" ||
@@ -40,6 +72,14 @@ const MemberTemplate = () => {
 
     return isPartMatch && isGenerationMatch;
   });
+
+  if (loading) {
+    return <CustomText textStyle="h2">로딩 중...</CustomText>;
+  }
+
+  if (error) {
+    return <CustomText textStyle="h2" color="red">{error}</CustomText>;
+  }
 
   return (
     <MemberTemplateContainer>
