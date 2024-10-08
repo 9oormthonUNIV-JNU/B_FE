@@ -1,4 +1,5 @@
-import { MemberData } from "../../../constants/MemberList";
+import { useState } from "react";
+import { MemberData as AllMembers } from "../../../constants/MemberList";
 import MemberBoxes from "../organisms/MemberBoxes";
 import styled from "styled-components";
 import CustomText from "../atoms/CustomText";
@@ -28,6 +29,18 @@ const MemberTemplateContainer = styled.div`
 `;
 
 const MemberTemplate = () => {
+  const [selectedPart, setSelectedPart] = useState<string>("전체");
+  const [selectedGeneration, setSelectedGeneration] = useState<string>("전체");
+
+  const filteredMembers = AllMembers.filter((member) => {
+    const isPartMatch = selectedPart === "전체" || member.part === selectedPart;
+    const isGenerationMatch =
+      selectedGeneration === "전체" ||
+      member.generations.includes(Number(selectedGeneration.replace("기", "")));
+
+    return isPartMatch && isGenerationMatch;
+  });
+
   return (
     <MemberTemplateContainer>
       <div className="member_content">
@@ -37,10 +50,21 @@ const MemberTemplate = () => {
         <FilterButton
           filterType="파트별"
           options={["전체", "PM", "PD", "FE", "BE"]}
+          onClick={(part) => {
+            console.log(`파트 필터 선택: ${part}`);
+            setSelectedPart(part);
+          }}
         />
-        <FilterButton filterType="기수별" options={["전체", "2기", "3기"]} />
+        <FilterButton
+          filterType="기수별"
+          options={["전체", "2기", "3기"]}
+          onClick={(generation) => {
+            console.log(`기수 필터 선택: ${generation}`);
+            setSelectedGeneration(generation);
+          }}
+        />
       </div>
-      <MemberBoxes MemberData={MemberData} />
+      <MemberBoxes MemberData={filteredMembers} />
     </MemberTemplateContainer>
   );
 };

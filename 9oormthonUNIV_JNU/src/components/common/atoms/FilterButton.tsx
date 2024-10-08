@@ -1,7 +1,7 @@
+import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import CustomText from "./CustomText";
 import icon_down from "../../../assets/images/icon_down.svg";
-import { useState, useRef, useEffect } from "react";
 
 const FilterButtonContainer = styled.button`
   display: flex;
@@ -40,9 +40,10 @@ const DropdownItem = styled.div`
 type FilterButtonProps = {
   filterType: string;
   options: string[];
+  onClick: (option: string) => void;
 };
 
-const FilterButton: React.FC<FilterButtonProps> = ({ filterType, options }) => {
+const FilterButton: React.FC<FilterButtonProps> = ({ filterType, options, onClick }) => {
   const [selectedOption, setSelectedOption] = useState<string>(filterType);
   const [isOpen, setIsOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -55,6 +56,8 @@ const FilterButton: React.FC<FilterButtonProps> = ({ filterType, options }) => {
   const handleOptionClick = (option: string) => {
     setSelectedOption(option);
     setIsOpen(false);
+    console.log(`Selected option: ${option}`);
+    onClick(option);
   };
 
   useEffect(() => {
@@ -73,10 +76,7 @@ const FilterButton: React.FC<FilterButtonProps> = ({ filterType, options }) => {
       {isOpen && (
         <DropdownMenu width={dropdownWidth}>
           {options.map((option) => (
-            <DropdownItem
-              key={option}
-              onClick={() => handleOptionClick(option)}
-            >
+            <DropdownItem key={option} onClick={() => handleOptionClick(option)}>
               <CustomText textStyle="b3">{option}</CustomText>
             </DropdownItem>
           ))}
