@@ -2,12 +2,12 @@ import LoginForm from "../organisms/LoginForm";
 import styled from "styled-components";
 
 const LoginConatiner = styled.div`
-  width: 50%;
+  width: 20%;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  box-sizing: border-box;
 `;
 
 const Login = () => {

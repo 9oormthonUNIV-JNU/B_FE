@@ -138,7 +138,11 @@ const ScheduleForm: React.FC<ScheduleFormProps> = ({
           </div>
           <DropdownButton
             form={true}
-            options={["최지원", "최지원", "최지원"]}
+            options={[
+              { label: "최지원", value: "최지원" },
+              { label: "최지원", value: "최지원" },
+              { label: "최지원", value: "최지원" },
+            ]}
           />
         </InputField>
         <InputField>

@@ -3,12 +3,17 @@ import React, { useState, useRef, useEffect } from "react";
 import CustomText from "./CustomText";
 import icon_down from "../../../assets/images/icon_down.svg";
 
+type Option = {
+  label: string;
+  value: string;
+};
+
 type DropdownButtonProps = {
   label?: string;
-  options: string[];
-  value?: string | string[]; // 다중 선택 시 string[]
-  onChange?: (selected: string[]) => void; // 다중 선택에만 집중할 경우 string[]로 변경
-  multi?: boolean; // 다중 선택 여부
+  options: Option[];
+  value?: string[]; // 배열로 값을 받음
+  onChange?: (selected: string[]) => void; // 항상 배열로 전달
+  multi?: boolean;
   style?: React.CSSProperties;
   form?: boolean;
 };
@@ -87,16 +92,14 @@ const DropdownItem = styled.div<{ form: boolean; selected?: boolean }>`
 const DropdownButton: React.FC<DropdownButtonProps> = ({
   label,
   options,
-  value,
+  value = [],
   onChange,
   style,
   form = false,
-  multi = false,
+  multi = false, // 기본값을 false로 설정
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOptions, setSelectedOptions] = useState<string[]>(
-    Array.isArray(value) ? value : []
-  );
+  const [selectedOptions, setSelectedOptions] = useState<string[]>(value);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [dropdownWidth, setDropdownWidth] = useState("200px");
@@ -107,16 +110,15 @@ const DropdownButton: React.FC<DropdownButtonProps> = ({
 
   const handleOptionClick = (option: string) => {
     if (multi) {
-      // 다중 선택일 경우
       const updatedSelection = selectedOptions.includes(option)
         ? selectedOptions.filter((selected) => selected !== option)
         : [...selectedOptions, option];
       setSelectedOptions(updatedSelection);
-      if (onChange) onChange(updatedSelection); // 다중 선택일 경우 배열 전달
+      if (onChange) onChange(updatedSelection); // 다중 선택 시 배열로 전달
     } else {
       setSelectedOptions([option]);
       setIsOpen(false);
-      if (onChange) onChange([option]); // 단일 선택도 배열 형태로 전달
+      if (onChange) onChange([option]); // 단일 선택 시에도 배열로 전달
     }
   };
 
@@ -137,7 +139,6 @@ const DropdownButton: React.FC<DropdownButtonProps> = ({
     } else {
       document.removeEventListener("mousedown", handleClickOutside);
     }
-
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -145,16 +146,17 @@ const DropdownButton: React.FC<DropdownButtonProps> = ({
 
   useEffect(() => {
     if (buttonRef.current) {
-      const buttonWidth = buttonRef.current.offsetWidth;
-      setDropdownWidth(`${buttonWidth}px`);
+      setDropdownWidth(`${buttonRef.current.offsetWidth}px`);
     }
   }, [isOpen]);
 
   return (
     <DropdownContainer>
-      <div className="dropdown_label">
-        {label && <CustomText textStyle="b3">{label}</CustomText>}
-      </div>
+      {label && (
+        <div className="dropdown_label">
+          <CustomText textStyle="b3">{label}</CustomText>
+        </div>
+      )}
       <StyledDropdownButton
         style={style}
         ref={buttonRef}
@@ -162,20 +164,25 @@ const DropdownButton: React.FC<DropdownButtonProps> = ({
         form={form}
       >
         <CustomText textStyle="b3" color="#797979">
-          {selectedOptions.length > 0 ? selectedOptions.join(", ") : label}
+          {selectedOptions.length > 0
+            ? options
+                .filter((opt) => selectedOptions.includes(opt.value))
+                .map((opt) => opt.label)
+                .join(", ")
+            : label}
         </CustomText>
-        <img src={icon_down} alt="down arrow" />
+        <img src={icon_down} />
       </StyledDropdownButton>
       {isOpen && (
         <DropdownMenu ref={dropdownRef} width={dropdownWidth}>
           {options.map((option) => (
             <DropdownItem
               form={form}
-              key={option}
-              selected={selectedOptions.includes(option)}
-              onClick={() => handleOptionClick(option)}
+              key={option.value}
+              selected={selectedOptions.includes(option.value)}
+              onClick={() => handleOptionClick(option.value)}
             >
-              <CustomText textStyle="b3">{option}</CustomText>
+              <CustomText textStyle="b3">{option.label}</CustomText>
             </DropdownItem>
           ))}
         </DropdownMenu>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { forwardRef } from "react";
 import styled from "styled-components";
 import CustomText from "./CustomText";
 import "../../../assets/fonts/font.css";
@@ -23,6 +23,9 @@ const StyledInput = styled.input`
   box-sizing: border-box;
   width: 100%;
   flex-grow: 1;
+  font-family: "Pretendard";
+  font-weight: 500;
+  font-size: clamp(16px, 2vw, 20px);
 
   &::-webkit-input-placeholder {
     color: #797979;
@@ -63,26 +66,23 @@ type CustomInputProps = {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-const CustomInput: React.FC<CustomInputProps> = ({
-  label,
-  placeholder,
-  value,
-  type = "text",
-  onChange,
-}) => {
-  return (
-    <InputContainer>
-      <div className="input_label">
-        {label && <CustomText textStyle="b3">{label}</CustomText>}
-      </div>
-      <StyledInput
-        type={type}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-      />
-    </InputContainer>
-  );
-};
+const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
+  ({ label, placeholder, value = "", type = "text", onChange }, ref) => {
+    return (
+      <InputContainer>
+        <div className="input_label">
+          {label && <CustomText textStyle="b3">{label}</CustomText>}
+        </div>
+        <StyledInput
+          ref={ref}
+          type={type}
+          placeholder={placeholder}
+          value={value}
+          onChange={onChange}
+        />
+      </InputContainer>
+    );
+  }
+);
 
 export default CustomInput;

@@ -1,16 +1,22 @@
-import { useState } from "react";
+import React from "react";
 import CustomInput from "../atoms/CustomInput";
 import CustomButton from "../atoms/CustomButton";
 
-const EmailVerification = () => {
-  const [isAuthSent, setIsAuthSent] = useState(false);
-  const [showNewInput, setShowNewInput] = useState(false);
+type EmailVerificationProps = {
+  email: string;
+  setEmail: (email: string) => void;
+  handleAuthClick: () => void;
+  isAuthSent: boolean;
+  showNewInput: boolean;
+};
 
-  const handleAuthClick = () => {
-    setIsAuthSent(true);
-    setShowNewInput(true);
-  };
-
+const EmailVerification: React.FC<EmailVerificationProps> = ({
+  email,
+  setEmail,
+  handleAuthClick,
+  isAuthSent,
+  showNewInput,
+}) => {
   return (
     <div className="signup_email">
       <div className="signup_email_input">
@@ -18,6 +24,8 @@ const EmailVerification = () => {
           label="이메일"
           placeholder="abcd123@gmail.com"
           type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
         <div>
           <CustomButton

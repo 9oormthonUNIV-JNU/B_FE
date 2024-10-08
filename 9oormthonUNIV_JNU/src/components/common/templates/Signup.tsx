@@ -3,10 +3,7 @@ import styled from "styled-components";
 
 const SignupContainer = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 100px 0px;
-  width: 100%;
+  width: 550px;
   margin: 120px auto;
 `;
 
