@@ -23,6 +23,9 @@ const StyledInput = styled.input`
   box-sizing: border-box;
   width: 100%;
   flex-grow: 1;
+  font-family: "Pretendard";
+  font-weight: 500;
+  font-size: clamp(16px, 2vw, 20px);
 
   &::-webkit-input-placeholder {
     color: #797979;
@@ -64,7 +67,7 @@ type CustomInputProps = {
 };
 
 const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
-  ({ label, placeholder, value, type = "text", onChange }, ref) => {
+  ({ label, placeholder, value = "", type = "text", onChange }, ref) => {
     return (
       <InputContainer>
         <div className="input_label">
