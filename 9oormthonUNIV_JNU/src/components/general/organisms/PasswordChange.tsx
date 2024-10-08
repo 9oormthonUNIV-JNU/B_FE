@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import CustomText from '../../common/atoms/CustomText';
 import CustomInput from '../../common/atoms/CustomInput';
 import CustomButton from '../../common/atoms/CustomButton';
+import { instance } from '../../../apis/instance';
 
 const Container = styled.div`
   display: flex;
@@ -37,11 +38,10 @@ const PasswordChange: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [passwordMatchError, setPasswordMatchError] = useState('');
-
-
-  //비밀번호 유효성 검사
+  
+  // 비밀번호 유효성 검사
   const isPasswordValid = (password: string) => {
-    const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,15}$/;
+    const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
     return passwordRegex.test(password);
   };
 
@@ -50,7 +50,7 @@ const PasswordChange: React.FC = () => {
     setNewPassword(value);
 
     if (!isPasswordValid(value)) {
-      setErrorMessage('영문자/숫자/특수문자가 포함된 8~15자 조합으로 입력해주세요.');
+      setErrorMessage('영문자/숫자/특수문자가 포함된 8~15자 조합으로 입력해주세요');
     } else {
       setErrorMessage('');
     }
@@ -67,13 +67,22 @@ const PasswordChange: React.FC = () => {
     }
   };
 
-  const handleSubmit = () => {
+  //API
+  const handleSubmit = async () => {
     if (!errorMessage && !passwordMatchError && newPassword && confirmPassword) {
-      console.log('비밀번호 변경 성공');
-      console.log('기존 비밀번호:', currentPassword);
-      console.log('새 비밀번호:', newPassword);
-      console.log('새 비밀번호 확인:', confirmPassword);
-  
+      try {
+        const response = await instance.post(' api/user/password/{user_id}', {
+          password: currentPassword,
+          newpassword: newPassword,
+        });
+
+        if (response.status === 200) {
+          console.log('비밀번호가 성공적으로 변경되었습니다.');
+        }
+      } catch (error) {
+        console.log('비밀번호 변경에 실패했습니다. 다시 시도해주세요.');
+        console.error(error);
+      }
     }
   };
 
