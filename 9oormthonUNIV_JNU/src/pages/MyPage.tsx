@@ -1,5 +1,7 @@
+import MyPageTemplate from "../components/general/templates/MyPageTemplate";
+
 const MyPage = () => {
-  return <div>MyPage</div>;
+  return <MyPageTemplate />;
 };
 
 export default MyPage;

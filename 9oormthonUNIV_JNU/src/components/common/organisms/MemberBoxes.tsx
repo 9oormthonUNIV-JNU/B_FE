@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import MemberBox from "../molecules/MemberBox";
+import CustomText from "../atoms/CustomText";
 
 const MemberBoxesContainer = styled.div`
   display: grid;
@@ -10,8 +11,14 @@ const MemberBoxesContainer = styled.div`
   margin: 100px 200px;
   justify-items: center;
   box-sizing: border-box;
-  max-width: 1200px;
-  margin: 100px auto;
+`;
+
+const EmptyStateContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 500px; 
+  width: 100%;
 `;
 
 const MemberBoxes: React.FC<{
@@ -23,7 +30,11 @@ const MemberBoxes: React.FC<{
   }>;
 }> = ({ MemberData }) => {
   if (!MemberData || MemberData.length === 0) {
-    return null;
+    return (
+      <EmptyStateContainer>
+        <CustomText textStyle="b3" color="#D8D8D8">선택된 조건에 해당하는 멤버가 없습니다.</CustomText>
+      </EmptyStateContainer>
+    );
   }
 
   return (
