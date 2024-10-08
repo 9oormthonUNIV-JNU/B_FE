@@ -3,9 +3,9 @@ import styled from "styled-components";
 import PostTable from "../organisms/PostTable";
 
 export type Post = {
-  id: string;
-  name: string;
-  category: "세미나" | "네트워킹" | "프로젝트" | "스터디";
+  id: number;
+  title: string;
+  category: "seminar" | "networking" | "project" | "study";
   date: string;
 };
 
@@ -18,71 +18,69 @@ const Container = styled.div`
 const PostManage: React.FC = () => {
   const samplePosts: Post[] = [
     {
-      id: "1",
-      name: "React Hooks 이해하기",
-      category: "세미나",
+      id: 1,
+      title: "React Hooks 이해하기",
+      category: "seminar",
       date: "2024-04-20T14:30:00Z",
     },
     {
-      id: "2",
-      name: "TypeScript 기초",
-      category: "스터디",
+      id: 2,
+      title: "TypeScript 기초",
+      category: "study",
       date: "2024-04-18T09:15:00Z",
     },
     {
-      id: "3",
-      name: "Styled-components 사용법",
-      category: "네트워킹",
+      id: 3,
+      title: "Styled-components 사용법",
+      category: "networking",
       date: "2024-04-22T16:45:00Z",
     },
-    // 추가적인 게시글 데이터...
-    // 10개 이상의 게시글을 추가하여 페이지네이션을 테스트하세요.
     {
-      id: "4",
-      name: "JavaScript 고급 개념",
-      category: "프로젝트",
+      id: 4,
+      title: "JavaScript 고급 개념",
+      category: "project",
       date: "2024-04-25T10:00:00Z",
     },
     {
-      id: "5",
-      name: "CSS Flexbox와 Grid",
-      category: "프로젝트",
+      id: 5,
+      title: "CSS Flexbox와 Grid",
+      category: "project",
       date: "2024-04-27T11:30:00Z",
     },
     {
-      id: "6",
-      name: "Node.js 기본",
-      category: "프로젝트",
+      id: 6,
+      title: "Node.js 기본",
+      category: "project",
       date: "2024-04-28T09:00:00Z",
     },
     {
-      id: "7",
-      name: "React Router 사용법",
-      category: "프로젝트",
+      id: 7,
+      title: "React Router 사용법",
+      category: "project",
       date: "2024-04-29T15:45:00Z",
     },
     {
-      id: "8",
-      name: "Redux 상태 관리",
-      category: "프로젝트",
+      id: 8,
+      title: "Redux 상태 관리",
+      category: "project",
       date: "2024-04-30T14:00:00Z",
     },
     {
-      id: "9",
-      name: "Express.js 서버 구축",
-      category: "프로젝트",
+      id: 9,
+      title: "Express.js 서버 구축",
+      category: "project",
       date: "2024-05-01T13:30:00Z",
     },
     {
-      id: "10",
-      name: "GraphQL 기초",
-      category: "프로젝트",
+      id: 10,
+      title: "GraphQL 기초",
+      category: "project",
       date: "2024-05-02T10:15:00Z",
     },
     {
-      id: "11",
-      name: "TypeScript 제네릭",
-      category: "프로젝트",
+      id: 11,
+      title: "TypeScript 제네릭",
+      category: "project",
       date: "2024-05-03T12:45:00Z",
     },
   ];

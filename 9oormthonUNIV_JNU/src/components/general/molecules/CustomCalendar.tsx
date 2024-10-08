@@ -13,7 +13,7 @@ const CalendarWrapper = styled.div`
   flex-direction: column;
   width: 100%;
   background-color: white;
-  z-index: 1; /* 추가 */
+  z-index: 1;
 
   .calendar_schedule_add {
     position: absolute;
@@ -62,16 +62,15 @@ const StyledCalendar = styled(Calendar)`
     background-color: white;
     border: none;
     cursor: pointer;
-    overflow: visible; /* 추가 */
+    overflow: visible;
 
     & > abbr {
       display: none;
     }
   }
 
-  /* 오늘 날짜 타일의 배경색을 설정 */
   .react-calendar__tile--today {
-    background-color: #f4f4f4 !important; /* 오늘 날짜의 배경색 설정 */
+    background-color: #f4f4f4 !important;
   }
 
   .react-calendar__month-view__days__day--weekend:nth-child(7n) {
@@ -147,7 +146,7 @@ type Schedule = {
   description: string;
 };
 
-const EventText = styled.div`
+const EventText = styled.div<{ admin: boolean }>`
   margin: 8px 0px;
   border-radius: 10px;
   padding: 4px 8px;
@@ -160,7 +159,10 @@ const EventText = styled.div`
   width: 100%;
   margin-top: 8px;
   position: relative;
-  cursor: pointer;
+  cursor: ${({ admin }) =>
+    admin ? "pointer" : "default"}; /* admin이 아닐 때는 클릭 불가 상태 */
+  pointer-events: ${({ admin }) =>
+    admin ? "auto" : "none"}; /* admin이 아닐 때는 클릭 이벤트 막기 */
 
   * {
     white-space: nowrap;
@@ -180,7 +182,7 @@ const DropdownMenu = styled.div`
   border-radius: 10px;
   padding: 14px 12px;
   box-shadow: 0px 0px 3px 3px rgba(0, 0, 0, 0.05);
-  z-index: 500; /* 더 높은 z-index 설정 */
+  z-index: 500;
 
   * {
     white-space: nowrap;
@@ -233,7 +235,7 @@ const DropdownMenuPortal = ({
 const CustomCalendar: React.FC<CustomCalendarProps> = ({ admin }) => {
   const [date, setDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [openDropdown, setOpenDropdown] = useState<string | null>(null); // 드롭다운 열릴 때 이벤트의 날짜를 기억
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalForm, setModalForm] = useState<Schedule>({
     date: "",
@@ -256,7 +258,7 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ admin }) => {
       member: "최지원",
       description: "최종 마감",
     },
-  ]); // 이벤트 데이터
+  ]);
 
   const [dropdownPosition, setDropdownPosition] = useState<{
     top: number;
@@ -268,7 +270,6 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ admin }) => {
     width: 0,
   });
 
-  // 일정 수정 핸들러
   const handleEditEvent = (eventToEdit: Schedule) => {
     setModalForm(eventToEdit);
     setIsEditing(true);
@@ -276,7 +277,6 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ admin }) => {
     setOpenDropdown(null);
   };
 
-  // 일정 삭제 핸들러
   const handleDeleteEvent = (eventToDelete: Schedule) => {
     if (window.confirm(`"${eventToDelete.name}" 일정을 삭제하시겠습니까?`)) {
       setEvents(events.filter((event) => event.date !== eventToDelete.date));
@@ -284,7 +284,6 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ admin }) => {
     }
   };
 
-  // 일정 추가 모달 열기 핸들러
   const handleOpenModal = () => {
     setIsEditing(false);
     setModalForm({
@@ -300,7 +299,6 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ admin }) => {
     setModalIsOpen(false);
   };
 
-  // 모달 입력 변경 핸들러
   const handleModalChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -312,10 +310,8 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ admin }) => {
     });
   };
 
-  // 모달 저장 핸들러
   const handleSave = () => {
     if (isEditing) {
-      // 수정 모드: 기존 일정을 업데이트
       setEvents(
         events.map((event) =>
           event.date === modalForm.date ? modalForm : event
@@ -327,19 +323,16 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ admin }) => {
     handleCloseModal();
   };
 
-  // 특정 날짜의 이벤트 찾기
   const findEvent = (tileDate: Date) => {
     const dateStr = tileDate.toISOString().split("T")[0];
     return events.find((event) => event.date === dateStr);
   };
 
-  // 이전 달로 이동
   const handlePrevMonth = () => {
     const prevMonth = new Date(date.setMonth(date.getMonth() - 1));
     setDate(prevMonth);
   };
 
-  // 다음 달로 이동
   const handleNextMonth = () => {
     const nextMonth = new Date(date.setMonth(date.getMonth() + 1));
     setDate(nextMonth);
@@ -362,7 +355,6 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ admin }) => {
     }
   };
 
-  // 드롭다운 토글 핸들러
   const toggleDropdown = (
     dateStr: string,
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -375,12 +367,11 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ admin }) => {
       left: rect.left + window.scrollX,
       width: rect.width,
     });
-    setOpenDropdown(openDropdown === dateStr ? null : dateStr); // 현재 열려있는 드롭다운을 클릭하면 닫음, 다른 타일을 클릭하면 열림
+    setOpenDropdown(openDropdown === dateStr ? null : dateStr);
   };
 
   return (
     <CalendarWrapper>
-      {/* 월 네비게이션 - 일정 추가하기 버튼을 오른쪽에 위치 */}
       <MonthNavigation>
         <NavButton onClick={handlePrevMonth}>{"<"}</NavButton>
         <MonthText>{formattedMonthYear}</MonthText>
@@ -392,7 +383,6 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ admin }) => {
         </div>
       )}
 
-      {/* 달력 */}
       <StyledCalendar
         onChange={handleDateClick}
         value={date}
@@ -430,7 +420,10 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ admin }) => {
                 {tileDate.getDate().toString().padStart(2, "0")}
               </DateText>
               {event && (
-                <EventText onClick={(e) => toggleDropdown(dateStr, e)}>
+                <EventText
+                  admin={!!admin}
+                  onClick={(e) => admin && toggleDropdown(dateStr, e)}
+                >
                   <CustomText textStyle="nav">{event.name}</CustomText>
                   {isOpen && admin && (
                     <DropdownMenuPortal position={dropdownPosition}>
@@ -455,7 +448,6 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ admin }) => {
         }}
       />
 
-      {/* 일정 추가/수정 모달 - admin 모드일 때만 표시 */}
       {admin && (
         <CustomModal isOpen={modalIsOpen} onRequestClose={handleCloseModal}>
           <ScheduleForm
