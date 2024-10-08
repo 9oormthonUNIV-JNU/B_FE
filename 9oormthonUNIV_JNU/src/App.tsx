@@ -11,6 +11,7 @@ import SignupPage from "./pages/SignupPage";
 import MyPage from "./pages/MyPage";
 import AdminPage from "./pages/AdminPage";
 import PendingPage from "./pages/PendingPage";
+import SchedulePage from "./pages/SchedulePage";
 
 const AppContainer = styled.div`
   display: flex;
@@ -41,6 +42,7 @@ const App = () => {
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/admin" element={<AdminPage />} />
             <Route path="/pending" element={<PendingPage />} />
+            <Route path="/schedule" element={<SchedulePage />} />
           </Routes>
         </MainContainer>
         <Footer />
