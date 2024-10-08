@@ -1,34 +1,45 @@
 import PendingMemberItem from "../atoms/PendingMemberItem";
 import CustomText from "../../common/atoms/CustomText";
 import { MemberList, MemberListContainer } from "../molecules/ListContainer";
+import { instance } from "../../../apis/instance";
+import { useState, useEffect } from "react";
+
+type Member = {
+  name: string;
+  email: string;
+  applicationDate: string;
+};
 
 const PendingMemberList = () => {
-  const members: {
-    name: string;
-    email: string;
-    applicationDate: string;
-  }[] = [
-    {
-      name: "최지원",
-      email: "email1@email.com",
-      applicationDate: "2024. 09. 09",
-    },
-    {
-      name: "김민수",
-      email: "email2@email.com",
-      applicationDate: "2024. 09. 10",
-    },
-    {
-      name: "박수현",
-      email: "email3@email.com",
-      applicationDate: "2024. 09. 11",
-    },
-    {
-      name: "이수빈",
-      email: "email4@email.com",
-      applicationDate: "2024. 09. 12",
-    },
-  ];
+  const [members, setMembers] = useState<Member[]>([]);
+
+  useEffect(() => {
+    const fetchMembers = async () => {
+      try {
+        const response = await instance.get("/api/admin/state");
+        setMembers(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchMembers();
+  }, []);
+
+  if (members.length === 0) {
+    return (
+      <MemberListContainer>
+        <div className="memberlist">
+          <CustomText textStyle="b1">승인 대기중인 회원</CustomText>
+        </div>
+        <div className="pending_none">
+          <CustomText textStyle="b3">
+            승인 대기 중인 회원이 없습니다.
+          </CustomText>
+        </div>
+      </MemberListContainer>
+    );
+  }
 
   return (
     <MemberListContainer>
