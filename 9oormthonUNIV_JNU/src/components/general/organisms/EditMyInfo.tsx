@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import CustomText from "../../common/atoms/CustomText";
 import CircledImage from "../atoms/CircledImage";
@@ -13,7 +13,7 @@ type UserProfile = {
   email: string;
   profileImage?: string;
   part: string;
-  generation: string;
+  cardinal: string;
 };
 
 const MyPageContainer = styled.div`
@@ -57,22 +57,93 @@ const InputContainer = styled.div`
   }
 `;
 
+const EmptyStateContainer = styled.div`
+  display: flex;
+  height: 500px;
+  width: 100%;
+  margin-left:170px;
+`;
+
 const EditMyInfo: React.FC = () => {
-  // 현재 유저 정보
   const [userProfile, setUserProfile] = useState<UserProfile>({
-    name: "김구름",
-    email: "abcd123@email.com",
+    name: "",
+    email: "",
     profileImage: "",
     part: "",
-    generation: "",
+    cardinal: "",
   });
 
-  //마이페이지 세부정보 수정 API
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // 마이페이지 조회 GET 요청
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const response = await instance.get("api/user/mypage/{user_id}");
+        const { name, email, imageURL, part, cardinal } = response.data.response;
+
+        setUserProfile({
+          name,
+          email,
+          profileImage: imageURL,
+          part,
+          cardinal: `${cardinal}기`,
+        });
+        setError(null);
+      } catch (error) {
+        setError("유저 정보를 불러오는데 실패했습니다.");
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
+
+  // 마이페이지 사진 업로드 api
+  const uploadImage = async (file: File) => {
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const response = await instance.post("api/user/imageAdd/{user_id}", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      return response.data.imageUrl;
+    } catch (error) {
+      console.error("이미지 업로드 실패:", error);
+      throw new Error("이미지 업로드에 실패했습니다.");
+    }
+  };
+
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      try {
+        const imageUrl = await uploadImage(file);
+        setUserProfile((prev) => ({
+          ...prev,
+          profileImage: imageUrl,
+        }));
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
+
+  const handleDeleteImage = () => {
+    setUserProfile((prev) => ({ ...prev, profileImage: "" }));
+  };
+
   const handleSaveProfile = async () => {
     try {
-      const response = await instance.patch("api/user/{user_id}", {
+      const response = await instance.patch("/api/user/{user_id}", {
         image: userProfile.profileImage,
-        cardinal: Number(userProfile.generation),
+        cardinal: Number(userProfile.cardinal.replace("기", "")),
         part: userProfile.part,
       });
 
@@ -83,7 +154,6 @@ const EditMyInfo: React.FC = () => {
       console.error("내 정보 업데이트에 실패했습니다:", error);
     }
   };
-
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -100,24 +170,24 @@ const EditMyInfo: React.FC = () => {
   const handleDropdownChange = (name: string, value: string) => {
     setUserProfile((prev) => ({ ...prev, [name]: value }));
   };
+  if (loading) {
+    return (
+      <EmptyStateContainer>
+        <CustomText textStyle="b2">로딩 중</CustomText>
+      </EmptyStateContainer>
+    );
+  }
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setUserProfile((prev) => ({
-          ...prev,
-          profileImage: reader.result as string,
-        }));
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  if (error) {
+    return (
+      <EmptyStateContainer>
+        <CustomText textStyle="b2" color="#FF6D57">
+          {error}
+        </CustomText>
+      </EmptyStateContainer>
+    );
+  }
 
-  const handleDeleteImage = () => {
-    setUserProfile((prev) => ({ ...prev, profileImage: "" }));
-  };
 
   return (
     <MyPageContainer>
@@ -178,7 +248,7 @@ const EditMyInfo: React.FC = () => {
               { label: "2기", value: "2기" },
               { label: "3기", value: "3기" },
             ]}
-            value={[userProfile.generation]}
+            value={[userProfile.cardinal]}
             onChange={(selected) => handleDropdownChange("generation", selected[0])}
           />
         </div>

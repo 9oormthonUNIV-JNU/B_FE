@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { MemberData as AllMembers } from "../../../constants/MemberList";
+import { useState, useEffect } from "react";
 import MemberBoxes from "../organisms/MemberBoxes";
 import styled from "styled-components";
 import CustomText from "../atoms/CustomText";
 import FilterButton from "../atoms/FilterButton";
+import { instance } from "../../../apis/instance";
 
 const MemberTemplateContainer = styled.div`
   display: flex;
@@ -27,19 +27,85 @@ const MemberTemplateContainer = styled.div`
     justify-content: center;
   }
 `;
+const EmptyStateContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 500px;
+  width: 100%;
+`;
 
 const MemberTemplate = () => {
+  const [members, setMembers] = useState<any[]>([]);
   const [selectedPart, setSelectedPart] = useState<string>("전체");
-  const [selectedGeneration, setSelectedGeneration] = useState<string>("전체");
+  const [selectedCardinal, setSelectedCardinal] = useState<string>("전체");
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const filteredMembers = AllMembers.filter((member) => {
+  // 멤버 리스트 조회 API
+  useEffect(() => {
+    const fetchMembers = async () => {
+      try {
+        setLoading(true);
+
+        // 쿼리 파라미터
+        const params: any = {};
+        if (selectedPart !== "전체") {
+          params.part = selectedPart;
+        }
+        if (selectedCardinal !== "전체") {
+          params.cardinal = Number(selectedCardinal.replace("기", ""));
+        }
+
+        const response = await instance.get("api/user", { params });
+        const responseData = response.data.response;
+
+        const formattedMembers = responseData.map((member: any) => ({
+          image: member.imageURL,
+          name: member.name,
+          cardinals: [member.cardinal],
+          part: member.part,
+        }));
+
+        setMembers(formattedMembers);
+        setError(null);
+      } catch (error) {
+        setError("데이터를 불러오는 중 오류가 발생했습니다.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMembers();
+  }, [selectedPart, selectedCardinal]); // 필터가 바뀔 때마다 fetch 호출
+
+  // 필터링된 멤버 데이터
+  const filteredMembers = members.filter((member) => {
     const isPartMatch = selectedPart === "전체" || member.part === selectedPart;
-    const isGenerationMatch =
-      selectedGeneration === "전체" ||
-      member.generations.includes(Number(selectedGeneration.replace("기", "")));
+    const isCardinalMatch =
+      selectedCardinal === "전체" ||
+      member.cardinals.includes(Number(selectedCardinal.replace("기", "")));
 
-    return isPartMatch && isGenerationMatch;
+    return isPartMatch && isCardinalMatch;
   });
+
+  if (loading) {
+    return (
+      <EmptyStateContainer>
+        <CustomText textStyle="b2">로딩 중</CustomText>
+      </EmptyStateContainer>
+    );
+  }
+
+  if (error) {
+    return (
+      <EmptyStateContainer>
+        <CustomText textStyle="b2" color="#FF6D57">
+          {error}
+        </CustomText>
+      </EmptyStateContainer>
+    );
+  }
 
   return (
     <MemberTemplateContainer>
@@ -58,9 +124,9 @@ const MemberTemplate = () => {
         <FilterButton
           filterType="기수별"
           options={["전체", "2기", "3기"]}
-          onClick={(generation) => {
-            console.log(`기수 필터 선택: ${generation}`);
-            setSelectedGeneration(generation);
+          onClick={(cardinal) => {
+            console.log(`기수 필터 선택: ${cardinal}`);
+            setSelectedCardinal(cardinal);
           }}
         />
       </div>

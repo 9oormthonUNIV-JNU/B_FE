@@ -31,7 +31,7 @@ const DateContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  background-color: #9fbeef;
+  background-color: #9FBEF7;
 
   padding-top: 130px;
 
