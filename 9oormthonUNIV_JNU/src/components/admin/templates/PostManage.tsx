@@ -7,8 +7,8 @@ export type Post = {
   title: string;
   category: "seminar" | "networking" | "project" | "study";
   date: string;
-  participant?: string[];
-  description?: string;
+  participant: string[];
+  description: string;
   photos?: string[];
 };
 
@@ -111,6 +111,7 @@ const PostManage: React.FC = () => {
       title: "GraphQL 기초",
       category: "project",
       date: "2024-05-02T10:15:00Z",
+      participant: ["최지원", "이현"],
       description:
         "GraphQL을 사용하여 효율적인 API를 설계하고 사용하는 방법을 학습합니다.",
     },
