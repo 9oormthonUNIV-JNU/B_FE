@@ -11,6 +11,9 @@ const MemberBoxesContainer = styled.div`
   margin: 100px 200px;
   justify-items: center;
   box-sizing: border-box;
+  padding-left: 100px;
+  padding-right: 100px;
+
 `;
 
 const EmptyStateContainer = styled.div`

@@ -27,6 +27,7 @@ const MyPageContainer = styled.div`
     width: 180px;
     height: 180px;
     margin-bottom: 30px;
+    object-fit: fill;
   }
 
   .buttonContainer {
@@ -138,7 +139,8 @@ const EditMyInfo: React.FC = () => {
   const handleDeleteImage = () => {
     setUserProfile((prev) => ({ ...prev, profileImage: "" }));
   };
-
+  
+//마이페이지 세부정보 수정 api
   const handleSaveProfile = async () => {
     try {
       const response = await instance.patch("/api/user/{user_id}", {
