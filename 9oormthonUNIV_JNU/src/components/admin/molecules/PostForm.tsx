@@ -1,15 +1,14 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import CustomText from "../../common/atoms/CustomText";
 import DropdownButton from "../../common/atoms/DropdownButton";
 import CustomButton from "../../common/atoms/CustomButton";
 import icon_trash from "../../../assets/images/icon_trash.svg";
 import icon_star from "../../../assets/images/icon_star.svg";
-
-// 스타일 컴포넌트 import
+import icon_star_fill from "../../../assets/images/icon_star_fill.svg";
 import { PostFormContainer, InputField } from "../organisms/Table"; // 경로에 맞게 수정
 
 type Post = {
-  id?: string; // 필수 id 필드
+  id?: string;
   title: string;
   participant?: string[];
   category?: string;
@@ -21,6 +20,7 @@ type Post = {
 
 type PostFormProps = {
   modalType: "project" | "study" | "seminar" | "networking";
+  isEditMode: boolean; // 수정 모드 여부
   modalForm: Post;
   handleModalChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -32,6 +32,7 @@ type PostFormProps = {
 
 const PostForm: React.FC<PostFormProps> = ({
   modalType,
+  isEditMode,
   modalForm,
   handleModalChange,
   handleFileChange,
@@ -42,8 +43,15 @@ const PostForm: React.FC<PostFormProps> = ({
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [thumbnailIndex, setThumbnailIndex] = useState<number | null>(null);
   const [selectedParticipants, setSelectedParticipants] = useState<string[]>(
-    modalForm.participant || []
+    []
   );
+
+  const modalTypeMap: { [key: string]: string } = {
+    project: "프로젝트",
+    study: "스터디",
+    seminar: "세미나",
+    networking: "네트워킹",
+  };
 
   const handleClickFileInput = () => {
     if (fileInputRef.current) {
@@ -58,12 +66,18 @@ const PostForm: React.FC<PostFormProps> = ({
       const nonDuplicateFiles = newFilesArray.filter(
         (newFile) =>
           !selectedFiles.some(
-            (existingFile) => existingFile.name === newFile.name
+            (existingFile) =>
+              existingFile.name === newFile.name &&
+              existingFile.lastModified === newFile.lastModified
           )
       );
       const updatedFiles = [...selectedFiles, ...nonDuplicateFiles];
       setSelectedFiles(updatedFiles);
       handleFileChange(e);
+
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
     }
   };
 
@@ -88,10 +102,19 @@ const PostForm: React.FC<PostFormProps> = ({
     setSelectedParticipants(selected);
   };
 
+  useEffect(() => {
+    // 수정 모드에서 초기 파일 및 기타 데이터를 설정하는 로직이 필요할 수 있습니다.
+    if (isEditMode) {
+      // 필요한 경우 기존 데이터를 설정할 수 있습니다.
+    }
+  }, [isEditMode]);
+
   return (
     <PostFormContainer>
       <div className="modal_type">
-        <CustomText textStyle="h2">{modalType} 게시글 작성</CustomText>
+        <CustomText textStyle="h2">
+          {modalTypeMap[modalType]} 게시글 {isEditMode ? "수정" : "작성"}
+        </CustomText>
       </div>
       <div className="modal_form">
         <InputField>
@@ -177,14 +200,12 @@ const PostForm: React.FC<PostFormProps> = ({
             <div className="modal_label">
               <CustomText textStyle="b3">설명</CustomText>
             </div>
-            <div>
-              <textarea
-                placeholder="일정에 대해서 간단히 설명해주세요"
-                name="description"
-                value={modalForm.description}
-                onChange={handleModalChange}
-              />
-            </div>
+            <textarea
+              placeholder="일정에 대해서 간단히 설명해주세요"
+              name="description"
+              value={modalForm.description}
+              onChange={handleModalChange}
+            />
           </div>
         </InputField>
 
@@ -226,7 +247,14 @@ const PostForm: React.FC<PostFormProps> = ({
                         className="thumbnail_button"
                         onClick={() => setThumbnail(index)}
                       >
-                        <img src={icon_star} />
+                        <img
+                          src={
+                            thumbnailIndex === index
+                              ? icon_star_fill
+                              : icon_star
+                          }
+                          alt="썸네일"
+                        />
                       </span>
                       <span
                         className="remove_button"
@@ -244,7 +272,7 @@ const PostForm: React.FC<PostFormProps> = ({
 
       <div className="modal_button">
         <CustomButton onClick={onSave} radius={10} width={200} height={46}>
-          작성하기
+          {isEditMode ? "수정하기" : "작성하기"}
         </CustomButton>
         <CustomButton
           onClick={onRequestClose}
