@@ -37,7 +37,7 @@ const MenuBarItem = styled.div<{ isActive: boolean }>`
 `;
 
 const MenuBar: React.FC<MenuBarProps> = ({ options, onOptionClick }) => {
-  const [activeOption, setActiveOption] = useState<string | null>(null); // 활성화된 옵션 상태
+  const [activeOption, setActiveOption] = useState<string>("회원 관리");
 
   const handleClick = (option: string) => {
     setActiveOption(option);

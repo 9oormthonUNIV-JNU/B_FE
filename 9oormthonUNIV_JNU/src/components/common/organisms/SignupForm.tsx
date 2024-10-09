@@ -77,7 +77,7 @@ const SignupForm = () => {
 
   const [password, setPassword] = useState<string>("");
   const [name, setName] = useState<string>("");
-  const [cardinal, setCardinal] = useState<string>(""); // 기수를 string으로 변경
+  const [cardinal, setCardinal] = useState<string>("");
   const [part, setPart] = useState<string>("");
   const [inputErrors, setInputErrors] = useState({
     email: "",
@@ -102,7 +102,7 @@ const SignupForm = () => {
       if (response.data.status === "success") {
         setIsAuthSent(true);
         setShowNewInput(true);
-        setInputErrors((prev) => ({ ...prev, email: "" })); // 이메일 오류 메시지 제거
+        setInputErrors((prev) => ({ ...prev, email: "" }));
       }
     } catch {
       setInputErrors((prev) => ({
@@ -144,8 +144,8 @@ const SignupForm = () => {
         email,
         password,
         name,
-        cardinal,
-        part,
+        user_cardinal: cardinal,
+        user_part: part,
       });
 
       if (response.data.success) {
