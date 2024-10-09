@@ -67,11 +67,11 @@ const PasswordChange: React.FC = () => {
     }
   };
 
-  //API
+  //비밀번호 변경 요청 API
   const handleSubmit = async () => {
     if (!errorMessage && !passwordMatchError && newPassword && confirmPassword) {
       try {
-        const response = await instance.post(' api/user/password/{user_id}', {
+        const response = await instance.post('api/user/password/{user_id}', {
           password: currentPassword,
           newpassword: newPassword,
         });

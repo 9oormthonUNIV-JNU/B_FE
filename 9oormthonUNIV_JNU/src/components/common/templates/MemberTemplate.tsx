@@ -31,23 +31,32 @@ const MemberTemplateContainer = styled.div`
 const MemberTemplate = () => {
   const [members, setMembers] = useState<any[]>([]);
   const [selectedPart, setSelectedPart] = useState<string>("전체");
-  const [selectedGeneration, setSelectedGeneration] = useState<string>("전체");
+  const [selectedCardinal, setSelectedCardinal] = useState<string>("전체");
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // API 호출을 위한 useEffect
+  // 멤버 리스트 조회 API
   useEffect(() => {
     const fetchMembers = async () => {
       try {
         setLoading(true);
-        const response = await instance.get("/members"); // instance 사용
+        
+        // 쿼리 파라미터
+        const params: any = {};
+        if (selectedPart !== "전체") {
+          params.part = selectedPart;
+        }
+        if (selectedCardinal !== "전체") {
+          params.cardinal = Number(selectedCardinal.replace("기", ""));
+        }
+
+        const response = await instance.get("api/user", { params });
         const responseData = response.data.response;
 
-        // API 응답 데이터를 상태로 설정
         const formattedMembers = responseData.map((member: any) => ({
           image: member.imageURL,
           name: member.name,
-          generations: [member.cardinal],
+          cardinals: [member.cardinal],
           part: member.part,
         }));
 
@@ -61,16 +70,16 @@ const MemberTemplate = () => {
     };
 
     fetchMembers();
-  }, []);
+  }, [selectedPart, selectedCardinal]); // 필터가 바뀔 때마다 fetch 호출
 
   // 필터링된 멤버 데이터
   const filteredMembers = members.filter((member) => {
     const isPartMatch = selectedPart === "전체" || member.part === selectedPart;
-    const isGenerationMatch =
-      selectedGeneration === "전체" ||
-      member.generations.includes(Number(selectedGeneration.replace("기", "")));
+    const isCardinalMatch =
+      selectedCardinal === "전체" ||
+      member.cardinals.includes(Number(selectedCardinal.replace("기", "")));
 
-    return isPartMatch && isGenerationMatch;
+    return isPartMatch && isCardinalMatch;
   });
 
   if (loading) {
@@ -98,9 +107,9 @@ const MemberTemplate = () => {
         <FilterButton
           filterType="기수별"
           options={["전체", "2기", "3기"]}
-          onClick={(generation) => {
-            console.log(`기수 필터 선택: ${generation}`);
-            setSelectedGeneration(generation);
+          onClick={(cardinal) => {
+            console.log(`기수 필터 선택: ${cardinal}`);
+            setSelectedCardinal(cardinal);
           }}
         />
       </div>

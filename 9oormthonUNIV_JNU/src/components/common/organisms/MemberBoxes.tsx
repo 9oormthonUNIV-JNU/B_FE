@@ -25,7 +25,7 @@ const MemberBoxes: React.FC<{
   MemberData?: Array<{
     image: string;
     name: string;
-    generations: number[];
+    cardinal: number[];
     part: "PM" | "PD" | "FE" | "BE";
   }>;
 }> = ({ MemberData }) => {
@@ -44,7 +44,7 @@ const MemberBoxes: React.FC<{
           key={index}
           image={data.image}
           name={data.name}
-          generations={data.generations}
+          cardinals={data.cardinal}
           part={data.part}
         />
       ))}
