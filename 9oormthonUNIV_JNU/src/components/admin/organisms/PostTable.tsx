@@ -24,6 +24,7 @@ export type Post = {
   title: string;
   category: "seminar" | "networking" | "project" | "study";
   date: string;
+  description: string;
 };
 
 interface ModalForm {
@@ -37,7 +38,22 @@ const formatDate = (dateStr: string): string => {
   const year = date.getFullYear();
   const month = (date.getMonth() + 1).toString().padStart(2, "0");
   const day = date.getDate().toString().padStart(2, "0");
-  return `${year}. ${month}. ${day}`;
+  return `${year}.${month}.${day}`;
+};
+
+const translateCategory = (category: string): string => {
+  switch (category) {
+    case "project":
+      return "프로젝트";
+    case "study":
+      return "스터디";
+    case "seminar":
+      return "세미나";
+    case "networking":
+      return "네트워킹";
+    default:
+      return category;
+  }
 };
 
 type PostTableProps = {
@@ -56,7 +72,7 @@ const PostTable: React.FC<PostTableProps> = ({ posts }) => {
     description: "",
     photos: undefined,
   });
-  const [selectedPostId, setSelectedPostId] = useState<number | null>(null); // 선택된 게시글 ID 저장
+  const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
 
   const postsPerPage = 10;
   const indexOfLastPost = currentPage * postsPerPage;
@@ -96,9 +112,9 @@ const PostTable: React.FC<PostTableProps> = ({ posts }) => {
     };
 
     if (selectedPostId !== null) {
-      await updatePost(selectedPostId, postData); // 수정 시 updatePost 호출
+      await updatePost(selectedPostId, postData);
     } else {
-      await createPost(postData); // 새 게시글 생성 시 createPost 호출
+      await createPost(postData);
     }
 
     setIsPostFormModalOpen(false);
@@ -140,12 +156,12 @@ const PostTable: React.FC<PostTableProps> = ({ posts }) => {
   };
 
   const updatePost = async (
-    postId: number, // number로 변경
+    postId: number,
     updatedPostData: ModalForm
   ): Promise<void> => {
     try {
       const response = await instance.patch(
-        `/api/post/${postId}`, // postId는 number입니다.
+        `/api/post/${postId}`,
         updatedPostData
       );
       if (response.data.status === "success") {
@@ -175,7 +191,7 @@ const PostTable: React.FC<PostTableProps> = ({ posts }) => {
           <LabelButton
             label="+ 게시글 추가"
             onClick={() => {
-              setSelectedPostId(null); // 새 게시글 작성 시 postId를 null로 설정
+              setSelectedPostId(null);
               setModalForm({ title: "", description: "", photos: undefined });
               setIsCategoryModalOpen(true);
             }}
@@ -196,19 +212,18 @@ const PostTable: React.FC<PostTableProps> = ({ posts }) => {
           {currentPosts.map((post) => (
             <Tr key={post.id}>
               <Td className="truncate">{post.title}</Td>
-              <Td className="truncate">{post.category}</Td>
+              <Td className="truncate">{translateCategory(post.category)}</Td>
               <Td className="truncate">{formatDate(post.date)}</Td>
               <Td className="post_button">
                 <CustomTag
                   onClick={() => {
                     setModalForm({
                       title: post.title,
-                      description: "", // 필요한 필드만 매핑
+                      description: post.description || "",
                       photos: undefined,
                     });
-                    setSelectedPostId(post.id); // 수정할 게시글 ID 설정
+                    setSelectedPostId(post.id);
                     setIsPostFormModalOpen(true);
-                    console.log(`수정: ${post.id}`);
                   }}
                   backgroundColor="#F7F7F7"
                   color="black"
@@ -280,6 +295,7 @@ const PostTable: React.FC<PostTableProps> = ({ posts }) => {
           onRequestClose={() => setIsPostFormModalOpen(false)}
         >
           <PostForm
+            isEditMode={selectedPostId !== null}
             modalType={selectedCategory}
             modalForm={modalForm}
             handleModalChange={handleModalChange}
