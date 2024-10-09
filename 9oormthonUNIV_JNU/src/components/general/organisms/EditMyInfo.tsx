@@ -57,6 +57,13 @@ const InputContainer = styled.div`
   }
 `;
 
+const EmptyStateContainer = styled.div`
+  display: flex;
+  height: 500px;
+  width: 100%;
+  margin-left:170px;
+`;
+
 const EditMyInfo: React.FC = () => {
   const [userProfile, setUserProfile] = useState<UserProfile>({
     name: "",
@@ -163,14 +170,24 @@ const EditMyInfo: React.FC = () => {
   const handleDropdownChange = (name: string, value: string) => {
     setUserProfile((prev) => ({ ...prev, [name]: value }));
   };
-
   if (loading) {
-    return <CustomText textStyle="h2">로딩 중...</CustomText>;
+    return (
+      <EmptyStateContainer>
+        <CustomText textStyle="b2">로딩 중</CustomText>
+      </EmptyStateContainer>
+    );
   }
 
   if (error) {
-    return <CustomText textStyle="h2" color="red">{error}</CustomText>;
+    return (
+      <EmptyStateContainer>
+        <CustomText textStyle="b2" color="#FF6D57">
+          {error}
+        </CustomText>
+      </EmptyStateContainer>
+    );
   }
+
 
   return (
     <MyPageContainer>

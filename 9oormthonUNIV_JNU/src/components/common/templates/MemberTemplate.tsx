@@ -27,6 +27,13 @@ const MemberTemplateContainer = styled.div`
     justify-content: center;
   }
 `;
+const EmptyStateContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 500px;
+  width: 100%;
+`;
 
 const MemberTemplate = () => {
   const [members, setMembers] = useState<any[]>([]);
@@ -40,7 +47,7 @@ const MemberTemplate = () => {
     const fetchMembers = async () => {
       try {
         setLoading(true);
-        
+
         // 쿼리 파라미터
         const params: any = {};
         if (selectedPart !== "전체") {
@@ -83,11 +90,21 @@ const MemberTemplate = () => {
   });
 
   if (loading) {
-    return <CustomText textStyle="h2">로딩 중...</CustomText>;
+    return (
+      <EmptyStateContainer>
+        <CustomText textStyle="b2">로딩 중</CustomText>
+      </EmptyStateContainer>
+    );
   }
 
   if (error) {
-    return <CustomText textStyle="h2" color="red">{error}</CustomText>;
+    return (
+      <EmptyStateContainer>
+        <CustomText textStyle="b2" color="#FF6D57">
+          {error}
+        </CustomText>
+      </EmptyStateContainer>
+    );
   }
 
   return (
