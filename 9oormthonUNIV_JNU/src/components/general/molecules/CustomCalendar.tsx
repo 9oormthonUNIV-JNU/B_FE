@@ -172,6 +172,9 @@ const EventText = styled.div<{ admin: boolean }>`
 `;
 
 const DropdownMenu = styled.div`
+  font-family: "Pretendard";
+  font-weight: 600;
+  font-size: 16px;
   display: flex;
   margin-top: 5px;
   flex-direction: column;
@@ -244,7 +247,6 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ admin }) => {
     description: "",
   });
   const [isEditing, setIsEditing] = useState(false);
-
   const [events, setEvents] = useState<Schedule[]>([
     {
       date: "2024-10-15",
@@ -300,9 +302,7 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ admin }) => {
   };
 
   const handleModalChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setModalForm({
       ...modalForm,
@@ -329,29 +329,16 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ admin }) => {
   };
 
   const handlePrevMonth = () => {
-    const prevMonth = new Date(date.setMonth(date.getMonth() - 1));
-    setDate(prevMonth);
+    setDate(new Date(date.setMonth(date.getMonth() - 1)));
   };
 
   const handleNextMonth = () => {
-    const nextMonth = new Date(date.setMonth(date.getMonth() + 1));
-    setDate(nextMonth);
+    setDate(new Date(date.setMonth(date.getMonth() + 1)));
   };
-
-  const formattedMonthYear = date
-    ? date.toLocaleDateString("ko-KR", {
-        year: "numeric",
-        month: "long",
-      })
-    : "";
-
-  const currentMonth = date.getMonth();
 
   const handleDateClick: CalendarProps["onChange"] = (value) => {
     if (value instanceof Date) {
       setSelectedDate(value);
-    } else if (Array.isArray(value)) {
-      setSelectedDate(value[0]);
     }
   };
 
@@ -359,9 +346,7 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ admin }) => {
     dateStr: string,
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
-    const rect = (
-      event.currentTarget as HTMLDivElement
-    ).getBoundingClientRect();
+    const rect = event.currentTarget.getBoundingClientRect();
     setDropdownPosition({
       top: rect.bottom + window.scrollY,
       left: rect.left + window.scrollX,
@@ -374,7 +359,9 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ admin }) => {
     <CalendarWrapper>
       <MonthNavigation>
         <NavButton onClick={handlePrevMonth}>{"<"}</NavButton>
-        <MonthText>{formattedMonthYear}</MonthText>
+        <MonthText>
+          {date.toLocaleDateString("ko-KR", { year: "numeric", month: "long" })}
+        </MonthText>
         <NavButton onClick={handleNextMonth}>{">"}</NavButton>
       </MonthNavigation>
       {admin && (
@@ -382,42 +369,26 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ admin }) => {
           <LabelButton label="+ 일정 추가" onClick={handleOpenModal} />
         </div>
       )}
-
       <StyledCalendar
         onChange={handleDateClick}
         value={date}
-        locale="en-US"
-        formatShortWeekday={(locale, date) =>
-          date.toLocaleDateString("en-US", { weekday: "short" }).toUpperCase()
-        }
-        tileClassName={({ date: tileDate }) =>
-          tileDate.toDateString() === new Date().toDateString()
-            ? "react-calendar__tile--today"
-            : ""
-        }
+        locale="ko-KR"
         tileContent={({ date: tileDate, view }) => {
-          if (view !== "month" || tileDate.getMonth() !== currentMonth) {
+          if (view !== "month" || tileDate.getMonth() !== date.getMonth())
             return null;
-          }
-
           const event = findEvent(tileDate);
           const dateStr = tileDate.toISOString().split("T")[0];
           const isOpen = openDropdown === dateStr;
-
           return (
             <>
               <DateText
                 isSunday={tileDate.getDay() === 0}
                 isSelected={
-                  !!(
-                    selectedDate &&
-                    tileDate.getDate() === selectedDate.getDate() &&
-                    tileDate.getMonth() === selectedDate.getMonth() &&
-                    tileDate.getFullYear() === selectedDate.getFullYear()
-                  )
+                  !!selectedDate &&
+                  selectedDate.toDateString() === tileDate.toDateString()
                 }
               >
-                {tileDate.getDate().toString().padStart(2, "0")}
+                {tileDate.getDate()}
               </DateText>
               {event && (
                 <EventText
@@ -427,17 +398,14 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ admin }) => {
                   <CustomText textStyle="nav">{event.name}</CustomText>
                   {isOpen && admin && (
                     <DropdownMenuPortal position={dropdownPosition}>
-                      <DropdownItem
-                        form={true}
-                        onClick={() => handleEditEvent(event)}
-                      >
-                        <CustomText textStyle="nav">일정 수정</CustomText>
+                      <DropdownItem form onClick={() => handleEditEvent(event)}>
+                        일정 수정
                       </DropdownItem>
                       <DropdownItem
-                        form={true}
+                        form
                         onClick={() => handleDeleteEvent(event)}
                       >
-                        <CustomText textStyle="nav">일정 삭제</CustomText>
+                        일정 삭제
                       </DropdownItem>
                     </DropdownMenuPortal>
                   )}
@@ -447,7 +415,6 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ admin }) => {
           );
         }}
       />
-
       {admin && (
         <CustomModal isOpen={modalIsOpen} onRequestClose={handleCloseModal}>
           <ScheduleForm
