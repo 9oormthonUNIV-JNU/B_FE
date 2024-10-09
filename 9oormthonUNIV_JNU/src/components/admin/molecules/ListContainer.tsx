@@ -9,6 +9,11 @@ export const MemberListContainer = styled.div`
     margin-bottom: 20px;
     margin-left: 10px;
   }
+
+  .pending_none {
+    margin-top: 10px;
+    margin-left: 10px;
+  }
 `;
 
 export const MemberList = styled.div`

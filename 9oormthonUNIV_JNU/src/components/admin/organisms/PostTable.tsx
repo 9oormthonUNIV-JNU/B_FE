@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import styled from "styled-components";
 import CustomText from "../../common/atoms/CustomText";
 import CustomTag from "../../common/atoms/CustomTag";
 import LabelButton from "../../common/atoms/LabelButton";
@@ -7,143 +6,31 @@ import CustomModal from "../atoms/CustomModal";
 import PostForm from "../molecules/PostForm";
 import DropdownButton from "../../common/atoms/DropdownButton";
 import CustomButton from "../../common/atoms/CustomButton";
+import { instance } from "../../../apis/instance";
+
+import {
+  PostTableContainer,
+  Table,
+  Thead,
+  Th,
+  Tbody,
+  Tr,
+  Td,
+  CategoryModal,
+} from "./Table";
 
 export type Post = {
-  id: string;
-  name: string;
-  category: "세미나" | "네트워킹" | "프로젝트" | "스터디";
+  id: number;
+  title: string;
+  category: "seminar" | "networking" | "project" | "study";
   date: string;
 };
 
-const PostTableContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  font-family: "Pretendard";
-
-  .truncate {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .post_header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 45px;
-  }
-
-  .pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 40px;
-    gap: 8px;
-  }
-
-  .pagination button {
-    padding: 8px 12px;
-    background-color: white;
-    border: none;
-    color: white;
-    cursor: pointer;
-    border-radius: 4px;
-
-    font-size: 16px;
-    font-weight: 500;
-    line-height: 30px;
-
-    &:disabled {
-      cursor: not-allowed;
-      background-color: white;
-    }
-  }
-
-  .pagination .page-number {
-    padding: 8px 12px;
-    border: none;
-    background-color: white;
-    color: black;
-    cursor: pointer;
-    border-radius: 4px;
-
-    font-size: 20px;
-    font-weight: 500;
-    line-height: 30px;
-
-    &.active {
-      border: 1px solid #c3c3c3;
-      color: #778fb9;
-    }
-  }
-`;
-
-const Table = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed;
-`;
-
-const Thead = styled.thead`
-  width: 100%;
-  background-color: #e1ebfd;
-`;
-
-const Th = styled.th`
-  text-align: left;
-  padding: 16px 12px;
-  color: black;
-  font-size: 20px;
-  font-weight: 500;
-  line-height: 30px;
-
-  &:nth-child(1) {
-    width: 40%;
-  }
-  &:nth-child(2) {
-    width: 20%;
-  }
-  &:nth-child(3) {
-    width: 25%;
-  }
-  &:nth-child(4) {
-    width: 15%;
-  }
-`;
-
-const Tbody = styled.tbody``;
-
-const Tr = styled.tr`
-  border-top: 1px solid black;
-  border-bottom: 1px solid black;
-`;
-
-const Td = styled.td`
-  padding: 16px 12px;
-  border-bottom: 1px solid black;
-  word-wrap: break-word;
-
-  color: #484848;
-  font-size: 20px;
-  font-weight: 500;
-  line-height: 30px;
-
-  .post_button {
-    display: flex;
-    flex-direction: row;
-    gap: 8px;
-  }
-`;
-
-const CategoryModal = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 27px;
-`;
+interface ModalForm {
+  title: string;
+  description: string;
+  photos: FileList | undefined;
+}
 
 const formatDate = (dateStr: string): string => {
   const date = new Date(dateStr);
@@ -162,20 +49,19 @@ const PostTable: React.FC<PostTableProps> = ({ posts }) => {
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [isPostFormModalOpen, setIsPostFormModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<
-    "프로젝트" | "스터디" | "세미나" | "네트워킹"
-  >("프로젝트");
-  const [modalForm, setModalForm] = useState({
-    name: "",
+    "project" | "study" | "seminar" | "networking"
+  >("project");
+  const [modalForm, setModalForm] = useState<ModalForm>({
+    title: "",
     description: "",
     photos: undefined,
   });
+  const [selectedPostId, setSelectedPostId] = useState<number | null>(null); // 선택된 게시글 ID 저장
 
   const postsPerPage = 10;
-
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
-
   const totalPages = Math.ceil(posts.length / postsPerPage);
 
   const pageNumbers = [];
@@ -201,8 +87,20 @@ const PostTable: React.FC<PostTableProps> = ({ posts }) => {
     setModalForm({ ...modalForm, [e.target.name]: e.target.value });
   };
 
-  const handleModalSave = () => {
-    console.log("Modal Form Data: ", modalForm);
+  const handleModalSave = async () => {
+    const postData = {
+      title: modalForm.title,
+      description: modalForm.description,
+      photos: modalForm.photos,
+      category: selectedCategory,
+    };
+
+    if (selectedPostId !== null) {
+      await updatePost(selectedPostId, postData); // 수정 시 updatePost 호출
+    } else {
+      await createPost(postData); // 새 게시글 생성 시 createPost 호출
+    }
+
     setIsPostFormModalOpen(false);
   };
 
@@ -214,15 +112,13 @@ const PostTable: React.FC<PostTableProps> = ({ posts }) => {
   };
 
   const handleCategoryChange = (selected: string | string[]) => {
-    // 단일 선택일 경우 selected는 string, 다중 선택일 경우 string[]
     if (typeof selected === "string") {
       setSelectedCategory(
-        selected as "프로젝트" | "스터디" | "세미나" | "네트워킹"
+        selected as "project" | "study" | "seminar" | "networking"
       );
     } else {
-      // 다중 선택인 경우 첫 번째 선택된 값을 사용하거나 필요에 따라 처리
       setSelectedCategory(
-        selected[0] as "프로젝트" | "스터디" | "세미나" | "네트워킹"
+        selected[0] as "project" | "study" | "seminar" | "networking"
       );
     }
   };
@@ -232,6 +128,45 @@ const PostTable: React.FC<PostTableProps> = ({ posts }) => {
     setIsPostFormModalOpen(true);
   };
 
+  const createPost = async (postData: ModalForm): Promise<void> => {
+    try {
+      const response = await instance.post("/api/post", postData);
+      if (response.data.status === "success") {
+        console.log("게시글 등록 성공", response.data.response);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const updatePost = async (
+    postId: number, // number로 변경
+    updatedPostData: ModalForm
+  ): Promise<void> => {
+    try {
+      const response = await instance.patch(
+        `/api/post/${postId}`, // postId는 number입니다.
+        updatedPostData
+      );
+      if (response.data.status === "success") {
+        console.log("게시글 수정 성공", response.data.response);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const deletePost = async (postId: number): Promise<void> => {
+    try {
+      const response = await instance.delete(`/api/post/${postId}`);
+      if (response.data.status === "success") {
+        console.log("게시글 삭제 성공", response.data.response);
+      }
+    } catch (error) {
+      console.log("게시글 삭제 실패", error);
+    }
+  };
+
   return (
     <PostTableContainer>
       <div className="post_header">
@@ -239,7 +174,11 @@ const PostTable: React.FC<PostTableProps> = ({ posts }) => {
         <div className="post_add">
           <LabelButton
             label="+ 게시글 추가"
-            onClick={() => setIsCategoryModalOpen(true)}
+            onClick={() => {
+              setSelectedPostId(null); // 새 게시글 작성 시 postId를 null로 설정
+              setModalForm({ title: "", description: "", photos: undefined });
+              setIsCategoryModalOpen(true);
+            }}
           />
         </div>
       </div>
@@ -256,12 +195,19 @@ const PostTable: React.FC<PostTableProps> = ({ posts }) => {
         <Tbody>
           {currentPosts.map((post) => (
             <Tr key={post.id}>
-              <Td className="truncate">{post.name}</Td>
+              <Td className="truncate">{post.title}</Td>
               <Td className="truncate">{post.category}</Td>
               <Td className="truncate">{formatDate(post.date)}</Td>
               <Td className="post_button">
                 <CustomTag
                   onClick={() => {
+                    setModalForm({
+                      title: post.title,
+                      description: "", // 필요한 필드만 매핑
+                      photos: undefined,
+                    });
+                    setSelectedPostId(post.id); // 수정할 게시글 ID 설정
+                    setIsPostFormModalOpen(true);
                     console.log(`수정: ${post.id}`);
                   }}
                   backgroundColor="#F7F7F7"
@@ -270,8 +216,10 @@ const PostTable: React.FC<PostTableProps> = ({ posts }) => {
                   수정
                 </CustomTag>
                 <CustomTag
-                  onClick={() => {
-                    console.log(`삭제: ${post.id}`);
+                  onClick={async () => {
+                    if (window.confirm("정말 삭제하시겠습니까?")) {
+                      await deletePost(post.id);
+                    }
                   }}
                   backgroundColor="#F7F7F7"
                   color="#FF6D57"
@@ -313,7 +261,12 @@ const PostTable: React.FC<PostTableProps> = ({ posts }) => {
             작성할 게시글의 카테고리를 선택하세요
           </CustomText>
           <DropdownButton
-            options={["프로젝트", "스터디", "세미나", "네트워킹"]}
+            options={[
+              { label: "프로젝트", value: "project" },
+              { label: "스터디", value: "study" },
+              { label: "세미나", value: "seminar" },
+              { label: "네트워킹", value: "networking" },
+            ]}
             onChange={handleCategoryChange}
           />
           <CustomButton onClick={handleCategorySubmit}>확인</CustomButton>

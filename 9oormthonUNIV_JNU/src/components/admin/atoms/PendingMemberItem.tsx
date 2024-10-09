@@ -1,6 +1,7 @@
 import CustomText from "../../common/atoms/CustomText";
 import CustomTag from "../../common/atoms/CustomTag";
 import styled from "styled-components";
+import { instance } from "../../../apis/instance";
 
 const PendingMemberItemContainer = styled.div`
   display: flex;
@@ -28,14 +29,62 @@ const PendingMemberItemContainer = styled.div`
 type PendingMemberItemProps = {
   name: string;
   email: string;
-  applicationDate: string;
+  createdAt: string;
+  userId: string;
+};
+
+const formatDate = (timestamp: string): string => {
+  const date = new Date(timestamp);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}.${month}.${day}`;
 };
 
 const PendingMemberItem: React.FC<PendingMemberItemProps> = ({
   name,
   email,
-  applicationDate,
+  createdAt,
+  userId,
 }) => {
+  // 승인 API 요청
+  const approveMember = async () => {
+    const isConfirmed = window.confirm("정말로 승인하시겠습니까?");
+    if (isConfirmed) {
+      try {
+        const response = await instance.post(`/api/user/approval/${userId}`, {
+          join_state: true,
+        });
+        if (response.data.status === "success") {
+          alert("회원이 승인되었습니다.");
+          // 필요한 후속 처리 로직 (예: 목록 갱신 등)
+        }
+      } catch (error) {
+        console.error(error);
+        alert("승인에 실패했습니다.");
+      }
+    }
+  };
+
+  // 거절 API 요청
+  const rejectMember = async () => {
+    const isConfirmed = window.confirm("정말로 거절하시겠습니까?");
+    if (isConfirmed) {
+      try {
+        const response = await instance.post(`/api/user/rejection/${userId}`, {
+          join_state: false,
+        });
+        if (response.status === 200) {
+          alert("회원이 거절되었습니다.");
+          // 필요한 후속 처리 로직 (예: 목록 갱신 등)
+        }
+      } catch (error) {
+        console.error("거절 요청 중 오류 발생:", error);
+        alert("거절에 실패했습니다.");
+      }
+    }
+  };
+
   return (
     <PendingMemberItemContainer>
       <div>
@@ -49,12 +98,12 @@ const PendingMemberItem: React.FC<PendingMemberItemProps> = ({
         </CustomText>
       </div>
       <div className="pending_bottom">
-        <CustomText textStyle="b3">신청일 : {applicationDate}</CustomText>
+        <CustomText textStyle="b3">신청일 : {formatDate(createdAt)}</CustomText>
         <div className="pending_button_container">
-          <CustomTag backgroundColor="#E1EBFD" onClick={() => {}}>
+          <CustomTag backgroundColor="#E1EBFD" onClick={approveMember}>
             승인
           </CustomTag>
-          <CustomTag backgroundColor="#F7F7F7" onClick={() => {}}>
+          <CustomTag backgroundColor="#F7F7F7" onClick={rejectMember}>
             거절
           </CustomTag>
         </div>

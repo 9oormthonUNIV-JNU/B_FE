@@ -1,143 +1,16 @@
 import React, { useRef, useState } from "react";
-import styled from "styled-components";
 import CustomText from "../../common/atoms/CustomText";
 import DropdownButton from "../../common/atoms/DropdownButton";
 import CustomButton from "../../common/atoms/CustomButton";
 import icon_trash from "../../../assets/images/icon_trash.svg";
 import icon_star from "../../../assets/images/icon_star.svg";
 
-const PostFormContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  font-family: "Pretendard";
-
-  .modal_type {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 50px;
-  }
-
-  .modal_form {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .modal_button {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 30px;
-  }
-`;
-
-const InputField = styled.div`
-  display: flex;
-  align-items: center;
-
-  .modal_description {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin: 10px 0px;
-  }
-
-  .modal_image {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    width: 100%;
-
-    .modal_select {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .selected_images {
-      margin-top: 10px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px 40px;
-      max-height: 150px;
-      overflow-y: auto;
-      width: 100%;
-    }
-
-    .image_item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-basis: calc(50% - 20px);
-      font-size: 14px;
-      color: #333;
-    }
-
-    .image_button {
-      display: flex;
-      gap: 4px;
-    }
-
-    .thumbnail_button,
-    .remove_button {
-      cursor: pointer;
-    }
-
-    .thumbnail_button img,
-    .remove_button img {
-      width: 20px;
-      height: 20px;
-    }
-  }
-
-  .modal_label {
-    width: 80px;
-  }
-
-  input[type="date"],
-  input[type="text"],
-  input[type="file"],
-  textarea {
-    font-family: "Pretendard";
-    font-size: 16px;
-    padding: 10px;
-    border: none;
-    width: 100%;
-  }
-
-  input[type="date"],
-  input[type="file"] {
-    cursor: pointer;
-  }
-
-  input::placeholder,
-  textarea::placeholder {
-    font-family: "Pretendard";
-    color: #9c9c9c;
-  }
-
-  textarea {
-    width: 100%;
-    padding: 20px;
-    box-sizing: border-box;
-    height: 125px;
-    margin-top: 5px;
-    border: none;
-    background-color: #f7f7f7;
-    resize: none;
-  }
-
-  .file_input {
-    display: none;
-  }
-`;
+// 스타일 컴포넌트 import
+import { PostFormContainer, InputField } from "../organisms/Table"; // 경로에 맞게 수정
 
 type Post = {
-  name: string;
+  id?: string; // 필수 id 필드
+  title: string;
   participant?: string[];
   category?: string;
   part?: string;
@@ -147,7 +20,7 @@ type Post = {
 };
 
 type PostFormProps = {
-  modalType: "프로젝트" | "스터디" | "세미나" | "네트워킹";
+  modalType: "project" | "study" | "seminar" | "networking";
   modalForm: Post;
   handleModalChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -227,21 +100,25 @@ const PostForm: React.FC<PostFormProps> = ({
           </div>
           <input
             type="text"
-            name="name"
+            name="title"
             placeholder="비어있음"
-            value={modalForm.name}
+            value={modalForm.title}
             onChange={handleModalChange}
           />
         </InputField>
 
-        {modalType === "프로젝트" && (
+        {modalType === "project" && (
           <InputField>
             <div className="modal_label">
               <CustomText textStyle="b3">참여자</CustomText>
             </div>
             <DropdownButton
               form={true}
-              options={["최지원", "이현", "김민"]}
+              options={[
+                { label: "최지원", value: "최지원" },
+                { label: "이현", value: "이현" },
+                { label: "김민", value: "김민" },
+              ]}
               multi={true}
               value={selectedParticipants}
               onChange={handleParticipantsChange}
@@ -249,28 +126,39 @@ const PostForm: React.FC<PostFormProps> = ({
           </InputField>
         )}
 
-        {modalType === "스터디" && (
+        {modalType === "study" && (
           <InputField>
             <div className="modal_label">
               <CustomText textStyle="b3">파트</CustomText>
             </div>
-            <DropdownButton form={true} options={["PM", "PD", "FE", "BE"]} />
+            <DropdownButton
+              form={true}
+              options={[
+                { label: "PM", value: "PM" },
+                { label: "PD", value: "PD" },
+                { label: "FE", value: "FE" },
+                { label: "BE", value: "BE" },
+              ]}
+            />
           </InputField>
         )}
 
-        {modalType === "프로젝트" && (
+        {modalType === "project" && (
           <InputField>
             <div className="modal_label">
               <CustomText textStyle="b3">카테고리</CustomText>
             </div>
             <DropdownButton
               form={true}
-              options={["교내프로젝트", "외부프로젝트"]}
+              options={[
+                { label: "교내프로젝트", value: "교내프로젝트" },
+                { label: "외부프로젝트", value: "외부프로젝트" },
+              ]}
             />
           </InputField>
         )}
 
-        {["스터디", "세미나", "네트워킹"].includes(modalType) && (
+        {["study", "seminar", "networking"].includes(modalType) && (
           <InputField>
             <div className="modal_label">
               <CustomText textStyle="b3">날짜</CustomText>
@@ -338,7 +226,7 @@ const PostForm: React.FC<PostFormProps> = ({
                         className="thumbnail_button"
                         onClick={() => setThumbnail(index)}
                       >
-                        <img src={icon_star} alt="대표사진 설정" />
+                        <img src={icon_star} />
                       </span>
                       <span
                         className="remove_button"

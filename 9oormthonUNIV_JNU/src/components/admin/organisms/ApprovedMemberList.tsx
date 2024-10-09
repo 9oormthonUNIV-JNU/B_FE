@@ -1,39 +1,45 @@
 import { MemberListContainer, MemberList } from "../molecules/ListContainer";
 import ApprovedMemberItem from "../atoms/ApprovedMemberItem";
 import CustomText from "../../common/atoms/CustomText";
+import { instance } from "../../../apis/instance";
+import { useEffect, useState } from "react";
+
+type Member = {
+  name: string;
+  email: string;
+  cardinal: number;
+  part: "PD" | "PM" | "FE" | "BE";
+};
 
 const ApprovedMemberList = () => {
-  const members: {
-    name: string;
-    email: string;
-    generation: number;
-    part: "PD" | "PM" | "FE" | "BE";
-  }[] = [
-    {
-      name: "최지원",
-      email: "email1@email.com",
-      generation: 3,
-      part: "PD",
-    },
-    {
-      name: "김민수",
-      email: "email2@email.com",
-      generation: 3,
-      part: "PM",
-    },
-    {
-      name: "박수현",
-      email: "email3@email.com",
-      generation: 3,
-      part: "FE",
-    },
-    {
-      name: "이수빈",
-      email: "email4@email.com",
-      generation: 3,
-      part: "BE",
-    },
-  ];
+  const [members, setMembers] = useState<Member[]>([]);
+
+  useEffect(() => {
+    const fetchApprovedMembers = async () => {
+      try {
+        const response = await instance.get("/api/admin/state");
+        const approvedList = response.data.response.ApprovedList;
+        setMembers(approvedList);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchApprovedMembers();
+  }, []);
+
+  if (members.length === 0) {
+    return (
+      <MemberListContainer>
+        <div className="memberlist">
+          <CustomText textStyle="b1">회원 목록</CustomText>
+        </div>
+        <div className="pending_none">
+          <CustomText textStyle="b3">승인 완료된 회원이 없습니다.</CustomText>
+        </div>
+      </MemberListContainer>
+    );
+  }
 
   return (
     <MemberListContainer>
@@ -46,7 +52,7 @@ const ApprovedMemberList = () => {
             key={member.email}
             name={member.name}
             email={member.email}
-            generation={member.generation}
+            cardinal={member.cardinal}
             part={member.part}
           />
         ))}
