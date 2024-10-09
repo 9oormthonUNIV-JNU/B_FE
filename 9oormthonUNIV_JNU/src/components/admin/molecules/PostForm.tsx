@@ -1,15 +1,14 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import CustomText from "../../common/atoms/CustomText";
 import DropdownButton from "../../common/atoms/DropdownButton";
 import CustomButton from "../../common/atoms/CustomButton";
 import icon_trash from "../../../assets/images/icon_trash.svg";
 import icon_star from "../../../assets/images/icon_star.svg";
-
-// 스타일 컴포넌트 import
+import icon_star_fill from "../../../assets/images/icon_star_fill.svg";
 import { PostFormContainer, InputField } from "../organisms/Table"; // 경로에 맞게 수정
 
 type Post = {
-  id?: string; // 필수 id 필드
+  id?: string;
   title: string;
   participant?: string[];
   category?: string;
@@ -42,8 +41,52 @@ const PostForm: React.FC<PostFormProps> = ({
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [thumbnailIndex, setThumbnailIndex] = useState<number | null>(null);
   const [selectedParticipants, setSelectedParticipants] = useState<string[]>(
-    modalForm.participant || []
+    []
   );
+
+  // Mock data 정의
+  const mockData: Post = {
+    id: "1",
+    title: "Mock Project Title",
+    participant: ["최지원", "이현"],
+    category: "project",
+    part: "FE",
+    date: "2024-12-01",
+    description: "This is a mock description for a project.",
+    photos: undefined, // 파일은 실제로는 로드할 수 없으므로 undefined로 설정
+  };
+
+  // Mock 데이터를 불러오는 함수
+  const loadMockData = () => {
+    setSelectedParticipants(mockData.participant || []);
+    setThumbnailIndex(null); // 초기 썸네일 인덱스
+    setSelectedFiles([]); // 초기 파일 목록 (사진은 실제 파일 업로드가 필요)
+    handleModalChange({
+      target: {
+        name: "title",
+        value: mockData.title,
+      },
+    } as React.ChangeEvent<HTMLInputElement>);
+
+    handleModalChange({
+      target: {
+        name: "description",
+        value: mockData.description,
+      },
+    } as React.ChangeEvent<HTMLTextAreaElement>);
+
+    handleModalChange({
+      target: {
+        name: "date",
+        value: mockData.date,
+      },
+    } as React.ChangeEvent<HTMLInputElement>);
+  };
+
+  // 컴포넌트가 마운트될 때 mock 데이터를 불러옴
+  useEffect(() => {
+    loadMockData();
+  }, []);
 
   const handleClickFileInput = () => {
     if (fileInputRef.current) {
@@ -58,12 +101,18 @@ const PostForm: React.FC<PostFormProps> = ({
       const nonDuplicateFiles = newFilesArray.filter(
         (newFile) =>
           !selectedFiles.some(
-            (existingFile) => existingFile.name === newFile.name
+            (existingFile) =>
+              existingFile.name === newFile.name &&
+              existingFile.lastModified === newFile.lastModified
           )
       );
       const updatedFiles = [...selectedFiles, ...nonDuplicateFiles];
       setSelectedFiles(updatedFiles);
       handleFileChange(e);
+
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
     }
   };
 
@@ -88,10 +137,19 @@ const PostForm: React.FC<PostFormProps> = ({
     setSelectedParticipants(selected);
   };
 
+  const modalTypeMap: { [key: string]: string } = {
+    project: "프로젝트",
+    study: "스터디",
+    seminar: "세미나",
+    networking: "네트워킹",
+  };
+
   return (
     <PostFormContainer>
       <div className="modal_type">
-        <CustomText textStyle="h2">{modalType} 게시글 작성</CustomText>
+        <CustomText textStyle="h2">
+          {modalTypeMap[modalType]} 게시글 작성
+        </CustomText>
       </div>
       <div className="modal_form">
         <InputField>
@@ -226,7 +284,14 @@ const PostForm: React.FC<PostFormProps> = ({
                         className="thumbnail_button"
                         onClick={() => setThumbnail(index)}
                       >
-                        <img src={icon_star} />
+                        <img
+                          src={
+                            thumbnailIndex === index
+                              ? icon_star_fill
+                              : icon_star
+                          }
+                          alt="썸네일"
+                        />
                       </span>
                       <span
                         className="remove_button"
