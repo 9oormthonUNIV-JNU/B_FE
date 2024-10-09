@@ -37,23 +37,26 @@ const ApprovedMemberItemContainer = styled.div`
 `;
 
 type ApprovedMemberItemProps = {
+  userId: number;
   name: string;
   email: string;
   cardinal: number;
   part: "PM" | "PD" | "FE" | "BE";
+  onDelete: (userId: number) => void;
 };
 
 const ApprovedMemberItem: React.FC<ApprovedMemberItemProps> = ({
+  userId,
   name,
   email,
   cardinal,
   part,
+  onDelete,
 }) => {
   const handleDeleteClick = () => {
     const isConfirmed = window.confirm(`${name} 회원을 삭제하시겠습니까?`);
     if (isConfirmed) {
-      // 실제 삭제 로직을 추가
-      alert("회원이 삭제되었습니다."); // 확인용 로그, 실제로는 삭제 로직 수행
+      onDelete(userId);
     }
   };
 

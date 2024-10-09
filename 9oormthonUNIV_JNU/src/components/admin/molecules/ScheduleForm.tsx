@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 import CustomText from "../../common/atoms/CustomText";
-import DropdownButton from "../../common/atoms/DropdownButton";
 import CustomButton from "../../common/atoms/CustomButton";
 
 const ScheduleFormContainer = styled.div`
@@ -54,10 +53,6 @@ const InputField = styled.div`
     padding: 10px;
     border: none;
     width: 100%;
-  }
-
-  input[type="date"] {
-    cursor: pointer;
   }
 
   input::placeholder,
@@ -113,7 +108,6 @@ const ScheduleForm: React.FC<ScheduleFormProps> = ({
             <CustomText textStyle="b3">날짜</CustomText>
           </div>
           <input
-            className="modal_date"
             type="date"
             name="date"
             value={modalForm.date}
@@ -136,13 +130,12 @@ const ScheduleForm: React.FC<ScheduleFormProps> = ({
           <div className="modal_label">
             <CustomText textStyle="b3">참석자</CustomText>
           </div>
-          <DropdownButton
-            form={true}
-            options={[
-              { label: "최지원", value: "최지원" },
-              { label: "최지원", value: "최지원" },
-              { label: "최지원", value: "최지원" },
-            ]}
+          <input
+            type="text"
+            name="member"
+            placeholder="참석자들을 쉼표로 구분하세요"
+            value={modalForm.member}
+            onChange={handleModalChange}
           />
         </InputField>
         <InputField>
@@ -150,14 +143,12 @@ const ScheduleForm: React.FC<ScheduleFormProps> = ({
             <div className="modal_label">
               <CustomText textStyle="b3">설명</CustomText>
             </div>
-            <div>
-              <textarea
-                placeholder="일정에 대해서 간단히 설명해주세요"
-                name="description"
-                value={modalForm.description}
-                onChange={handleModalChange}
-              />
-            </div>
+            <textarea
+              name="description"
+              placeholder="일정에 대해서 간단히 설명해주세요"
+              value={modalForm.description}
+              onChange={handleModalChange}
+            />
           </div>
         </InputField>
       </div>

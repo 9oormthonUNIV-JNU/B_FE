@@ -5,6 +5,7 @@ import { instance } from "../../../apis/instance";
 import { useEffect, useState } from "react";
 
 type Member = {
+  user_id: number;
   name: string;
   email: string;
   cardinal: number;
@@ -28,6 +29,20 @@ const ApprovedMemberList = () => {
     fetchApprovedMembers();
   }, []);
 
+  const handleDeleteMember = async (userId: number) => {
+    try {
+      const response = await instance.delete(`/api/user/approval/${userId}`);
+      if (response.data.status === "success") {
+        alert("회원이 삭제되었습니다.");
+        setMembers((prevMembers) =>
+          prevMembers.filter((member) => member.user_id !== userId)
+        );
+      }
+    } catch (error) {
+      console.error("회원 삭제 실패", error);
+    }
+  };
+
   if (members.length === 0) {
     return (
       <MemberListContainer>
@@ -49,11 +64,13 @@ const ApprovedMemberList = () => {
       <MemberList>
         {members.map((member) => (
           <ApprovedMemberItem
-            key={member.email}
+            key={member.user_id}
+            userId={member.user_id}
             name={member.name}
             email={member.email}
             cardinal={member.cardinal}
             part={member.part}
+            onDelete={handleDeleteMember}
           />
         ))}
       </MemberList>
