@@ -20,6 +20,7 @@ type Post = {
 
 type PostFormProps = {
   modalType: "project" | "study" | "seminar" | "networking";
+  isEditMode: boolean; // 수정 모드 여부
   modalForm: Post;
   handleModalChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -31,6 +32,7 @@ type PostFormProps = {
 
 const PostForm: React.FC<PostFormProps> = ({
   modalType,
+  isEditMode,
   modalForm,
   handleModalChange,
   handleFileChange,
@@ -44,49 +46,12 @@ const PostForm: React.FC<PostFormProps> = ({
     []
   );
 
-  // Mock data 정의
-  const mockData: Post = {
-    id: "1",
-    title: "Mock Project Title",
-    participant: ["최지원", "이현"],
-    category: "project",
-    part: "FE",
-    date: "2024-12-01",
-    description: "This is a mock description for a project.",
-    photos: undefined, // 파일은 실제로는 로드할 수 없으므로 undefined로 설정
+  const modalTypeMap: { [key: string]: string } = {
+    project: "프로젝트",
+    study: "스터디",
+    seminar: "세미나",
+    networking: "네트워킹",
   };
-
-  // Mock 데이터를 불러오는 함수
-  const loadMockData = () => {
-    setSelectedParticipants(mockData.participant || []);
-    setThumbnailIndex(null); // 초기 썸네일 인덱스
-    setSelectedFiles([]); // 초기 파일 목록 (사진은 실제 파일 업로드가 필요)
-    handleModalChange({
-      target: {
-        name: "title",
-        value: mockData.title,
-      },
-    } as React.ChangeEvent<HTMLInputElement>);
-
-    handleModalChange({
-      target: {
-        name: "description",
-        value: mockData.description,
-      },
-    } as React.ChangeEvent<HTMLTextAreaElement>);
-
-    handleModalChange({
-      target: {
-        name: "date",
-        value: mockData.date,
-      },
-    } as React.ChangeEvent<HTMLInputElement>);
-  };
-
-  // 컴포넌트가 마운트될 때 mock 데이터를 불러옴
-  useEffect(() => {
-    loadMockData();
-  }, []);
 
   const handleClickFileInput = () => {
     if (fileInputRef.current) {
@@ -137,18 +102,18 @@ const PostForm: React.FC<PostFormProps> = ({
     setSelectedParticipants(selected);
   };
 
-  const modalTypeMap: { [key: string]: string } = {
-    project: "프로젝트",
-    study: "스터디",
-    seminar: "세미나",
-    networking: "네트워킹",
-  };
+  useEffect(() => {
+    // 수정 모드에서 초기 파일 및 기타 데이터를 설정하는 로직이 필요할 수 있습니다.
+    if (isEditMode) {
+      // 필요한 경우 기존 데이터를 설정할 수 있습니다.
+    }
+  }, [isEditMode]);
 
   return (
     <PostFormContainer>
       <div className="modal_type">
         <CustomText textStyle="h2">
-          {modalTypeMap[modalType]} 게시글 작성
+          {modalTypeMap[modalType]} 게시글 {isEditMode ? "수정" : "작성"}
         </CustomText>
       </div>
       <div className="modal_form">
@@ -235,14 +200,12 @@ const PostForm: React.FC<PostFormProps> = ({
             <div className="modal_label">
               <CustomText textStyle="b3">설명</CustomText>
             </div>
-            <div>
-              <textarea
-                placeholder="일정에 대해서 간단히 설명해주세요"
-                name="description"
-                value={modalForm.description}
-                onChange={handleModalChange}
-              />
-            </div>
+            <textarea
+              placeholder="일정에 대해서 간단히 설명해주세요"
+              name="description"
+              value={modalForm.description}
+              onChange={handleModalChange}
+            />
           </div>
         </InputField>
 
@@ -309,7 +272,7 @@ const PostForm: React.FC<PostFormProps> = ({
 
       <div className="modal_button">
         <CustomButton onClick={onSave} radius={10} width={200} height={46}>
-          작성하기
+          {isEditMode ? "수정하기" : "작성하기"}
         </CustomButton>
         <CustomButton
           onClick={onRequestClose}
