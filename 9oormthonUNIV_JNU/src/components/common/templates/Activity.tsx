@@ -1,14 +1,9 @@
-import LabelButton from "../atoms/LabelButton";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import {
-    ProjectData,
-    SeminarData,
-    StudyData,
-    NetworkingData,
-} from "../../../constants/ActivityList";
-import { useState } from "react";
+import LabelButton from "../atoms/LabelButton";
 import ActivityBoxes from "../organisms/ActivityBoxes";
 import CustomText from "../atoms/CustomText";
+import { instance } from "../../../apis/instance";
 
 const ActivityContainer = styled.div`
   display: flex;
@@ -32,68 +27,92 @@ const ActivityContainer = styled.div`
   }
 `;
 
-
 type ActivityProps = {
-    activityType: number;
-    Type: string;
+  activityType: number;
 };
 
 const Activity: React.FC<ActivityProps> = ({ activityType }) => {
-    const [selectedTab, setSelectedTab] = useState<number>(activityType);
-    const ActivityData =
-        selectedTab === 1
-            ? ProjectData
-            : selectedTab === 2
-                ? SeminarData
-                : selectedTab === 3
-                    ? StudyData
-                    : selectedTab === 4
-                        ? NetworkingData
-                        : [];
+  const [selectedTab, setSelectedTab] = useState<number>(activityType);
+  const [activityData, setActivityData] = useState<any[]>([]);
 
-    const Type =
-        selectedTab === 1
-            ? "프로젝트"
-            : selectedTab === 2
-                ? "세미나"
-                : selectedTab === 3
-                    ? "스터디"
-                    : selectedTab === 4
-                        ? "네트워킹"
-                        : "";
+  // 카테고리 매핑
+  const getCategoryFromTab = (tab: number) => {
+    switch (tab) {
+      case 1:
+        return "Project";
+      case 2:
+        return "Seminar";
+      case 3:
+        return "Study";
+      case 4:
+        return "Networking";
+      default:
+        return "";
+    }
+  };
 
-    return (
-        <ActivityContainer>
-            <div className="activity_content">
-                <CustomText textStyle="h1">Activities</CustomText>
-            </div>
+  // 게시글 리스트 api
+  const fetchActivityData = async () => {
+    const category = getCategoryFromTab(selectedTab);
 
-            <div className="button_container">
-                <LabelButton
-                    label="프로젝트"
-                    isActive={selectedTab === 1}
-                    onClick={() => setSelectedTab(1)}
-                />
-                <LabelButton
-                    label="세미나"
-                    isActive={selectedTab === 2}
-                    onClick={() => setSelectedTab(2)}
-                />
+    try {
+      const response = await instance.post("api/post", {
+        acti_category: category, 
+      });
 
-                <LabelButton
-                    label="스터디"
-                    isActive={selectedTab === 3}
-                    onClick={() => setSelectedTab(3)}
-                />
+      const postList = response.data.response.post_list;
 
-                <LabelButton
-                    label="네트워킹"
-                    isActive={selectedTab === 4}
-                    onClick={() => setSelectedTab(4)}
-                />
-            </div>
-            <ActivityBoxes ActivityData={ActivityData} Type={Type} />
-        </ActivityContainer>
-    );
+      const formattedData = postList.map((post: any) => ({
+        image: [post.image],
+        subject: post.post_title,
+        tag: [post.project_category, post.date, post.part],
+        post_id: post.post_id,
+      }));
+
+      setActivityData(formattedData);
+    } catch (error) {
+      console.error("게시글 데이터를 불러오는 데 실패했습니다.", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchActivityData();
+  }, [selectedTab]);
+
+  const Type = getCategoryFromTab(selectedTab);
+
+  return (
+    <ActivityContainer>
+      <div className="activity_content">
+        <CustomText textStyle="h1">Activities</CustomText>
+      </div>
+
+      <div className="button_container">
+        <LabelButton
+          label="프로젝트"
+          isActive={selectedTab === 1}
+          onClick={() => setSelectedTab(1)}
+        />
+        <LabelButton
+          label="세미나"
+          isActive={selectedTab === 2}
+          onClick={() => setSelectedTab(2)}
+        />
+        <LabelButton
+          label="스터디"
+          isActive={selectedTab === 3}
+          onClick={() => setSelectedTab(3)}
+        />
+        <LabelButton
+          label="네트워킹"
+          isActive={selectedTab === 4}
+          onClick={() => setSelectedTab(4)}
+        />
+      </div>
+
+      <ActivityBoxes ActivityData={activityData} Type={Type} />
+    </ActivityContainer>
+  );
 };
+
 export default Activity;

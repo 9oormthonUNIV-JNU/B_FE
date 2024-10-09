@@ -27,6 +27,7 @@ const MyPageContainer = styled.div`
     width: 180px;
     height: 180px;
     margin-bottom: 30px;
+    object-fit: fill;
   }
 
   .buttonContainer {
