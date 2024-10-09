@@ -24,6 +24,7 @@ export type Post = {
   title: string;
   category: "seminar" | "networking" | "project" | "study";
   date: string;
+  description: string;
 };
 
 interface ModalForm {
