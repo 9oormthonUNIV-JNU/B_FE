@@ -43,7 +43,6 @@ const LoginFormContainer = styled.div`
 const LoginForm = () => {
   const nav = useNavigate();
 
-  // useRef를 사용하여 입력 필드를 참조합니다.
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
@@ -52,7 +51,6 @@ const LoginForm = () => {
   const [error, setError] = useState<string | null>();
 
   const handleLogin = async () => {
-    // 이메일과 비밀번호가 입력되지 않았을 경우 에러 메시지 설정 및 focus 이동
     if (!email) {
       setError("아이디와 비밀번호를 입력해주세요.");
       emailRef.current?.focus(); // 이메일 입력 필드에 포커스
@@ -63,6 +61,7 @@ const LoginForm = () => {
       passwordRef.current?.focus(); // 비밀번호 입력 필드에 포커스
       return;
     }
+
     try {
       const response = await instance.post("/api/user/login", {
         email,
@@ -73,11 +72,12 @@ const LoginForm = () => {
         const token = response.headers.authorization;
         localStorage.setItem("auth", token);
 
-        const { role, image } = response.data.response;
+        const { role, image, approved } = response.data.response;
         localStorage.setItem("role", role);
         localStorage.setItem("image", image);
 
-        nav("/"); // 성공적으로 로그인하면 홈으로 이동
+        if (approved) nav("/");
+        else nav("/pending");
       } else {
         setError("아이디 또는 비밀번호가 틀렸습니다.");
       }
