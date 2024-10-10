@@ -1,8 +1,6 @@
 import PendingMemberItem from "../atoms/PendingMemberItem";
 import CustomText from "../../common/atoms/CustomText";
 import { MemberList, MemberListContainer } from "../molecules/ListContainer";
-import { instance } from "../../../apis/instance";
-import { useState, useEffect } from "react";
 
 type Member = {
   userId: string;
@@ -11,23 +9,15 @@ type Member = {
   createdAt: string;
 };
 
-const PendingMemberList = () => {
-  const [members, setMembers] = useState<Member[]>([]);
+type PendingMemberListProps = {
+  members: Member[];
+  onRefresh: () => void;
+};
 
-  useEffect(() => {
-    const fetchMembers = async () => {
-      try {
-        const response = await instance.get("/api/admin/state");
-        const pendingList = response.data.PendingList;
-        setMembers(pendingList);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchMembers();
-  }, []);
-
+const PendingMemberList: React.FC<PendingMemberListProps> = ({
+  members,
+  onRefresh,
+}) => {
   if (members.length === 0) {
     return (
       <MemberListContainer>
@@ -56,6 +46,7 @@ const PendingMemberList = () => {
             name={member.name}
             email={member.email}
             createdAt={member.createdAt}
+            onRefresh={onRefresh}
           />
         ))}
       </MemberList>

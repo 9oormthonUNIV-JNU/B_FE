@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import CustomText from "../../common/atoms/CustomText";
 import CustomTag from "../../common/atoms/CustomTag";
+import { useState } from "react";
+import { instance } from "../../../apis/instance";
 
 const ApprovedMemberItemContainer = styled.div`
   display: flex;
@@ -19,10 +21,6 @@ const ApprovedMemberItemContainer = styled.div`
     align-items: center;
   }
 
-  .approved_kebab {
-    cursor: pointer;
-  }
-
   .approved_tag_container {
     display: flex;
     align-items: center;
@@ -37,13 +35,12 @@ const ApprovedMemberItemContainer = styled.div`
 `;
 
 type ApprovedMemberItemProps = {
-  userId: number;
+  userId: string;
   name: string;
   email: string;
   cardinal: number;
   part: "PM" | "PD" | "FE" | "BE";
-  onDelete: (userId: number) => void;
-  isDeleting: boolean;
+  onRefresh: () => void;
 };
 
 const ApprovedMemberItem: React.FC<ApprovedMemberItemProps> = ({
@@ -52,13 +49,28 @@ const ApprovedMemberItem: React.FC<ApprovedMemberItemProps> = ({
   email,
   cardinal,
   part,
-  onDelete,
-  isDeleting,
+  onRefresh,
 }) => {
-  const handleDeleteClick = () => {
+  const [deleting, setDeleting] = useState<boolean>(false);
+
+  const handleDeleteClick = async () => {
     const isConfirmed = window.confirm(`${name} 회원을 삭제하시겠습니까?`);
-    if (isConfirmed) {
-      onDelete(userId);
+    if (!isConfirmed) return;
+    setDeleting(true);
+
+    try {
+      const response = await instance.delete(`/api/user/approval/${userId}`);
+      if (response.data.status === "success") {
+        alert("회원이 삭제되었습니다.");
+        onRefresh();
+      } else {
+        alert("회원 삭제에 실패했습니다. 다시 시도해 주세요.");
+      }
+    } catch (error) {
+      console.error("회원 삭제 실패", error);
+      alert("삭제 중 오류가 발생했습니다. 다시 시도해 주세요.");
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -66,9 +78,7 @@ const ApprovedMemberItem: React.FC<ApprovedMemberItemProps> = ({
     <ApprovedMemberItemContainer>
       <div className="approved_name">
         <div>
-          <CustomText textStyle="b2">
-            {name} {""}
-          </CustomText>
+          <CustomText textStyle="b2">{name}</CustomText>
           <CustomText textStyle="b2" color="#ABABAB">
             {"("}
             {email}
@@ -82,11 +92,11 @@ const ApprovedMemberItem: React.FC<ApprovedMemberItemProps> = ({
           <CustomTag backgroundColor="#F7F7F7">{part}</CustomTag>
         </div>
         <CustomTag
-          onClick={!isDeleting ? handleDeleteClick : undefined}
+          onClick={!deleting ? handleDeleteClick : undefined}
           backgroundColor="#F7F7F7"
           color="#FF6D57"
         >
-          회원 삭제
+          {deleting ? "삭제 중..." : "회원 삭제"}
         </CustomTag>
       </div>
     </ApprovedMemberItemContainer>
