@@ -70,6 +70,13 @@ const LoginForm = () => {
       });
 
       if (response.data.success) {
+        const token = response.headers.authorization;
+        localStorage.setItem("auth", token);
+
+        const { role, image } = response.data.response;
+        localStorage.setItem("role", role);
+        localStorage.setItem("image", image);
+
         nav("/"); // 성공적으로 로그인하면 홈으로 이동
       } else {
         setError("아이디 또는 비밀번호가 틀렸습니다.");
