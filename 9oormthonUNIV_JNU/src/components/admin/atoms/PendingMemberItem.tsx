@@ -27,10 +27,11 @@ const PendingMemberItemContainer = styled.div`
 `;
 
 type PendingMemberItemProps = {
+  userId: number;
   name: string;
   email: string;
   createdAt: string;
-  userId: string;
+  onRefresh: () => void;
 };
 
 const formatDate = (timestamp: string): string => {
@@ -46,42 +47,39 @@ const PendingMemberItem: React.FC<PendingMemberItemProps> = ({
   email,
   createdAt,
   userId,
+  onRefresh,
 }) => {
   // 승인 API 요청
   const approveMember = async () => {
     const isConfirmed = window.confirm("정말로 승인하시겠습니까?");
-    if (isConfirmed) {
-      try {
-        const response = await instance.post(`/api/user/approval/${userId}`, {
-          join_state: true,
-        });
-        if (response.data.status === "success") {
-          alert("회원이 승인되었습니다.");
-          // 필요한 후속 처리 로직 (예: 목록 갱신 등)
-        }
-      } catch (error) {
-        console.error(error);
-        alert("승인에 실패했습니다.");
+    if (!isConfirmed) return;
+
+    try {
+      const response = await instance.post(`/api/user/approval/${userId}`);
+      if (response.data.status === "success") {
+        alert("승인되었습니다.");
+        onRefresh();
       }
+    } catch (error) {
+      console.error("승인 요청 중 오류 발생:", error);
+      alert("승인에 실패했습니다.");
     }
   };
 
   // 거절 API 요청
   const rejectMember = async () => {
     const isConfirmed = window.confirm("정말로 거절하시겠습니까?");
-    if (isConfirmed) {
-      try {
-        const response = await instance.post(`/api/user/rejection/${userId}`, {
-          join_state: false,
-        });
-        if (response.status === 200) {
-          alert("회원이 거절되었습니다.");
-          // 필요한 후속 처리 로직 (예: 목록 갱신 등)
-        }
-      } catch (error) {
-        console.error("거절 요청 중 오류 발생:", error);
-        alert("거절에 실패했습니다.");
+    if (!isConfirmed) return;
+
+    try {
+      const response = await instance.post(`/api/user/rejection/${userId}`);
+      if (response.data.status === "success") {
+        alert("거절되었습니다.");
+        onRefresh();
       }
+    } catch (error) {
+      console.error("거절 요청 중 오류 발생:", error);
+      alert("거절에 실패했습니다.");
     }
   };
 

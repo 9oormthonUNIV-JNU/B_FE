@@ -1,48 +1,24 @@
 import { MemberListContainer, MemberList } from "../molecules/ListContainer";
 import ApprovedMemberItem from "../atoms/ApprovedMemberItem";
 import CustomText from "../../common/atoms/CustomText";
-import { instance } from "../../../apis/instance";
-import { useEffect, useState } from "react";
 
 type Member = {
-  user_id: number;
+  userId: number;
   name: string;
   email: string;
   cardinal: number;
   part: "PD" | "PM" | "FE" | "BE";
 };
 
-const ApprovedMemberList = () => {
-  const [members, setMembers] = useState<Member[]>([]);
+type ApprovedMemberListProps = {
+  members: Member[];
+  onRefresh: () => void;
+};
 
-  useEffect(() => {
-    const fetchApprovedMembers = async () => {
-      try {
-        const response = await instance.get("/api/admin/state");
-        const approvedList = response.data.response.ApprovedList;
-        setMembers(approvedList);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchApprovedMembers();
-  }, []);
-
-  const handleDeleteMember = async (userId: number) => {
-    try {
-      const response = await instance.delete(`/api/user/approval/${userId}`);
-      if (response.data.status === "success") {
-        alert("회원이 삭제되었습니다.");
-        setMembers((prevMembers) =>
-          prevMembers.filter((member) => member.user_id !== userId)
-        );
-      }
-    } catch (error) {
-      console.error("회원 삭제 실패", error);
-    }
-  };
-
+const ApprovedMemberList: React.FC<ApprovedMemberListProps> = ({
+  members,
+  onRefresh,
+}) => {
   if (members.length === 0) {
     return (
       <MemberListContainer>
@@ -64,13 +40,13 @@ const ApprovedMemberList = () => {
       <MemberList>
         {members.map((member) => (
           <ApprovedMemberItem
-            key={member.user_id}
-            userId={member.user_id}
+            key={member.userId}
+            userId={member.userId}
             name={member.name}
             email={member.email}
             cardinal={member.cardinal}
             part={member.part}
-            onDelete={handleDeleteMember}
+            onRefresh={onRefresh}
           />
         ))}
       </MemberList>
