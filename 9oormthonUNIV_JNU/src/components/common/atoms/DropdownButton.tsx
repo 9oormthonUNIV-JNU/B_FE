@@ -11,8 +11,8 @@ type Option = {
 type DropdownButtonProps = {
   label?: string;
   options: Option[];
-  value?: string[]; // 배열로 값을 받음
-  onChange?: (selected: string[]) => void; // 항상 배열로 전달
+  value?: string[];
+  onChange?: (selected: string[]) => void;
   multi?: boolean;
   style?: React.CSSProperties;
   form?: boolean;
@@ -61,16 +61,24 @@ const StyledDropdownButton = styled.button<{ form?: boolean }>`
   }
 `;
 
-const DropdownMenu = styled.div<{ width: string }>`
+const DropdownMenu = styled.div<{ width: string; scrollable: boolean }>`
   box-sizing: border-box;
   position: absolute;
   top: calc(100% + 10px);
   left: 0;
   background-color: #f7f7f7;
-  border: 10px solid #f7f7f7;
+  border: 1px solid #e5e5e5;
   border-radius: 10px;
   box-shadow: 0px 0px 3px 3px rgba(0, 0, 0, 0.05);
   width: ${({ width }) => width};
+  padding: 12px;
+
+  ${({ scrollable }) =>
+    scrollable &&
+    `
+    max-height: 200px; 
+    overflow-y: auto; 
+  `}
   z-index: 1;
 `;
 
@@ -96,7 +104,7 @@ const DropdownButton: React.FC<DropdownButtonProps> = ({
   onChange,
   style,
   form = false,
-  multi = false, // 기본값을 false로 설정
+  multi = false,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState<string[]>(value);
@@ -114,11 +122,11 @@ const DropdownButton: React.FC<DropdownButtonProps> = ({
         ? selectedOptions.filter((selected) => selected !== option)
         : [...selectedOptions, option];
       setSelectedOptions(updatedSelection);
-      if (onChange) onChange(updatedSelection); // 다중 선택 시 배열로 전달
+      if (onChange) onChange(updatedSelection);
     } else {
       setSelectedOptions([option]);
       setIsOpen(false);
-      if (onChange) onChange([option]); // 단일 선택 시에도 배열로 전달
+      if (onChange) onChange([option]);
     }
   };
 
@@ -171,10 +179,14 @@ const DropdownButton: React.FC<DropdownButtonProps> = ({
                 .join(", ")
             : label}
         </CustomText>
-        <img src={icon_down} />
+        <img src={icon_down} alt="dropdown icon" />
       </StyledDropdownButton>
       {isOpen && (
-        <DropdownMenu ref={dropdownRef} width={dropdownWidth}>
+        <DropdownMenu
+          ref={dropdownRef}
+          width={dropdownWidth}
+          scrollable={options.length > 5} // 옵션이 5개 이상일 때만 스크롤 가능
+        >
           {options.map((option) => (
             <DropdownItem
               form={form}
