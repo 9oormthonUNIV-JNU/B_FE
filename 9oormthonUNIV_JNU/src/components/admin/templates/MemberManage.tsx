@@ -14,14 +14,14 @@ const MemberManageContainer = styled.div`
 `;
 
 type PendingMember = {
-  userId: string;
+  userId: number;
   name: string;
   email: string;
   createdAt: string;
 };
 
 type ApprovedMember = {
-  userId: string;
+  userId: number;
   name: string;
   email: string;
   cardinal: number;

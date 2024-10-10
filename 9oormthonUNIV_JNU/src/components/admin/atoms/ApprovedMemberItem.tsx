@@ -35,7 +35,7 @@ const ApprovedMemberItemContainer = styled.div`
 `;
 
 type ApprovedMemberItemProps = {
-  userId: string;
+  userId: number;
   name: string;
   email: string;
   cardinal: number;

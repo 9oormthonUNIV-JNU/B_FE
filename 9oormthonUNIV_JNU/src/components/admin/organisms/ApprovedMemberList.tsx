@@ -3,7 +3,7 @@ import ApprovedMemberItem from "../atoms/ApprovedMemberItem";
 import CustomText from "../../common/atoms/CustomText";
 
 type Member = {
-  userId: string;
+  userId: number;
   name: string;
   email: string;
   cardinal: number;

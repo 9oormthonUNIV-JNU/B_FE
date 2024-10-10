@@ -3,7 +3,7 @@ import CustomText from "../../common/atoms/CustomText";
 import { MemberList, MemberListContainer } from "../molecules/ListContainer";
 
 type Member = {
-  userId: string;
+  userId: number;
   name: string;
   email: string;
   createdAt: string;

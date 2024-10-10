@@ -27,10 +27,10 @@ const PendingMemberItemContainer = styled.div`
 `;
 
 type PendingMemberItemProps = {
+  userId: number;
   name: string;
   email: string;
   createdAt: string;
-  userId: string;
   onRefresh: () => void;
 };
 

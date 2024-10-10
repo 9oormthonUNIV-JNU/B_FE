@@ -159,10 +159,8 @@ const EventText = styled.div<{ admin: boolean }>`
   width: 100%;
   margin-top: 8px;
   position: relative;
-  cursor: ${({ admin }) =>
-    admin ? "pointer" : "default"}; /* admin이 아닐 때는 클릭 불가 상태 */
-  pointer-events: ${({ admin }) =>
-    admin ? "auto" : "none"}; /* admin이 아닐 때는 클릭 이벤트 막기 */
+  cursor: ${({ admin }) => (admin ? "pointer" : "default")};
+  pointer-events: ${({ admin }) => (admin ? "auto" : "none")};
 
   * {
     white-space: nowrap;
