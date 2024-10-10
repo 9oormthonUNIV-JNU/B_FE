@@ -43,6 +43,7 @@ type ApprovedMemberItemProps = {
   cardinal: number;
   part: "PM" | "PD" | "FE" | "BE";
   onDelete: (userId: number) => void;
+  isDeleting: boolean;
 };
 
 const ApprovedMemberItem: React.FC<ApprovedMemberItemProps> = ({
@@ -52,6 +53,7 @@ const ApprovedMemberItem: React.FC<ApprovedMemberItemProps> = ({
   cardinal,
   part,
   onDelete,
+  isDeleting,
 }) => {
   const handleDeleteClick = () => {
     const isConfirmed = window.confirm(`${name} 회원을 삭제하시겠습니까?`);
@@ -80,7 +82,7 @@ const ApprovedMemberItem: React.FC<ApprovedMemberItemProps> = ({
           <CustomTag backgroundColor="#F7F7F7">{part}</CustomTag>
         </div>
         <CustomTag
-          onClick={handleDeleteClick}
+          onClick={!isDeleting ? handleDeleteClick : undefined}
           backgroundColor="#F7F7F7"
           color="#FF6D57"
         >
