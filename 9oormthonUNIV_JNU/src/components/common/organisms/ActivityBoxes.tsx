@@ -40,7 +40,7 @@ const ActivityBoxes: React.FC<ActivityBoxesProps> = ({ ActivityData, Type }) => 
   const handleOpenModal = async (activity: any) => {
     setSelectedActivity(activity);
     try {
-      const response = await instance.get(`api/post/${activity.post_id}`);
+      const response = await instance.get(`/api/post/${activity.post_id}`);
       setActivityDetail(response.data.response);
       setIsOpen(true);
     } catch (error) {
@@ -53,6 +53,7 @@ const ActivityBoxes: React.FC<ActivityBoxesProps> = ({ ActivityData, Type }) => 
     setSelectedActivity(null);
     setActivityDetail(null);
   };
+
 
   return (
     <ActivityBoxesContainer>

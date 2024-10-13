@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import CustomText from "../../common/atoms/CustomText";
 import CustomButton from "../../common/atoms/CustomButton";
+import DropdownButton from "../../common/atoms/DropdownButton";
+import { instance } from "../../../apis/instance";
 
 const ScheduleFormContainer = styled.div`
   display: flex;
@@ -18,6 +20,13 @@ const ScheduleFormContainer = styled.div`
     display: flex;
     flex-direction: column;
     gap: 12px;
+  }
+
+  .modal_error {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 20px;
   }
 
   .modal_button {
@@ -80,6 +89,10 @@ type Schedule = {
   description: string;
 };
 
+type Member = {
+  name: string;
+};
+
 type ScheduleFormProps = {
   modalType: "일정 추가하기" | "일정 수정하기";
   modalForm: Schedule;
@@ -97,6 +110,86 @@ const ScheduleForm: React.FC<ScheduleFormProps> = ({
   onSave,
   onRequestClose,
 }) => {
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [memberList, setMemberList] = useState<
+    { label: string; value: string }[]
+  >([]);
+
+  useEffect(() => {
+    const fetchMembers = async () => {
+      try {
+        const response = await instance.get("/api/user");
+        if (response.data.status === "success") {
+          const members = response.data.response;
+          const memberOptions = members
+            .map((member: Member) => ({
+              label: member.name,
+              value: member.name,
+            }))
+            .sort(
+              (
+                a: { label: string; value: string },
+                b: { label: string; value: string }
+              ) => a.label.localeCompare(b.label)
+            );
+          setMemberList(memberOptions);
+        } else {
+          console.error("멤버 목록을 가져오는 데 실패했습니다.");
+        }
+      } catch (error) {
+        console.error("멤버 목록을 가져오는 데 오류 발생:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchMembers();
+  }, []);
+
+  const handleMemberChange = (selected: string[]) => {
+    handleModalChange({
+      target: { name: "member", value: selected.join(", ") },
+    } as React.ChangeEvent<HTMLInputElement>);
+  };
+
+  const handleSave = async () => {
+    if (
+      !modalForm.date ||
+      !modalForm.name ||
+      !modalForm.member ||
+      !modalForm.description
+    ) {
+      setError("모든 항목을 입력해주세요.");
+      return;
+    }
+
+    setError(null);
+
+    const participants = modalForm.member
+      .split(", ")
+      .map((name) => name.trim());
+
+    try {
+      const response = await instance.post("/api/schedule/add", {
+        name: modalForm.name,
+        period: modalForm.date,
+        participants: participants,
+        content: modalForm.description,
+      });
+
+      if (response.data.status === "success") {
+        alert("일정이 추가되었습니다.");
+        onSave();
+      } else {
+        console.error("일정 추가에 실패했습니다.");
+        setError("일정 추가에 실패했습니다. 다시 시도해주세요.");
+      }
+    } catch (error) {
+      console.error("일정 추가 요청 중 오류 발생:", error);
+      setError("요청 중 오류가 발생했습니다. 다시 시도해주세요.");
+    }
+  };
+
   return (
     <ScheduleFormContainer>
       <div className="modal_type">
@@ -130,13 +223,19 @@ const ScheduleForm: React.FC<ScheduleFormProps> = ({
           <div className="modal_label">
             <CustomText textStyle="b3">참석자</CustomText>
           </div>
-          <input
-            type="text"
-            name="member"
-            placeholder="참석자들을 쉼표로 구분하세요"
-            value={modalForm.member}
-            onChange={handleModalChange}
-          />
+          {loading ? (
+            <CustomText textStyle="b3">
+              멤버 목록을 불러오는 중입니다...
+            </CustomText>
+          ) : (
+            <DropdownButton
+              options={memberList}
+              value={modalForm.member.split(", ")}
+              onChange={handleMemberChange}
+              multi={true}
+              form={true}
+            />
+          )}
         </InputField>
         <InputField>
           <div className="modal_description">
@@ -152,8 +251,20 @@ const ScheduleForm: React.FC<ScheduleFormProps> = ({
           </div>
         </InputField>
       </div>
+      {error && (
+        <div className="modal_error">
+          <CustomText textStyle="b3" color="#FF6D57">
+            {error}
+          </CustomText>
+        </div>
+      )}
       <div className="modal_button">
-        <CustomButton onClick={onSave} radius={10} width={200} height={46}>
+        <CustomButton
+          onClick={!loading ? handleSave : undefined}
+          radius={10}
+          width={200}
+          height={46}
+        >
           {modalType === "일정 추가하기" ? "추가하기" : "수정하기"}
         </CustomButton>
         <CustomButton

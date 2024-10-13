@@ -103,9 +103,24 @@ const OptionContainer = styled.div`
 const Header = () => {
   const [activeOption, setActiveOption] = useState<string | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [role, setRole] = useState<string>("admin"); // 'guest', 'general', 'admin' 역할 구분
   const dropdownRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+
+  const [role, setRole] = useState<string>("");
+  const [image, setImage] = useState<string>("");
+
+  useEffect(() => {
+    const storedRole = localStorage.getItem("role");
+    const storedImage = localStorage.getItem("image");
+
+    if (storedRole) {
+      setRole(storedRole);
+    }
+
+    if (storedImage) {
+      setImage(storedImage);
+    }
+  }, []);
 
   const handleClickOutside = (e: MouseEvent) => {
     if (
@@ -161,7 +176,11 @@ const Header = () => {
         navigate("/schedule");
         break;
       case "로그아웃":
-        setRole("guest");
+        localStorage.removeItem("auth");
+        localStorage.removeItem("role");
+        localStorage.removeItem("image");
+        setRole("");
+        setImage("");
         break;
       default:
         break;
@@ -176,7 +195,7 @@ const Header = () => {
   return (
     <HeaderContainer>
       <div style={{ cursor: "pointer" }} onClick={() => navigate("/")}>
-        <img src={logo_horizontal} alt="logo" />
+        <img src={logo_horizontal} />
         <CustomText color="white">&nbsp;: CNU</CustomText>
       </div>
       <OptionContainer>
@@ -190,7 +209,7 @@ const Header = () => {
         ))}
 
         {/* 로그인 상태에 따라 Login 버튼 또는 CircledImage 표시 */}
-        {role === "guest" ? (
+        {!role ? (
           <HeaderButton
             option="Login"
             isActive={activeOption === "Login"}
@@ -204,6 +223,7 @@ const Header = () => {
           >
             <CircledImage
               width="48px"
+              image={image}
               onClick={() => setIsDropdownOpen((prev) => !prev)}
             />
             {isDropdownOpen && (

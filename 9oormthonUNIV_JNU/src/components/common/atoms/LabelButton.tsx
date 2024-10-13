@@ -27,7 +27,11 @@ const LabelButton: React.FC<LabelButtonProps> = ({
   return (
     <LabelButtonContainer isActive={isActive} onClick={onClick}>
       {/* isActive에 따라 텍스트 색상을 흰색 또는 검정색으로 설정 */}
-      <CustomText textStyle="b3" color={isActive ? "white" : "black"}>
+      <CustomText
+        onClick={() => onClick}
+        textStyle="b3"
+        color={isActive ? "white" : "black"}
+      >
         {label}
       </CustomText>
     </LabelButtonContainer>

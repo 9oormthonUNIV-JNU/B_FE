@@ -27,6 +27,7 @@ const MemberTemplateContainer = styled.div`
     justify-content: center;
   }
 `;
+
 const EmptyStateContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -35,8 +36,23 @@ const EmptyStateContainer = styled.div`
   width: 100%;
 `;
 
+interface Member {
+  user_id: number;
+  name: string;
+  part: "PM" | "PD" | "FE" | "BE";
+  cardinals: number[];
+  imageURL: string;
+}
+
+interface MemberData {
+  imageURL: string;
+  name: string;
+  cardinals: number[];
+  part: "PM" | "PD" | "FE" | "BE";
+}
+
 const MemberTemplate = () => {
-  const [members, setMembers] = useState<any[]>([]);
+  const [members, setMembers] = useState<Member[]>([]);
   const [selectedPart, setSelectedPart] = useState<string>("전체");
   const [selectedCardinal, setSelectedCardinal] = useState<string>("전체");
   const [loading, setLoading] = useState<boolean>(true);
@@ -57,14 +73,15 @@ const MemberTemplate = () => {
           params.cardinal = Number(selectedCardinal.replace("기", ""));
         }
 
-        const response = await instance.get("api/user", { params });
+        const response = await instance.get("/api/user", { params });
         const responseData = response.data.response;
 
         const formattedMembers = responseData.map((member: any) => ({
-          image: member.imageURL,
+          user_id: member.user_id,
           name: member.name,
-          cardinals: [member.cardinal],
           part: member.part,
+          cardinals: member.cardinals,
+          imageURL: member.imageURL,
         }));
 
         setMembers(formattedMembers);
@@ -77,17 +94,25 @@ const MemberTemplate = () => {
     };
 
     fetchMembers();
-  }, [selectedPart, selectedCardinal]); // 필터가 바뀔 때마다 fetch 호출
+  }, [selectedPart, selectedCardinal]);
 
   // 필터링된 멤버 데이터
-  const filteredMembers = members.filter((member) => {
-    const isPartMatch = selectedPart === "전체" || member.part === selectedPart;
-    const isCardinalMatch =
-      selectedCardinal === "전체" ||
-      member.cardinals.includes(Number(selectedCardinal.replace("기", "")));
+  const filteredMembers: MemberData[] = members
+    .filter((member) => {
+      const isPartMatch =
+        selectedPart === "전체" || member.part === selectedPart;
+      const isCardinalMatch =
+        selectedCardinal === "전체" ||
+        member.cardinals.includes(Number(selectedCardinal.replace("기", "")));
 
-    return isPartMatch && isCardinalMatch;
-  });
+      return isPartMatch && isCardinalMatch;
+    })
+    .map((member) => ({
+      imageURL: member.imageURL,
+      name: member.name,
+      cardinals: member.cardinals,
+      part: member.part,
+    }));
 
   if (loading) {
     return (
@@ -117,7 +142,6 @@ const MemberTemplate = () => {
           filterType="파트별"
           options={["전체", "PM", "PD", "FE", "BE"]}
           onClick={(part) => {
-            console.log(`파트 필터 선택: ${part}`);
             setSelectedPart(part);
           }}
         />
@@ -125,7 +149,6 @@ const MemberTemplate = () => {
           filterType="기수별"
           options={["전체", "2기", "3기"]}
           onClick={(cardinal) => {
-            console.log(`기수 필터 선택: ${cardinal}`);
             setSelectedCardinal(cardinal);
           }}
         />
