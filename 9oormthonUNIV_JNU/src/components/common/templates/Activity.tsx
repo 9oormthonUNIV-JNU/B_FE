@@ -5,7 +5,6 @@ import ActivityBoxes from "../organisms/ActivityBoxes";
 import CustomText from "../atoms/CustomText";
 import { instance } from "../../../apis/instance";
 
-// 스타일 컴포넌트 정의
 const ActivityContainer = styled.div`
   display: flex;
   flex-direction: column;
