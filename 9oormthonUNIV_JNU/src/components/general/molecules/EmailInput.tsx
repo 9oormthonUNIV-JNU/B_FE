@@ -43,7 +43,7 @@ const EmailInput: React.FC<EmailInputProps> = ({
   const handleAuthClick = async () => {
     if (isEmailValid) {
       try {
-        const response = await instance.post("/api/auth/send-code", {
+        const response = await instance.post("/api/authentication", {
           email: email,
         });
         

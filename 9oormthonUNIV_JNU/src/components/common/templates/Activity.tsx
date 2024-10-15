@@ -27,16 +27,35 @@ const ActivityContainer = styled.div`
   }
 `;
 
-type ActivityProps = {
-  activityType: number;
-};
+// 게시글 데이터 타입 정의
+interface Post {
+  image: string[];
+  subject: string;
+  tag: string[];
+  post_id: number;
+}
 
-const Activity: React.FC<ActivityProps> = ({ activityType }) => {
-  const [selectedTab, setSelectedTab] = useState<number>(activityType);
-  const [activityData, setActivityData] = useState<any[]>([]);
+// API 응답 타입 정의
+interface ApiResponse {
+  response: {
+    post_list: {
+      image: string;
+      post_title: string;
+      project_category: string;
+      date: string;
+      part: string;
+      post_id: number;
+    }[];
+  };
+}
 
-  // 카테고리 매핑
-  const getCategoryFromTab = (tab: number) => {
+const Activity: React.FC = () => {
+  const [selectedTab, setSelectedTab] = useState<number>(1);  // 기본 탭을 1로 설정
+  const [activityData, setActivityData] = useState<Post[]>([]);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+
+  // 카테고리 매핑 함수
+  const getCategoryFromTab = (tab: number): string => {
     switch (tab) {
       case 1:
         return "Project";
@@ -51,27 +70,45 @@ const Activity: React.FC<ActivityProps> = ({ activityType }) => {
     }
   };
 
-  // 게시글 리스트 api
+  // 게시글 리스트 조회 API
   const fetchActivityData = async () => {
     const category = getCategoryFromTab(selectedTab);
 
     try {
-      const response = await instance.post("api/post", {
-        acti_category: category, 
+      const response = await instance.get<ApiResponse>("/api/post", {
+        params: {
+          category: category,
+        },
+        timeout: 10000,
       });
 
       const postList = response.data.response.post_list;
 
-      const formattedData = postList.map((post: any) => ({
+      if (postList.length === 0) {
+        setErrorMessage("해당 카테고리에 게시글이 없습니다.");
+        setActivityData([]); 
+        return;
+      }
+
+      const formattedData: Post[] = postList.map((post) => ({
         image: [post.image],
         subject: post.post_title,
         tag: [post.project_category, post.date, post.part],
-        post_id: post.post_id,
+        post_id: Number(post.post_id),
       }));
 
       setActivityData(formattedData);
-    } catch (error) {
-      console.error("게시글 데이터를 불러오는 데 실패했습니다.", error);
+      setErrorMessage(""); 
+    } catch (error: any) {
+      if (error.code === "ECONNABORTED") {
+        setErrorMessage("요청 시간이 초과되었습니다. 네트워크 상태를 확인해주세요.");
+      } else if (error.response && error.response.status === 404) {
+        setErrorMessage("게시글을 찾을 수 없습니다.");
+        setActivityData([]);
+      } else {
+        setErrorMessage("게시글 데이터를 불러오는 데 실패했습니다.");
+        console.error("API 호출 오류:", error);
+      }
     }
   };
 
@@ -110,6 +147,10 @@ const Activity: React.FC<ActivityProps> = ({ activityType }) => {
         />
       </div>
 
+      {/* 에러 메시지가 있을 때 출력 */}
+      {errorMessage && <div>{errorMessage}</div>}
+
+      {/* ActivityBoxes 컴포넌트에 데이터 전달 */}
       <ActivityBoxes ActivityData={activityData} Type={Type} />
     </ActivityContainer>
   );

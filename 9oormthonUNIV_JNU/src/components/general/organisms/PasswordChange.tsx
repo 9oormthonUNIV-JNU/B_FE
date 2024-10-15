@@ -33,11 +33,11 @@ const ErrorMessage = styled.p`
 `;
 
 const PasswordChange: React.FC = () => {
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-  const [passwordMatchError, setPasswordMatchError] = useState('');
+  const [currentPassword, setCurrentPassword] = useState<string>('');
+  const [newPassword, setNewPassword] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [passwordMatchError, setPasswordMatchError] = useState<string>('');
   
   // 비밀번호 유효성 검사
   const isPasswordValid = (password: string) => {
@@ -71,7 +71,7 @@ const PasswordChange: React.FC = () => {
   const handleSubmit = async () => {
     if (!errorMessage && !passwordMatchError && newPassword && confirmPassword) {
       try {
-        const response = await instance.post('api/user/password/{user_id}', {
+        const response = await instance.post('/api/user/password/{user_id}', {
           password: currentPassword,
           newpassword: newPassword,
         });

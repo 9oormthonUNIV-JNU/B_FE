@@ -81,7 +81,7 @@ const EditMyInfo: React.FC = () => {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const response = await instance.get("api/user/mypage/{user_id}");
+        const response = await instance.get("/api/user/mypage/{user_id}");
         const { name, email, imageURL, part, cardinal } = response.data.response;
 
         setUserProfile({
@@ -109,7 +109,7 @@ const EditMyInfo: React.FC = () => {
     formData.append("image", file);
 
     try {
-      const response = await instance.post("api/user/imageAdd/{user_id}", formData, {
+      const response = await instance.post("/api/user/imageAdd/{user_id}", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -251,7 +251,7 @@ const EditMyInfo: React.FC = () => {
               { label: "3기", value: "3기" },
             ]}
             value={[userProfile.cardinal]}
-            onChange={(selected) => handleDropdownChange("generation", selected[0])}
+            onChange={(selected) => handleDropdownChange("cardinal", selected[0])}
           />
         </div>
         <div className="Inputgap">
