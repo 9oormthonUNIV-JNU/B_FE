@@ -71,7 +71,7 @@ const Activity: React.FC = () => {
     }
   };
 
-  // 게시글 리스트 API (GET 요청)
+  // 게시글 리스트 조회 API
   const fetchActivityData = async () => {
     const category = getCategoryFromTab(selectedTab);
 
@@ -80,19 +80,17 @@ const Activity: React.FC = () => {
         params: {
           category: category,
         },
-        timeout: 10000, // 타임아웃 10초로 설정
+        timeout: 10000,
       });
 
       const postList = response.data.response.post_list;
 
-      // 게시글이 없는 경우 처리
       if (postList.length === 0) {
         setErrorMessage("해당 카테고리에 게시글이 없습니다.");
-        setActivityData([]);  // 빈 배열로 설정하여 ActivityBoxes가 빈 상태로 렌더링되게 함
+        setActivityData([]); 
         return;
       }
 
-      // 게시글이 있을 경우 데이터 포맷팅
       const formattedData: Post[] = postList.map((post) => ({
         image: [post.image],
         subject: post.post_title,
@@ -101,13 +99,13 @@ const Activity: React.FC = () => {
       }));
 
       setActivityData(formattedData);
-      setErrorMessage(""); // 오류 메시지 초기화
+      setErrorMessage(""); 
     } catch (error: any) {
       if (error.code === "ECONNABORTED") {
         setErrorMessage("요청 시간이 초과되었습니다. 네트워크 상태를 확인해주세요.");
       } else if (error.response && error.response.status === 404) {
         setErrorMessage("게시글을 찾을 수 없습니다.");
-        setActivityData([]); // 404 에러가 발생했을 때도 빈 배열로 설정
+        setActivityData([]);
       } else {
         setErrorMessage("게시글 데이터를 불러오는 데 실패했습니다.");
         console.error("API 호출 오류:", error);
@@ -115,7 +113,6 @@ const Activity: React.FC = () => {
     }
   };
 
-  // 탭 선택 변경 시 데이터 불러오기
   useEffect(() => {
     fetchActivityData();
   }, [selectedTab]);
